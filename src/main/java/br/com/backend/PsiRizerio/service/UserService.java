@@ -1,17 +1,15 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.exception.SaveUserException;
+import br.com.backend.PsiRizerio.exception.user.SaveUserException;
 import br.com.backend.PsiRizerio.mapper.UserMapper;
 import br.com.backend.PsiRizerio.model.UserDTO;
 import br.com.backend.PsiRizerio.persistence.entities.User;
 import br.com.backend.PsiRizerio.persistence.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -39,8 +37,24 @@ public class UserService {
     }
 
     public UserDTO update(Long id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        return mapper.toDto(userRepository.save(mapper.toEntity(userDTO)));
+        try {
+            if (userRepository.findById(id).isEmpty()) {
+                throw new RuntimeException("User not found");
+            }
+
+            User usersToUpdate = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            usersToUpdate.setName(userDTO.getName());
+            usersToUpdate.setEmail(userDTO.getEmail());
+            usersToUpdate.setPassword(userDTO.getPassword());
+            usersToUpdate.setPhone(userDTO.getPhone());
+            usersToUpdate.setAddress(userDTO.getAddress());
+            usersToUpdate.setCpf(userDTO.getCpf());
+            userRepository.save(usersToUpdate);
+            return mapper.toDto(usersToUpdate);
+        } catch (Exception e) {
+            log.error("Error updating user", e);
+            throw new RuntimeException("Error updating user");
+        }
 
     }
 
