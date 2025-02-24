@@ -16,6 +16,4 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findAll();
     Optional<Schedule> findById(Long id);
     void deleteById(Long id);
-    List<Schedule> findByUserId(Long userId);
-    boolean existsByDataAndStartTimeBeforeAndEndTimeAfter(LocalDate data, LocalTime endTime, LocalTime startTime);
 }

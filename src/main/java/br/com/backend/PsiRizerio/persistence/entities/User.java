@@ -1,20 +1,12 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.Builder;
-import lombok.Data;
 
-@Data
-@Builder
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "users")
 public class User {
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-        @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         @Column(name = "name", columnDefinition = "VARCHAR(255)", nullable = false)
@@ -65,6 +57,10 @@ public class User {
 
         public String getPhone() {
                 return phone;
+        }
+
+        public void setId(Long id) {
+                this.id = id;
         }
 
         public void setPhone(String phone) {
