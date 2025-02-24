@@ -1,11 +1,5 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.exception.schedule.DeleScheduleException;
-import br.com.backend.PsiRizerio.exception.schedule.FindScheduleException;
-import br.com.backend.PsiRizerio.exception.schedule.SaveScheduleException;
-import br.com.backend.PsiRizerio.exception.schedule.ScheduleConflictException;
-import br.com.backend.PsiRizerio.mapper.ScheduleMapper;
-import br.com.backend.PsiRizerio.model.ScheduleDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Schedule;
 import br.com.backend.PsiRizerio.persistence.repositories.ScheduleRepository;
 import org.slf4j.Logger;
@@ -20,44 +14,30 @@ public class ScheduleService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final ScheduleRepository scheduleRepository;
-    private final ScheduleMapper scheduleMapper;
 
-    public ScheduleService(ScheduleRepository scheduleRepository, ScheduleMapper scheduleMapper) {
+    public ScheduleService(ScheduleRepository scheduleRepository) {
         this.scheduleRepository = scheduleRepository;
-        this.scheduleMapper = scheduleMapper;
     }
 
-    public ScheduleDTO save(ScheduleDTO schedule) {
+    public Schedule save(Schedule schedule) {
         try {
-            log.info("Tentando salvar: {}", schedule);
-            Schedule scheduleEntity = scheduleMapper.toEntity(schedule);
-
-            if (scheduleEntity.getStart_time().isAfter(scheduleEntity.getEnd_time())) {
-                throw new ScheduleConflictException("Horário inválido");
-            }
-
-            scheduleRepository.save(scheduleEntity);
-            return scheduleMapper.toDto(scheduleEntity);
+            return scheduleRepository.save(schedule);
         } catch (Exception e) {
             log.error("Erro ao salvar consulta: {}", e.getMessage(), e);
-            throw new SaveScheduleException("Erro ao salvar consulta", e);
+            throw new RuntimeException("Erro ao salvar consulta");
         }
     }
 
-    public ScheduleDTO update(Long id,ScheduleDTO scheduleDTO) {
+    public Schedule update(Long id,Schedule schedule) {
         try {
-            if (scheduleRepository.findById(id).isEmpty()) {
-                throw new FindScheduleException("Consulta não encontrada");
-            }
-
-            Schedule scheduleToUpdate = scheduleRepository.findById(id).orElseThrow(() -> new FindScheduleException("Consulta não encontrada"));
-            scheduleToUpdate.setStart_time(scheduleDTO.getStart_time());
-            scheduleToUpdate.setEnd_time(scheduleDTO.getEnd_time());
-            scheduleToUpdate.setTitle(scheduleDTO.getTitle());
-            scheduleToUpdate.setDescription(scheduleDTO.getDescription());
-            scheduleToUpdate.setData(scheduleDTO.getData());
+            Schedule scheduleToUpdate = scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+            scheduleToUpdate.setStart_time(schedule.getStart_time());
+            scheduleToUpdate.setEnd_time(schedule.getEnd_time());
+            scheduleToUpdate.setTitle(schedule.getTitle());
+            scheduleToUpdate.setDescription(schedule.getDescription());
+            scheduleToUpdate.setData(schedule.getData());
             scheduleRepository.save(scheduleToUpdate);
-            return scheduleMapper.toDto(scheduleToUpdate);
+            return scheduleToUpdate;
         }catch (Exception e) {
             log.error("Erro ao atualizar consulta: {}", e.getMessage(), e);
             throw new RuntimeException("Erro ao atualizar consulta");
@@ -68,20 +48,23 @@ public class ScheduleService {
         try {
             return scheduleRepository.findAll();
         } catch (Exception e) {
-            throw new FindScheduleException("Erro ao buscar consultas");
+            throw new RuntimeException("Erro ao buscar consultas");
         }
     }
 
-    public ScheduleDTO findById(Long id) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new FindScheduleException("Consulta não encontrada"));
-        return scheduleMapper.toDto(schedule);
+    public Schedule findById(Long id) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+        return schedule;
     }
 
     public void cancelSchedule(Long id) {
         try {
+            if (!scheduleRepository.existsById(id)) {
+                throw new RuntimeException("Consulta não encontrada");
+            }
             scheduleRepository.deleteById(id);
         } catch (Exception e) {
-            throw new DeleScheduleException("Erro ao cancelar consulta");
+            throw new RuntimeException("Erro ao cancelar consulta");
         }
     }
 }

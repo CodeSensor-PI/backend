@@ -1,8 +1,5 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.exception.user.SaveUserException;
-import br.com.backend.PsiRizerio.mapper.UserMapper;
-import br.com.backend.PsiRizerio.model.UserDTO;
 import br.com.backend.PsiRizerio.persistence.entities.User;
 import br.com.backend.PsiRizerio.persistence.repositories.UserRepository;
 
@@ -18,57 +15,51 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final UserMapper mapper;
 
     @Autowired
-    private UserService(UserRepository userRepository, UserMapper mapper) {
+    private UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.mapper = mapper;
     }
 
-    public UserDTO createUser(UserDTO userDTO) {
+    public User createUser(User user) {
         try {
-            var persistedUser = userRepository.save(mapper.toEntity(userDTO));
-            return mapper.toDto(persistedUser);
+            return userRepository.save(user);
         } catch (Exception e) {
             log.error("Error creating user", e);
-            throw new SaveUserException("Error creating user");
+            throw new RuntimeException("Error creating user");
         }
     }
 
-    public UserDTO update(Long id, UserDTO userDTO) {
+    public User update(Long id, User user) {
         try {
-            if (userRepository.findById(id).isEmpty()) {
-                throw new RuntimeException("User not found");
-            }
-
-            User usersToUpdate = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-            usersToUpdate.setName(userDTO.getName());
-            usersToUpdate.setEmail(userDTO.getEmail());
-            usersToUpdate.setPassword(userDTO.getPassword());
-            usersToUpdate.setPhone(userDTO.getPhone());
-            usersToUpdate.setAddress(userDTO.getAddress());
-            usersToUpdate.setCpf(userDTO.getCpf());
-            userRepository.save(usersToUpdate);
-            return mapper.toDto(usersToUpdate);
+            User userToUpdate = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            userToUpdate.setName(user.getName());
+            userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setPassword(user.getPassword());
+            userToUpdate.setPhone(user.getPhone());
+            userToUpdate.setAddress(user.getAddress());
+            userToUpdate.setCpf(user.getCpf());
+            return userRepository.save(userToUpdate);
         } catch (Exception e) {
             log.error("Error updating user", e);
             throw new RuntimeException("Error updating user");
         }
-
     }
 
-    public UserDTO findById(Long id) {
-        if (userRepository.findById(id).isEmpty()) {
-            throw new RuntimeException("User not found");
+    public User findById(Long id) {
+        try {
+            return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        } catch (Exception e) {
+            log.error("Error finding user", e);
+            throw new RuntimeException("Error finding user");
         }
-
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        return mapper.toDto(user);
     }
 
     public void delete(Long id) {
         try {
+            if (!userRepository.existsById(id)) {
+                throw new RuntimeException("User not found");
+            }
             userRepository.deleteById(id);
         } catch (Exception e) {
             log.error("Error deleting user", e);
@@ -76,9 +67,13 @@ public class UserService {
         }
     }
 
-    public List<UserDTO> findAll() {
-        List<User> users = userRepository.findAll();
-        return mapper.toDto(users);
+    public List<User> findAll() {
+        try {
+            return userRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error finding users", e);
+            throw new RuntimeException("Error finding users");
+        }
     }
 
 }
