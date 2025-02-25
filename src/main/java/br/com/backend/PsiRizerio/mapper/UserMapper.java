@@ -15,6 +15,7 @@ public class UserMapper {
     @Named(value="toEntity")
     public User toEntity(UserDTO model) {
         User user = new User();
+        user.setId(model.getId());
         user.setName(model.getName());
         user.setEmail(model.getEmail());
         user.setPassword(model.getPassword());
@@ -27,6 +28,7 @@ public class UserMapper {
     @Named(value="toDto")
     public UserDTO toDto(User entity) {
         UserDTO userDTO = new UserDTO();
+        userDTO.setId(entity.getId());
         userDTO.setName(entity.getName());
         userDTO.setEmail(entity.getEmail());
         userDTO.setPassword(entity.getPassword());

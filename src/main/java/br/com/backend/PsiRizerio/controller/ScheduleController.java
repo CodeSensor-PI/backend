@@ -27,61 +27,35 @@ public class ScheduleController {
     @PostMapping
     @Operation(summary = "Cria um agendamento", description = "Cria um agendamento")
     public ResponseEntity<ScheduleDTO> create(@RequestBody ScheduleDTO scheduleDTO) {
-        try {
-            var schedule = scheduleService.save(scheduleDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(schedule);
-        } catch (SaveScheduleException sse) {
-            throw new SaveScheduleException("Erro ao salvar consulta", sse);
-        }
+        var schedule = scheduleService.save(scheduleDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(schedule);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um agendamento", description = "Atualiza um agendamento")
     public ResponseEntity<ScheduleDTO> update(@PathVariable Long id, @RequestBody ScheduleDTO scheduleDTO) {
-        try {
-            var schedule = scheduleService.update(id, scheduleDTO);
-            return ResponseEntity.ok(schedule);
-        } catch (FindScheduleException fse) {
-            throw new FindScheduleException("Consulta não encontrada");
-        } catch (SaveScheduleException sse) {
-            throw new SaveScheduleException("Erro ao salvar consulta", sse);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar consulta");
-        }
+        var schedule = scheduleService.update(id, scheduleDTO);
+        return ResponseEntity.ok(schedule);
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os agendamentos", description = "Busca todos os agendamentos")
     public ResponseEntity<List<Schedule>> findAll() {
-        try {
-            var schedules = scheduleService.findAll();
-            return ResponseEntity.ok(schedules);
-        } catch (FindScheduleException fse) {
-            throw new FindScheduleException("Erro ao buscar consultas");
-        }
+        var schedules = scheduleService.findAll();
+        return ResponseEntity.ok(schedules);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um agendamento por ID", description = "Busca um agendamento por ID")
     public ResponseEntity<ScheduleDTO> findById(@PathVariable Long id) {
-        try {
-            var schedule = scheduleService.findById(id);
-            return ResponseEntity.ok(schedule);
-        } catch (FindScheduleException fse) {
-            throw new FindScheduleException("Consulta não encontrada");
-        }
+        var schedule = scheduleService.findById(id);
+        return ResponseEntity.ok(schedule);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deleta um agendamento por ID", description = "Deleta um agendamento por ID")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            scheduleService.cancelSchedule(id);
-            return ResponseEntity.noContent().build();
-        } catch (FindScheduleException fse) {
-            throw new FindScheduleException("Consulta não encontrada");
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao cancelar consulta");
-        }
+        scheduleService.cancelSchedule(id);
+        return ResponseEntity.noContent().build();
     }
 }

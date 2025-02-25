@@ -13,9 +13,9 @@ import java.util.Optional;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Schedule save(Schedule schedule);
-    List<Schedule> findAll();
-    Optional<Schedule> findById(Long id);
     void deleteById(Long id);
+
+    List<Schedule> findAll();
     List<Schedule> findByUserId(Long userId);
-    boolean existsByDataAndStartTimeBeforeAndEndTimeAfter(LocalDate data, LocalTime endTime, LocalTime startTime);
+    Optional<Schedule> findById(Long id);
 }

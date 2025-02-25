@@ -1,6 +1,5 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.exception.schedule.DeleScheduleException;
 import br.com.backend.PsiRizerio.exception.schedule.FindScheduleException;
 import br.com.backend.PsiRizerio.exception.schedule.SaveScheduleException;
 import br.com.backend.PsiRizerio.exception.schedule.ScheduleConflictException;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,11 +43,6 @@ public class ScheduleService {
     }
 
     public ScheduleDTO update(Long id,ScheduleDTO scheduleDTO) {
-        try {
-            if (scheduleRepository.findById(id).isEmpty()) {
-                throw new FindScheduleException("Consulta não encontrada");
-            }
-
             Schedule scheduleToUpdate = scheduleRepository.findById(id).orElseThrow(() -> new FindScheduleException("Consulta não encontrada"));
             scheduleToUpdate.setStart_time(scheduleDTO.getStart_time());
             scheduleToUpdate.setEnd_time(scheduleDTO.getEnd_time());
@@ -58,18 +51,11 @@ public class ScheduleService {
             scheduleToUpdate.setData(scheduleDTO.getData());
             scheduleRepository.save(scheduleToUpdate);
             return scheduleMapper.toDto(scheduleToUpdate);
-        }catch (Exception e) {
-            log.error("Erro ao atualizar consulta: {}", e.getMessage(), e);
-            throw new RuntimeException("Erro ao atualizar consulta");
-        }
     }
 
     public List<Schedule> findAll() {
-        try {
-            return scheduleRepository.findAll();
-        } catch (Exception e) {
-            throw new FindScheduleException("Erro ao buscar consultas");
-        }
+       List<Schedule> schedules = scheduleRepository.findAll();
+       return schedules;
     }
 
     public ScheduleDTO findById(Long id) {
@@ -78,10 +64,7 @@ public class ScheduleService {
     }
 
     public void cancelSchedule(Long id) {
-        try {
-            scheduleRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new DeleScheduleException("Erro ao cancelar consulta");
-        }
+        var schedule = scheduleRepository.findById(id).orElseThrow(() -> new FindScheduleException("Consulta não encontrada"));
+        scheduleRepository.delete(schedule);
     }
 }

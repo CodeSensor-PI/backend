@@ -7,6 +7,7 @@ import br.com.backend.PsiRizerio.model.UserDTO;
 import br.com.backend.PsiRizerio.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,67 +32,36 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Cria um usuário", description = "Cria um usuário")
-    public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
-        try {
+    public ResponseEntity<UserDTO> create(@Valid @RequestBody UserDTO userDTO) {
             var userToReturn = userService.createUser(userDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(userToReturn);
-        } catch (SaveUserException sue) {
-            log.error("Erro ao salvar consulta: {}", sue.getMessage(), sue);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error creating user");
-        }
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um usuário", description = "Atualiza um usuário")
-    public UserDTO update(@PathVariable Long id,
-                          @RequestBody UserDTO userDTO) {
-       try {
-            return userService.update(id, userDTO);
-        } catch (FindUserException fue) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error updating user");
-       } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error updating user");
-        }
+    public ResponseEntity<UserDTO> update(@PathVariable Long id,
+                          @Valid @RequestBody UserDTO userDTO) {
+        var userToReturn = userService.update(id, userDTO);
+        return ResponseEntity.ok(userToReturn);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um usuário por ID", description = "Busca um usuário por ID")
-    public UserDTO findById(@PathVariable Long id) {
-        try {
-            return userService.findById(id);
-        } catch (FindUserException fue) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error finding user");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error finding user");
-        }
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        var userToReturn = userService.findById(id);
+        return ResponseEntity.ok(userToReturn);
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os usuários", description = "Busca todos os usuários")
     public ResponseEntity<List<UserDTO>> findAll() {
-        if (userService.findAll().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-
-        try {
-            var users = userService.findAll();
-            return ResponseEntity.ok(users);
-        } catch (FindUserException fue) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error finding users");
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error finding users");
-        }
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deleta um usuário", description = "Deleta um usuário")
-    public void delete(@PathVariable Long id) {
-        try {
-            userService.delete(id);
-        } catch (DeleteUserException due) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error deleting user");
-        } catch (FindUserException fue) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error finding user");
-        }
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+       userService.delete(id);
+       return ResponseEntity.noContent().build();
     }
 }

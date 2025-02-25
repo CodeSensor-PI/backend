@@ -13,6 +13,7 @@ public class ScheduleMapper {
     @Named(value="toEntity")
     public Schedule toEntity(ScheduleDTO model) {
         Schedule schedule = new Schedule();
+        schedule.setId(model.getId());
         schedule.setData(model.getData());
         schedule.setTitle(model.getTitle());
         schedule.setDescription(model.getDescription());

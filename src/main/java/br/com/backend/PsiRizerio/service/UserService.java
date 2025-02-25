@@ -1,6 +1,8 @@
 package br.com.backend.PsiRizerio.service;
 
+import br.com.backend.PsiRizerio.exception.user.FindUserException;
 import br.com.backend.PsiRizerio.exception.user.SaveUserException;
+import br.com.backend.PsiRizerio.exception.user.UpdateUserException;
 import br.com.backend.PsiRizerio.mapper.UserMapper;
 import br.com.backend.PsiRizerio.model.UserDTO;
 import br.com.backend.PsiRizerio.persistence.entities.User;
@@ -28,21 +30,21 @@ public class UserService {
 
     public UserDTO createUser(UserDTO userDTO) {
         try {
-            var persistedUser = userRepository.save(mapper.toEntity(userDTO));
-            return mapper.toDto(persistedUser);
+            User user = mapper.toEntity(userDTO);
+            userRepository.save(user);
+            log.info("User created: {}", user);
+            return mapper.toDto(user);
+        } catch (SaveUserException sue) {
+            log.error("Error creating user", sue);
+            throw new SaveUserException("Error creating user");
         } catch (Exception e) {
             log.error("Error creating user", e);
-            throw new SaveUserException("Error creating user");
+            throw new RuntimeException("Error creating user");
         }
     }
 
     public UserDTO update(Long id, UserDTO userDTO) {
-        try {
-            if (userRepository.findById(id).isEmpty()) {
-                throw new RuntimeException("User not found");
-            }
-
-            User usersToUpdate = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            User usersToUpdate = userRepository.findById(id).orElseThrow(() -> new UpdateUserException("User not found"));
             usersToUpdate.setName(userDTO.getName());
             usersToUpdate.setEmail(userDTO.getEmail());
             usersToUpdate.setPassword(userDTO.getPassword());
@@ -51,11 +53,6 @@ public class UserService {
             usersToUpdate.setCpf(userDTO.getCpf());
             userRepository.save(usersToUpdate);
             return mapper.toDto(usersToUpdate);
-        } catch (Exception e) {
-            log.error("Error updating user", e);
-            throw new RuntimeException("Error updating user");
-        }
-
     }
 
     public UserDTO findById(Long id) {
@@ -68,15 +65,16 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        try {
-            userRepository.deleteById(id);
-        } catch (Exception e) {
-            log.error("Error deleting user", e);
-            throw new RuntimeException("Error deleting user");
-        }
+        var user = userRepository.findById(id).orElseThrow(() -> new FindUserException("User not found"));
+        userRepository.delete(user);
     }
 
     public List<UserDTO> findAll() {
+        if (userRepository.findAll().isEmpty()) {
+            log.error("No users found");
+            throw new RuntimeException("No users found");
+        }
+
         List<User> users = userRepository.findAll();
         return mapper.toDto(users);
     }
