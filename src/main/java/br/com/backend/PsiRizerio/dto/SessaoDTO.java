@@ -1,45 +1,42 @@
-package br.com.backend.PsiRizerio.persistence.entities;
+package br.com.backend.PsiRizerio.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "agenda")
-public class Schedule {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SessaoDTO {
+    @JsonProperty("id")
     private Long id;
 
-    @Column(name = "data", columnDefinition = "DATE", nullable = false)
-    private LocalDate data;
-
-    @Column(name = "title", columnDefinition = "VARCHAR(255)", nullable = false)
+    @JsonProperty("title")
     private String title;
 
-    @Column(name = "description", columnDefinition = "VARCHAR(255)", nullable = false)
+    @JsonProperty("description")
     private String description;
 
-    @Column(name = "start_time", columnDefinition = "TIME", nullable = false)
+    @JsonProperty("data")
+    private LocalDate data;
+
+    @JsonProperty("start_time")
     private LocalTime startTime;
 
-    @Column(name = "end_time", columnDefinition = "TIME", nullable = false)
+    @JsonProperty("end_time")
     private LocalTime endTime;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
+    @JsonProperty("userId")
     private Long userId;
 
     public Long getId() {
@@ -48,14 +45,6 @@ public class Schedule {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
     }
 
     public String getTitle() {
@@ -72,6 +61,14 @@ public class Schedule {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     public LocalTime getStart_time() {
