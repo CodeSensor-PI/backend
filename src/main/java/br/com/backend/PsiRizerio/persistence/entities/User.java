@@ -15,31 +15,31 @@ public class User {
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
         @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
-        private Long id;
+        private Integer id;
 
-        @Column(name = "name", columnDefinition = "VARCHAR(255)", nullable = false)
+        @Column(name = "name", columnDefinition = "VARCHAR(60)", nullable = false)
         private String name;
 
-        @Column(name = "email", columnDefinition = "VARCHAR(255)", nullable = false)
-        private String email;
-
-        @Column(name = "password", columnDefinition = "VARCHAR(255)", nullable = false)
-        private String password;
-
-        @Column(name = "phone", columnDefinition = "VARCHAR(255)", nullable = false)
-        private String phone;
-
-        @Column(name = "address", columnDefinition = "VARCHAR(255)", nullable = false)
-        private String address;
-
-        @Column(name = "cpf", columnDefinition = "VARCHAR(255)", nullable = false)
+        @Column(name = "cpf", columnDefinition = "CHAR(14)", nullable = false)
         private String cpf;
 
-        public Long getId() {
+        @Column(name = "email", columnDefinition = "VARCHAR(80)", nullable = false)
+        private String email;
+
+        @Column(name = "senha", columnDefinition = "VARCHAR(20)", nullable = false)
+        private String senha;
+
+        @JoinColumn(name = "fk_plano ", columnDefinition = "INT", nullable = false)
+        private Integer fk_plano;
+
+        @JoinColumn(name = "fk_endereco", columnDefinition = "INT", nullable = false)
+        private Integer fk_endereco;
+
+        public Integer getId() {
                 return id;
         }
 
-        public void setId(Long id) {
+        public void setId(Integer id) {
                 this.id = id;
         }
 
@@ -51,6 +51,14 @@ public class User {
                 this.name = name;
         }
 
+        public String getCpf() {
+                return cpf;
+        }
+
+        public void setCpf(String cpf) {
+                this.cpf = cpf;
+        }
+
         public String getEmail() {
                 return email;
         }
@@ -59,35 +67,27 @@ public class User {
                 this.email = email;
         }
 
-        public String getPassword() {
-                return password;
+        public String getSenha() {
+                return senha;
         }
 
-        public void setPassword(String password) {
-                this.password = password;
+        public void setSenha(String senha) {
+                this.senha = senha;
         }
 
-        public String getPhone() {
-                return phone;
+        public Integer getFk_plano() {
+                return fk_plano;
         }
 
-        public void setPhone(String phone) {
-                this.phone = phone;
+        public void setFk_plano(Integer fk_plano) {
+                this.fk_plano = fk_plano;
         }
 
-        public String getAddress() {
-                return address;
+        public Integer getFk_endereco() {
+                return fk_endereco;
         }
 
-        public void setAddress(String address) {
-                this.address = address;
-        }
-
-        public String getCpf() {
-                return cpf;
-        }
-
-        public void setCpf(String cpf) {
-                this.cpf = cpf;
+        public void setFk_endereco(Integer fk_endereco) {
+                this.fk_endereco = fk_endereco;
         }
 }
