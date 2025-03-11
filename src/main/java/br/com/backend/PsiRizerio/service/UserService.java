@@ -4,7 +4,7 @@ import br.com.backend.PsiRizerio.exception.user.FindUserException;
 import br.com.backend.PsiRizerio.exception.user.SaveUserException;
 import br.com.backend.PsiRizerio.exception.user.UpdateUserException;
 import br.com.backend.PsiRizerio.mapper.UserMapper;
-import br.com.backend.PsiRizerio.model.UserDTO;
+import br.com.backend.PsiRizerio.dto.UserDTO;
 import br.com.backend.PsiRizerio.persistence.entities.User;
 import br.com.backend.PsiRizerio.persistence.repositories.UserRepository;
 
