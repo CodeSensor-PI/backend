@@ -1,8 +1,6 @@
-package br.com.backend.PsiRizerio.model;
+package br.com.backend.PsiRizerio.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,32 +9,34 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ScheduleDTO {
-    @JsonProperty("id")
+@Entity
+@Table(name = "sessaoz")
+public class Sessao {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
     private Long id;
 
-    @JsonProperty("title")
-    private String title;
-
-    @JsonProperty("description")
-    private String description;
-
-    @JsonProperty("data")
+    @Column(name = "data", columnDefinition = "DATE", nullable = false)
     private LocalDate data;
 
-    @JsonProperty("start_time")
+    @Column(name = "title", columnDefinition = "VARCHAR(255)", nullable = false)
+    private String title;
+
+    @Column(name = "description", columnDefinition = "VARCHAR(255)", nullable = false)
+    private String description;
+
+    @Column(name = "start_time", columnDefinition = "TIME", nullable = false)
     private LocalTime startTime;
 
-    @JsonProperty("end_time")
+    @Column(name = "end_time", columnDefinition = "TIME", nullable = false)
     private LocalTime endTime;
 
-    @JsonProperty("userId")
+    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
     private Long userId;
 
     public Long getId() {
@@ -45,6 +45,14 @@ public class ScheduleDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     public String getTitle() {
@@ -61,14 +69,6 @@ public class ScheduleDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
     }
 
     public LocalTime getStart_time() {

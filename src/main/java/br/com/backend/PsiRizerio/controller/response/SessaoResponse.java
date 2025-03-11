@@ -2,9 +2,8 @@ package br.com.backend.PsiRizerio.controller.response;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-public record ScheduleResponse(
+public record SessaoResponse(
     Long id,
     String title,
     String description,

@@ -1,6 +1,6 @@
 package br.com.backend.PsiRizerio.mapper;
 
-import br.com.backend.PsiRizerio.model.UserDTO;
+import br.com.backend.PsiRizerio.dto.UserDTO;
 import br.com.backend.PsiRizerio.persistence.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
