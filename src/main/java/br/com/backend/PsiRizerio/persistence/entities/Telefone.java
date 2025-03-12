@@ -21,8 +21,8 @@ public class Telefone {
     @SequenceGenerator(name = "telefone_seq", sequenceName = "TELEFONE_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "dd", columnDefinition = "CHAR(2)", nullable = false)
-    private String dd;
+    @Column(name = "ddd", columnDefinition = "CHAR(2)", nullable = false)
+    private String ddd;
 
     @Column(name = "numero", columnDefinition = "CHAR(14)", nullable = false)
     private String numero;
@@ -47,12 +47,12 @@ public class Telefone {
         this.id = id;
     }
 
-    public String getDd() {
-        return dd;
+    public String getDdd() {
+        return ddd;
     }
 
-    public void setDd(String dd) {
-        this.dd = dd;
+    public void setDdd(String ddd) {
+        this.ddd = ddd;
     }
 
     public String getNumero() {
