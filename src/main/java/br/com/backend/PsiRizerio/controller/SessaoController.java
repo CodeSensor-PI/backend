@@ -31,7 +31,7 @@ public class SessaoController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um agendamento", description = "Atualiza um agendamento")
-    public ResponseEntity<SessaoDTO> update(@PathVariable Long id, @RequestBody SessaoDTO sessaoDTO) {
+    public ResponseEntity<SessaoDTO> update(@PathVariable Integer id, @RequestBody SessaoDTO sessaoDTO) {
         var schedule = sessaoService.update(id, sessaoDTO);
         return ResponseEntity.ok(schedule);
     }
@@ -45,14 +45,14 @@ public class SessaoController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um agendamento por ID", description = "Busca um agendamento por ID")
-    public ResponseEntity<SessaoDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<SessaoDTO> findById(@PathVariable Integer id) {
         var schedule = sessaoService.findById(id);
         return ResponseEntity.ok(schedule);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deleta um agendamento por ID", description = "Deleta um agendamento por ID")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         sessaoService.cancelSchedule(id);
         return ResponseEntity.noContent().build();
     }

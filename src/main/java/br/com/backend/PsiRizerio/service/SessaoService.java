@@ -30,10 +30,6 @@ public class SessaoService {
             log.info("Tentando salvar: {}", schedule);
             Sessao sessaoEntity = scheduleMapper.toEntity(schedule);
 
-            if (sessaoEntity.getStart_time().isAfter(sessaoEntity.getEnd_time())) {
-                throw new ConflictSessaoException("Horário inválido");
-            }
-
             sessaoRepository.save(sessaoEntity);
             return scheduleMapper.toDto(sessaoEntity);
         } catch (Exception e) {
@@ -42,13 +38,8 @@ public class SessaoService {
         }
     }
 
-    public SessaoDTO update(Long id, SessaoDTO sessaoDTO) {
+    public SessaoDTO update(Integer id, SessaoDTO sessaoDTO) {
             Sessao sessaoToUpdate = sessaoRepository.findById(id).orElseThrow(() -> new FindSessaoException("Consulta não encontrada"));
-            sessaoToUpdate.setStart_time(sessaoDTO.getStart_time());
-            sessaoToUpdate.setEnd_time(sessaoDTO.getEnd_time());
-            sessaoToUpdate.setTitle(sessaoDTO.getTitle());
-            sessaoToUpdate.setDescription(sessaoDTO.getDescription());
-            sessaoToUpdate.setData(sessaoDTO.getData());
             sessaoRepository.save(sessaoToUpdate);
             return scheduleMapper.toDto(sessaoToUpdate);
     }
@@ -58,12 +49,12 @@ public class SessaoService {
        return sessaos;
     }
 
-    public SessaoDTO findById(Long id) {
+    public SessaoDTO findById(Integer id) {
         Sessao sessao = sessaoRepository.findById(id).orElseThrow(() -> new FindSessaoException("Consulta não encontrada"));
         return scheduleMapper.toDto(sessao);
     }
 
-    public void cancelSchedule(Long id) {
+    public void cancelSchedule(Integer id) {
         var schedule = sessaoRepository.findById(id).orElseThrow(() -> new FindSessaoException("Consulta não encontrada"));
         sessaoRepository.delete(schedule);
     }

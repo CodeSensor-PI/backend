@@ -43,19 +43,13 @@ public class UserService {
         }
     }
 
-    public UserDTO update(Long id, UserDTO userDTO) {
-            User usersToUpdate = userRepository.findById(id).orElseThrow(() -> new UpdateUserException("User not found"));
-            usersToUpdate.setName(userDTO.getName());
-            usersToUpdate.setEmail(userDTO.getEmail());
-            usersToUpdate.setPassword(userDTO.getPassword());
-            usersToUpdate.setPhone(userDTO.getPhone());
-            usersToUpdate.setAddress(userDTO.getAddress());
-            usersToUpdate.setCpf(userDTO.getCpf());
+    public UserDTO update(Integer id, UserDTO userDTO) {
+            User usersToUpdate = userRepository.findById(id).orElseThrow(() -> new UpdateUserException("User not found"));;
             userRepository.save(usersToUpdate);
             return mapper.toDto(usersToUpdate);
     }
 
-    public UserDTO findById(Long id) {
+    public UserDTO findById(Integer id) {
         if (userRepository.findById(id).isEmpty()) {
             throw new RuntimeException("User not found");
         }
@@ -64,7 +58,7 @@ public class UserService {
         return mapper.toDto(user);
     }
 
-    public void delete(Long id) {
+    public void delete(Integer id) {
         var user = userRepository.findById(id).orElseThrow(() -> new FindUserException("User not found"));
         userRepository.delete(user);
     }

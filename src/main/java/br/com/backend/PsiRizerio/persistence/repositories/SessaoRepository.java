@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SessaoRepository extends JpaRepository<Sessao, Long> {
+public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     Sessao save(Sessao sessao);
-    void deleteById(Long id);
+    void deleteById(Integer id);
 
     List<Sessao> findAll();
-    List<Sessao> findByUserId(Long userId);
-    Optional<Sessao> findById(Long id);
+    Optional<Sessao> findById(Integer id);
 }

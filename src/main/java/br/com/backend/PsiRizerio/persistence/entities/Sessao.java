@@ -1,5 +1,7 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
+import br.com.backend.PsiRizerio.enums.StatusSessao;
+import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Builder
@@ -19,79 +22,90 @@ public class Sessao {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "data", columnDefinition = "DATE", nullable = false)
-    private LocalDate data;
+    @JoinColumn(name = "fk_cliente", columnDefinition = "INT", nullable = false)
+    private Integer fkCliente;
 
-    @Column(name = "title", columnDefinition = "VARCHAR(255)", nullable = false)
-    private String title;
+    @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME", nullable = false)
+    private LocalDateTime dtHrSessao;
 
-    @Column(name = "description", columnDefinition = "VARCHAR(255)", nullable = false)
-    private String description;
+    @Column(name = "tipo", columnDefinition = "VARCHAR(10)", nullable = false)
+    private TipoSessao tipo;
 
-    @Column(name = "start_time", columnDefinition = "TIME", nullable = false)
-    private LocalTime startTime;
+    @Column(name = "status_sessao", columnDefinition = "VARCHAR(15)", nullable = false)
+    private StatusSessao statusSessao;
 
-    @Column(name = "end_time", columnDefinition = "TIME", nullable = false)
-    private LocalTime endTime;
+    @Column(name = "anotacao", columnDefinition = "LONGTEXT", nullable = false)
+    private String anotacao;
 
-    @Column(name = "user_id", columnDefinition = "BIGINT", nullable = false)
-    private Long userId;
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime createdAt;
 
-    public Long getId() {
+    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+    private LocalDateTime updatedAt;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public LocalDate getData() {
-        return data;
+    public Integer getFkCliente() {
+        return fkCliente;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setFkCliente(Integer fkCliente) {
+        this.fkCliente = fkCliente;
     }
 
-    public String getTitle() {
-        return title;
+    public LocalDateTime getDtHrSessao() {
+        return dtHrSessao;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setDtHrSessao(LocalDateTime dtHrSessao) {
+        this.dtHrSessao = dtHrSessao;
     }
 
-    public String getDescription() {
-        return description;
+    public TipoSessao getTipo() {
+        return tipo;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTipo(TipoSessao tipo) {
+        this.tipo = tipo;
     }
 
-    public LocalTime getStart_time() {
-        return startTime;
+    public StatusSessao getStatusSessao() {
+        return statusSessao;
     }
 
-    public void setStart_time(LocalTime start_time) {
-        this.startTime = start_time;
+    public void setStatusSessao(StatusSessao statusSessao) {
+        this.statusSessao = statusSessao;
     }
 
-    public LocalTime getEnd_time() {
-        return endTime;
+    public String getAnotacao() {
+        return anotacao;
     }
 
-    public void setEnd_time(LocalTime end_time) {
-        this.endTime = end_time;
+    public void setAnotacao(String anotacao) {
+        this.anotacao = anotacao;
     }
 
-    public Long getUserId() {
-        return userId;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

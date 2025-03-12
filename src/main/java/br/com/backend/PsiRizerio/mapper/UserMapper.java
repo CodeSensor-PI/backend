@@ -16,12 +16,14 @@ public class UserMapper {
     public User toEntity(UserDTO model) {
         User user = new User();
         user.setId(model.getId());
-        user.setName(model.getName());
-        user.setEmail(model.getEmail());
-        user.setPassword(model.getPassword());
-        user.setPhone(model.getPhone());
-        user.setAddress(model.getAddress());
+        user.setNome(model.getNome());
         user.setCpf(model.getCpf());
+        user.setEmail(model.getEmail());
+        user.setSenha(model.getSenha());
+        user.setFk_plano(model.getFkPlano());
+        user.setFk_endereco(model.getFkEndereco());
+        user.setCreatedAt(model.getCreatedAt());
+        user.setUpdatedAt(model.getUpdatedAt());
         return user;
     }
 
@@ -29,12 +31,14 @@ public class UserMapper {
     public UserDTO toDto(User entity) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(entity.getId());
-        userDTO.setName(entity.getName());
-        userDTO.setEmail(entity.getEmail());
-        userDTO.setPassword(entity.getPassword());
-        userDTO.setPhone(entity.getPhone());
-        userDTO.setAddress(entity.getAddress());
+        userDTO.setNome(entity.getNome());
         userDTO.setCpf(entity.getCpf());
+        userDTO.setEmail(entity.getEmail());
+        userDTO.setSenha(entity.getSenha());
+        userDTO.setFkPlano(entity.getFk_plano());
+        userDTO.setFkEndereco(entity.getFk_endereco());
+        userDTO.setCreatedAt(entity.getCreatedAt());
+        userDTO.setUpdatedAt(entity.getUpdatedAt());
         return userDTO;
     }
 

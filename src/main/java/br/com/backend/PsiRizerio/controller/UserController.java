@@ -35,7 +35,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um usuário", description = "Atualiza um usuário")
-    public ResponseEntity<UserDTO> update(@PathVariable Long id,
+    public ResponseEntity<UserDTO> update(@PathVariable Integer id,
                           @Valid @RequestBody UserDTO userDTO) {
         var userToReturn = userService.update(id, userDTO);
         return ResponseEntity.ok(userToReturn);
@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um usuário por ID", description = "Busca um usuário por ID")
-    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> findById(@PathVariable Integer id) {
         var userToReturn = userService.findById(id);
         return ResponseEntity.ok(userToReturn);
     }
@@ -56,7 +56,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deleta um usuário", description = "Deleta um usuário")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
        userService.delete(id);
        return ResponseEntity.noContent().build();
     }

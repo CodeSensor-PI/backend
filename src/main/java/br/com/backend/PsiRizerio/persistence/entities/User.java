@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,8 +20,8 @@ public class User {
         @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
         private Integer id;
 
-        @Column(name = "name", columnDefinition = "VARCHAR(60)", nullable = false)
-        private String name;
+        @Column(name = "nome", columnDefinition = "VARCHAR(60)", nullable = false)
+        private String nome;
 
         @Column(name = "cpf", columnDefinition = "CHAR(14)", nullable = false)
         private String cpf;
@@ -35,6 +38,14 @@ public class User {
         @JoinColumn(name = "fk_endereco", columnDefinition = "INT", nullable = false)
         private Integer fk_endereco;
 
+        @CreatedDate
+        @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+        private LocalDateTime createdAt;
+
+        @CreatedDate
+        @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+        private LocalDateTime updatedAt;
+
         public Integer getId() {
                 return id;
         }
@@ -43,12 +54,12 @@ public class User {
                 this.id = id;
         }
 
-        public String getName() {
-                return name;
+        public String getNome() {
+                return nome;
         }
 
-        public void setName(String name) {
-                this.name = name;
+        public void setNome(String nome) {
+                this.nome = nome;
         }
 
         public String getCpf() {
@@ -89,5 +100,21 @@ public class User {
 
         public void setFk_endereco(Integer fk_endereco) {
                 this.fk_endereco = fk_endereco;
+        }
+
+        public LocalDateTime getCreatedAt() {
+                return createdAt;
+        }
+
+        public void setCreatedAt(LocalDateTime createdAt) {
+                this.createdAt = createdAt;
+        }
+
+        public LocalDateTime getUpdatedAt() {
+                return updatedAt;
+        }
+
+        public void setUpdatedAt(LocalDateTime updatedAt) {
+                this.updatedAt = updatedAt;
         }
 }
