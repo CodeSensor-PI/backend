@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS telefone(
     id int primary key auto_increment,
     fk_cliente int not null,
-    dd char(2) not null,
+    ddd char(2) not null,
     numero varchar(14) not null,
     tipo varchar(15) not null check(tipo in('emergencial', 'pessoal')),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
