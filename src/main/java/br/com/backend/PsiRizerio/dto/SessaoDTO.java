@@ -1,5 +1,7 @@
 package br.com.backend.PsiRizerio.dto;
 
+import br.com.backend.PsiRizerio.enums.StatusSessao;
+import br.com.backend.PsiRizerio.enums.TipoSessao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -19,79 +22,90 @@ import java.time.LocalTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SessaoDTO {
     @JsonProperty("id")
-    private Long id;
+    private Integer id;
 
-    @JsonProperty("title")
-    private String title;
+    @JsonProperty("fk_cliente")
+    private Integer fkCliente;
 
-    @JsonProperty("description")
-    private String description;
+    @JsonProperty("dt_hr_sessao")
+    private LocalDateTime dtHrSessao;
 
-    @JsonProperty("data")
-    private LocalDate data;
+    @JsonProperty("tipo")
+    private TipoSessao tipo;
 
-    @JsonProperty("start_time")
-    private LocalTime startTime;
+    @JsonProperty("status_sessao")
+    private StatusSessao statusSessao;
 
-    @JsonProperty("end_time")
-    private LocalTime endTime;
+    @JsonProperty("anotacao")
+    private String anotacao;
 
-    @JsonProperty("userId")
-    private Long userId;
+    @JsonProperty("createdAt")
+    private LocalDateTime createdAt;
 
-    public Long getId() {
+    @JsonProperty("updatedAt")
+    private LocalDateTime updatedAt;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public Integer getFkCliente() {
+        return fkCliente;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setFkCliente(Integer fkCliente) {
+        this.fkCliente = fkCliente;
     }
 
-    public String getDescription() {
-        return description;
+    public LocalDateTime getDtHrSessao() {
+        return dtHrSessao;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDtHrSessao(LocalDateTime dtHrSessao) {
+        this.dtHrSessao = dtHrSessao;
     }
 
-    public LocalDate getData() {
-        return data;
+    public TipoSessao getTipo() {
+        return tipo;
     }
 
-    public void setData(LocalDate data) {
-        this.data = data;
+    public void setTipo(TipoSessao tipo) {
+        this.tipo = tipo;
     }
 
-    public LocalTime getStart_time() {
-        return startTime;
+    public StatusSessao getStatusSessao() {
+        return statusSessao;
     }
 
-    public void setStart_time(LocalTime start_time) {
-        this.startTime = start_time;
+    public void setStatusSessao(StatusSessao statusSessao) {
+        this.statusSessao = statusSessao;
     }
 
-    public LocalTime getEnd_time() {
-        return endTime;
+    public String getAnotacao() {
+        return anotacao;
     }
 
-    public void setEnd_time(LocalTime end_time) {
-        this.endTime = end_time;
+    public void setAnotacao(String anotacao) {
+        this.anotacao = anotacao;
     }
 
-    public Long getUserId() {
-        return userId;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
