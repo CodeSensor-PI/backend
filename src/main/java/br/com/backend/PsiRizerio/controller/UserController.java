@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/v1/user")
+@RequestMapping(value = "/v1/usuarios")
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -27,56 +28,32 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
-        try {
-            var userToReturn = userService.createUser(user);
+            User userToReturn = userService.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(userToReturn);
-        } catch (Exception e) {
-            log.error("Erro ao salvar consulta: {}", e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error creating user");
-        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id,
+    public ResponseEntity<User> update(@PathVariable Integer id,
                           @RequestBody User user) {
-       try {
-           var userToReturn = userService.update(id, user);
-           return ResponseEntity.ok(userToReturn);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error updating user");
-       }
+            User userToUpdate = userService.update(id, user);
+            return ResponseEntity.ok(userToUpdate);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        try {
-            var user = userService.findById(id);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error finding user");
-        }
+    public ResponseEntity<User> findById(@PathVariable Integer id) {
+        User user = userService.findById(id);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
-        try {
-            if (userService.findAll().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
-            var users = userService.findAll();
-            return ResponseEntity.ok(users);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error finding users");
-        }
+        List<User> users = userService.findAll();
+        return ResponseEntity.ok(users);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> delete(@PathVariable Long id) {
-        try {
-            userService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error deleting user");
-        }
+    public ResponseEntity<User> delete(@PathVariable Integer id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

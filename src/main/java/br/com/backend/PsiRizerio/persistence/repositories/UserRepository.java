@@ -10,9 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
     User save(User user);
-    void deleteById(Long id);
-    Optional<User> findById(Long id);
+    void deleteById(Integer id);
+    Optional<User> findById(Integer id);
 
+
+    boolean existsByEmailOrCpfIgnoreCase(String email, String cpf);
+
+    boolean existsByEmailOrCpfAndIdNot(String email, String cpf, Integer id);
 }
