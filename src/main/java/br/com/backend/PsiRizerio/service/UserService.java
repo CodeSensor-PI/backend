@@ -59,6 +59,13 @@ public class UserService {
 
         try {
             user.setId(null);
+            userToUpdate.setNome(user.getNome());
+            userToUpdate.setEmail(user.getEmail());
+            userToUpdate.setCpf(user.getCpf());
+            userToUpdate.setSenha(user.getSenha());
+            userToUpdate.setFk_endereco(user.getFk_endereco());
+            userToUpdate.setFk_plano(user.getFk_plano());
+            userToUpdate.setUpdatedAt(LocalDateTime.now());
             return userRepository.save(userToUpdate);
         } catch (Exception e) {
             log.error("Error updating user", e);
