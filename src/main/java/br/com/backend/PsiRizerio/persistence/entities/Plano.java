@@ -23,7 +23,7 @@ public class Plano {
     private String categoria;
 
     @Column(name = "preco", columnDefinition = "DECIMAL(6,2)", nullable = false)
-    private Double valor;
+    private Double preco;
 
     public Plano(Integer id) {
     }
@@ -44,13 +44,11 @@ public class Plano {
         this.categoria = categoria;
     }
 
-    public Double getValor() {
-        return valor;
+    public Double getPreco() {
+        return preco;
     }
 
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setPreco(Double preco) {
+        this.preco = preco;
     }
-
-
 }

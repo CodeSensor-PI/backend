@@ -22,7 +22,7 @@ public class PlanoDTO {
         @JsonProperty("categoria")
         private String categoria;
 
-        @JsonProperty("nome")
+        @JsonProperty("preco")
         private Double preco;
 
         public Integer getId() {
