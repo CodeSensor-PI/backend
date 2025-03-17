@@ -18,4 +18,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     Optional<User> findByCpf(String cpf);
 
+    boolean existsByEmailOrCpfIgnoreCase(String email, String cpf);
+
+    boolean existsByEmailOrCpfAndIdNot(String email, String cpf, Integer id);
+
+    boolean existsByCpfIgnoreCaseAndIdNot(String cpf, Integer id);
+
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Integer id);
 }
