@@ -15,11 +15,10 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collections;
 import java.util.List;
 
-@Slf4j
 @Service
 public class EnderecoService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final EnderecoRepository enderecoRepository;
     private final EnderecoMapper enderecoMapper;
 

@@ -44,9 +44,9 @@ public class SessaoService {
             return scheduleMapper.toDto(sessaoToUpdate);
     }
 
-    public List<Sessao> findAll() {
-       List<Sessao> sessaos = sessaoRepository.findAll();
-       return sessaos;
+    public List<SessaoDTO> findAll() {
+        List<Sessao> schedules = sessaoRepository.findAll();
+        return scheduleMapper.toDto(schedules);
     }
 
     public SessaoDTO findById(Integer id) {

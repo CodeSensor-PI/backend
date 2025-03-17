@@ -6,6 +6,7 @@ import br.com.backend.PsiRizerio.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,27 +27,28 @@ public class EnderecoController {
     @Operation(summary = "Cria um endereço", description = "Cria um endereço")
     public ResponseEntity<EnderecoDTO> create(@RequestBody EnderecoDTO enderecoDTO) {
         EnderecoDTO endereco = enderecoService.createEndereco(enderecoDTO);
-        return ResponseEntity.ok(endereco);
+        return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os endereços", description = "Busca todos os endereços")
     public ResponseEntity<List<EnderecoDTO>> findAll() {
-        return ResponseEntity.ok(enderecoService.findAll());
+        List<EnderecoDTO> enderecos = enderecoService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(enderecos);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um endereço por ID", description = "Busca um endereço por ID")
     public ResponseEntity<EnderecoDTO> findById(@PathVariable Integer id) {
         EnderecoDTO endereco = enderecoService.findById(id);
-        return ResponseEntity.ok(endereco);
+        return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um endereço", description = "Atualiza um endereço")
     public ResponseEntity<EnderecoDTO> update(@PathVariable Integer id, @RequestBody EnderecoDTO enderecoDTO) {
         EnderecoDTO endereco = enderecoService.update(id, enderecoDTO);
-        return ResponseEntity.ok(endereco);
+        return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
 
     @DeleteMapping("/{id}")
