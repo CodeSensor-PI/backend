@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "413f332c-0ff3-44cd-9355-ad4adf883dfa",
+		"name": "Psi-Rizerio",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "38485918"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "create-user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"nome_04a3d32f5215\",\r\n  \"cpf\": \"a43e6c3c7e56\",\r\n  \"email\": \"email_8d6895e0b6af\",\r\n  \"senha\": \"senha_b571514dab78\",\r\n  \"fk_plano\": 1,\r\n  \"fk_endereco\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/v1/user"
+					},
+					"response": []
+				},
+				{
+					"name": "find-user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/v1/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "find-all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/v1/user"
+					},
+					"response": []
+				},
+				{
+					"name": "delete-user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/v1/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "update-user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"user\",\r\n    \"email\": \"teste\",\r\n    \"password\": \"teste\",\r\n    \"phone\": \"1131231321\",\r\n    \"address\": \"teste\",\r\n    \"cpf\": \"11111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/v1/user/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Agendar",
+			"item": [
+				{
+					"name": "buscar-agendamentos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/v1/schedule"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Consulta Psicológica\",\r\n    \"description\": \"Sessão de terapia com a Dra. Jessica\",\r\n    \"data\": \"2025-02-20\",\r\n    \"start_time\": \"13:00:00\",\r\n    \"end_time\": \"15:00:00\",\r\n    \"userId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/v1/schedule"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Consulta Psicológica\",\r\n    \"description\": \"Sessão de terapia com a Dra. Jessica\",\r\n    \"data\": \"2025-02-20\",\r\n    \"start_time\": \"14:00:00\",\r\n    \"end_time\": \"15:00:00\",\r\n    \"userId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/v1/schedule/1"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/v1/schedule/2"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/v1/sessoes/"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "url-sessao",
+			"value": "http://localhost:8080/v1/sessoes",
+			"type": "default"
+		},
+		{
+			"key": "url-usuarios",
+			"value": "http://localhost:8080/v1/usuarios",
+			"type": "default"
+		}
+	]
+}
