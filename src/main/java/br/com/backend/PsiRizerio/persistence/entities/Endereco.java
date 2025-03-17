@@ -43,6 +43,9 @@ public class Endereco {
     @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updatedAt;
 
+    public Endereco(Integer id) {
+    }
+
     public Integer getId() {
         return id;
     }

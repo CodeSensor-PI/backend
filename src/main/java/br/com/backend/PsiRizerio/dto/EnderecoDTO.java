@@ -31,7 +31,7 @@ public class EnderecoDTO {
     private String bairro;
 
     @JsonProperty("numero")
-    private String numero;
+    private Integer numero;
 
     @JsonProperty("cidade")
     private String cidade;
@@ -77,11 +77,11 @@ public class EnderecoDTO {
         this.bairro = bairro;
     }
 
-    public String getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 

@@ -25,6 +25,9 @@ public class Plano {
     @Column(name = "preco", columnDefinition = "DECIMAL(6,2)", nullable = false)
     private Double valor;
 
+    public Plano(Integer id) {
+    }
+
     public Integer getId() {
         return id;
     }

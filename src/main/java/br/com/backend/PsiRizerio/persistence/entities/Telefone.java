@@ -37,7 +37,7 @@ public class Telefone {
     private LocalDateTime updatedAt;
 
     @JoinColumn(name = "fk_cliente", columnDefinition = "INT", nullable = false)
-    private Integer fk_cliente;
+    private Integer fkCliente;
 
     public Integer getId() {
         return id;
@@ -87,11 +87,11 @@ public class Telefone {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getFk_cliente() {
-        return fk_cliente;
+    public Integer getFkCliente() {
+        return fkCliente;
     }
 
-    public void setFk_cliente(Integer fk_cliente) {
-        this.fk_cliente = fk_cliente;
+    public void setFkCliente(Integer fkCliente) {
+        this.fkCliente = fkCliente;
     }
 }

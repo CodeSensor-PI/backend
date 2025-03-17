@@ -40,7 +40,7 @@ public class PreferenciaConsulta {
     private LocalDateTime updatedAt;
 
     @JoinColumn(name = "fk_user", columnDefinition = "INT", nullable = false)
-    private Integer fk_user;
+    private Integer fkUser;
 
     public Integer getId() {
         return id;
@@ -98,11 +98,11 @@ public class PreferenciaConsulta {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getFk_user() {
-        return fk_user;
+    public Integer getFkUser() {
+        return fkUser;
     }
 
-    public void setFk_user(Integer fk_user) {
-        this.fk_user = fk_user;
+    public void setFkUser(Integer fkUser) {
+        this.fkUser = fkUser;
     }
 }
