@@ -3,6 +3,8 @@ package br.com.backend.PsiRizerio.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -22,20 +24,22 @@ public class UserDTO {
     @JsonProperty("nome")
     private String nome;
 
+    @Pattern(regexp = "\\d{11}", message = "CPF deve conter apenas números e ter 11 dígitos")
     @JsonProperty("cpf")
     private String cpf;
 
+    @Email(message = "Email inválido")
     @JsonProperty("email")
     private String email;
 
     @JsonProperty("senha")
     private String senha;
 
-    @JsonProperty("fk_plano")
-    private Integer fkPlano;
+    @JsonProperty("fkPlano")
+    private PlanoDTO fkPlano;
 
-    @JsonProperty("fk_endereco")
-    private Integer fkEndereco;
+    @JsonProperty("fkEndereco")
+    private EnderecoDTO fkEndereco;
 
     @JsonProperty("createdAt")
     private LocalDateTime createdAt;
@@ -59,19 +63,19 @@ public class UserDTO {
         this.nome = nome;
     }
 
-    public String getCpf() {
+    public @Pattern(regexp = "\\d{11}", message = "CPF deve conter apenas números e ter 11 dígitos") String getCpf() {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
+    public void setCpf(@Pattern(regexp = "\\d{11}", message = "CPF deve conter apenas números e ter 11 dígitos") String cpf) {
         this.cpf = cpf;
     }
 
-    public String getEmail() {
+    public @Email(message = "Email inválido") String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@Email(message = "Email inválido") String email) {
         this.email = email;
     }
 
@@ -83,19 +87,19 @@ public class UserDTO {
         this.senha = senha;
     }
 
-    public Integer getFkPlano() {
+    public PlanoDTO getFkPlano() {
         return fkPlano;
     }
 
-    public void setFkPlano(Integer fkPlano) {
+    public void setFkPlano(PlanoDTO fkPlano) {
         this.fkPlano = fkPlano;
     }
 
-    public Integer getFkEndereco() {
+    public EnderecoDTO getFkEndereco() {
         return fkEndereco;
     }
 
-    public void setFkEndereco(Integer fkEndereco) {
+    public void setFkEndereco(EnderecoDTO fkEndereco) {
         this.fkEndereco = fkEndereco;
     }
 
