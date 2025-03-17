@@ -100,23 +100,42 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
 
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        return userMapper.toDto(user);
+        User user = userRepository.findById(id).orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        try {
+            return userMapper.toDto(user);
+        } catch (Exception e) {
+            log.error("Error finding user", e);
+            throw new RuntimeException("Error finding user");
+        }
     }
 
     public void delete(Integer id) {
-        var user = userRepository.findById(id).orElseThrow(() -> new FindUserException("User not found"));
-        userRepository.delete(user);
+        if (userRepository.findById(id).isEmpty()) {
+            throw new  ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        try {
+            userRepository.deleteById(id);
+        } catch (Exception e) {
+            log.error("Error deleting user", e);
+            throw new RuntimeException("Error deleting user");
+        }
     }
 
     public List<UserDTO> findAll() {
         if (userRepository.findAll().isEmpty()) {
             log.error("No users found");
-            throw new RuntimeException("No users found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No users found");
         }
 
-        List<User> users = userRepository.findAll();
-        return userMapper.toDto(users);
+        try {
+            List<User> users = userRepository.findAll();
+            return userMapper.toDto(users);
+        } catch (Exception e) {
+            log.error("Error finding all users", e);
+            throw new RuntimeException("Error finding all users");
+        }
     }
 
     public static boolean isValidCPF(String cpf) {
