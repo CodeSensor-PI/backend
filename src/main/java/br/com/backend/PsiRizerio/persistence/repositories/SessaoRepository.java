@@ -4,6 +4,7 @@ import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +15,11 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
 
     List<Sessao> findAll();
     Optional<Sessao> findById(Integer id);
+
+    boolean existsByDtHrSessao(LocalDateTime dtHrSessao);
+
+    boolean existsByDtHrSessaoBetween(LocalDateTime start, LocalDateTime end);
+
+    boolean existsByDtHrSessaoBetweenAndIdNot(LocalDateTime start, LocalDateTime end, Integer id);
+
 }

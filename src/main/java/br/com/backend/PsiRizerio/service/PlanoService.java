@@ -1,11 +1,8 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.dto.EnderecoDTO;
 import br.com.backend.PsiRizerio.dto.PlanoDTO;
-import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.mapper.PlanoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Plano;
-import br.com.backend.PsiRizerio.persistence.repositories.EnderecoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PlanoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

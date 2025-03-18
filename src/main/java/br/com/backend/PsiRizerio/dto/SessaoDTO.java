@@ -24,16 +24,16 @@ public class SessaoDTO {
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("fk_cliente")
+    @JsonProperty("fkCliente")
     private Integer fkCliente;
 
-    @JsonProperty("dt_hr_sessao")
+    @JsonProperty("dtHrSessao")
     private LocalDateTime dtHrSessao;
 
     @JsonProperty("tipo")
     private TipoSessao tipo;
 
-    @JsonProperty("status_sessao")
+    @JsonProperty("statusSessao")
     private StatusSessao statusSessao;
 
     @JsonProperty("anotacao")

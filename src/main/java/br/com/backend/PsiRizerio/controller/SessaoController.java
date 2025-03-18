@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/schedule")
+@RequestMapping("/sessoes")
 @Tag(name = "Crud de Agendamento - Controller", description = "Crud de Agendamento")
 public class SessaoController {
 

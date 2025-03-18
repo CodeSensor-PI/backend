@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1/user")
+@RequestMapping(value = "/usuarios")
 @Tag(name = "Crud de usuario - Controller", description = "Crud de usuario")
 public class UserController {
 

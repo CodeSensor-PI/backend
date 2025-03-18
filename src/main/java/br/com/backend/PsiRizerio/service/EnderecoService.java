@@ -59,6 +59,8 @@ public class EnderecoService {
         }
     }
 
+
+
     public void delete(Integer id) {
         if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id inválido");
 
