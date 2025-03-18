@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "413f332c-0ff3-44cd-9355-ad4adf883dfa",
+		"_postman_id": "a07ba49e-b9f5-4d0b-878b-5db26efe7bf0",
 		"name": "Psi-Rizerio",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "38485918"
@@ -10,13 +10,13 @@
 			"name": "Users",
 			"item": [
 				{
-					"name": "create-user",
+					"name": "criar-usuario",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"nome_04a3d32f5215\",\r\n  \"cpf\": \"a43e6c3c7e56\",\r\n  \"email\": \"email_8d6895e0b6af\",\r\n  \"senha\": \"senha_b571514dab78\",\r\n  \"fk_plano\": 1,\r\n  \"fk_endereco\": 1\r\n}",
+							"raw": "{\r\n  \"nome\": \"nome_04a3d32f5215\",\r\n  \"cpf\": \"47652882850\",\r\n  \"email\": \"gustavogrizeriog@gmail.com\",\r\n  \"senha\": \"senha_b571514dab78\",\r\n  \"fkPlano\": 1,\r\n  \"fkEndereco\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -28,7 +28,7 @@
 					"response": []
 				},
 				{
-					"name": "find-user",
+					"name": "achar-usuario",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -37,7 +37,7 @@
 					"response": []
 				},
 				{
-					"name": "find-all",
+					"name": "achar-todos-usuarios",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -46,28 +46,28 @@
 					"response": []
 				},
 				{
-					"name": "delete-user",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "http://localhost:8080/v1/user/1"
-					},
-					"response": []
-				},
-				{
-					"name": "update-user",
+					"name": "atualizar-usuario",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"user\",\r\n    \"email\": \"teste\",\r\n    \"password\": \"teste\",\r\n    \"phone\": \"1131231321\",\r\n    \"address\": \"teste\",\r\n    \"cpf\": \"11111111\"\r\n}",
+							"raw": "{\r\n  \"nome\": \"nome\",\r\n  \"cpf\": \"47652882850\",\r\n  \"email\": \"gustavogrizeriog@gmail.com\",\r\n  \"senha\": \"senha_b571514dab78\",\r\n  \"fk_plano\": 1,\r\n  \"fk_endereco\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
+						"url": "http://localhost:8080/v1/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "deletar-usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
 						"url": "http://localhost:8080/v1/user/1"
 					},
 					"response": []
@@ -78,6 +78,24 @@
 			"name": "Agendar",
 			"item": [
 				{
+					"name": "save-sessao",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"fk_cliente\": 0,\r\n  \"dt_hr_sessao\": \"2025-03-18 09:19:50\",\r\n  \"tipo\": \"AVULSO\",\r\n  \"status_sessao\": \"CANCELADA\",\r\n  \"anotacao\": \"anotacao_22a65d4a46e8\",\r\n  \"createdAt\": \"2025-03-18T09:19:50\",\r\n  \"updatedAt\": \"2025-03-18T09:19:50\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/v1/sessoes"
+					},
+					"response": []
+				},
+				{
 					"name": "buscar-agendamentos",
 					"request": {
 						"method": "GET",
@@ -87,25 +105,16 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "buscar-todos-agendamentos",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Consulta Psicológica\",\r\n    \"description\": \"Sessão de terapia com a Dra. Jessica\",\r\n    \"data\": \"2025-02-20\",\r\n    \"start_time\": \"13:00:00\",\r\n    \"end_time\": \"15:00:00\",\r\n    \"userId\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:8080/v1/schedule"
+						"url": "http://localhost:8080/v1/sessoes/"
 					},
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "atualizar-sessao",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -123,20 +132,11 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "delete-sessao",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": "http://localhost:8080/v1/schedule/2"
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost:8080/v1/sessoes/"
 					},
 					"response": []
 				}

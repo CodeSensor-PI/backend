@@ -47,6 +47,13 @@ docker run --name meu-mysql -e MYSQL_ROOT_PASSWORD=senha -e MYSQL_DATABASE=meuba
    ```sh
    mvn spring-boot:run
    ```
+   
+### Postman Collection
+
+Para testar os endpoints da API, você pode importar a coleção do Postman disponível no arquivo **docs/Psi-Rizerio.postman_collection.json**.
+
+
+
 
 
 
