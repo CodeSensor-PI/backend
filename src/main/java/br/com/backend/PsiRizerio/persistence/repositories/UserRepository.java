@@ -15,8 +15,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteById(Integer id);
     Optional<User> findById(Integer id);
 
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Integer id);
 
-    boolean existsByEmailOrCpfIgnoreCase(String email, String cpf);
+    boolean existsByCpfIgnoreCaseAndIdNot(String cpf, Integer id);
 
-    boolean existsByEmailOrCpfAndIdNot(String email, String cpf, Integer id);
+    boolean existsByCpfOrEmailIgnoreCase(String cpf, String email);
 }

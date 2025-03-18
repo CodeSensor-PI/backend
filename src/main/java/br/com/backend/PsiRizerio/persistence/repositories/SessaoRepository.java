@@ -20,4 +20,6 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     boolean existsByDtHrSessao(LocalDateTime dtHrSessao);
 
     boolean existsByDtHrSessaoBetween(LocalDateTime start, LocalDateTime end);
+
+    boolean existsByDtHrSessaoBetweenAndIdNot(LocalDateTime start, LocalDateTime end, Integer id);
 }

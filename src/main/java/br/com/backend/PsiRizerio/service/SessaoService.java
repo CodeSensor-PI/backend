@@ -38,7 +38,7 @@ public class SessaoService {
         LocalDateTime start = sessao.getDtHrSessao().minusHours(1);
         LocalDateTime end = sessao.getDtHrSessao().plusHours(1);
 
-        if (sessaoRepository.existsByDtHrSessaoBetween(start, end)) {
+        if (sessaoRepository.existsByDtHrSessaoBetweenAndIdNot(start, end, sessao.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma consulta agendada dentro de 1 hora deste horário");
         }
 
@@ -115,7 +115,7 @@ public class SessaoService {
 
     public void cancelSchedule(Integer id) {
         if (!sessaoRepository.existsById(id)) {
-            throw new RuntimeException("Consulta não encontrada");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Consulta não encontrada");
         }
 
         try {

@@ -33,10 +33,10 @@ public class User {
         private String senha;
 
         @JoinColumn(name = "fk_plano ", columnDefinition = "INT", nullable = false)
-        private Integer fk_plano;
+        private Integer fkPlano;
 
         @JoinColumn(name = "fk_endereco", columnDefinition = "INT", nullable = false)
-        private Integer fk_endereco;
+        private Integer fkEndereco;
 
         @CreatedDate
         @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
@@ -86,20 +86,20 @@ public class User {
                 this.senha = senha;
         }
 
-        public Integer getFk_plano() {
-                return fk_plano;
+        public Integer getFkPlano() {
+                return fkPlano;
         }
 
-        public void setFk_plano(Integer fk_plano) {
-                this.fk_plano = fk_plano;
+        public void setFkPlano(Integer fkPlano) {
+                this.fkPlano = fkPlano;
         }
 
-        public Integer getFk_endereco() {
-                return fk_endereco;
+        public Integer getFkEndereco() {
+                return fkEndereco;
         }
 
-        public void setFk_endereco(Integer fk_endereco) {
-                this.fk_endereco = fk_endereco;
+        public void setFkEndereco(Integer fkEndereco) {
+                this.fkEndereco = fkEndereco;
         }
 
         public LocalDateTime getCreatedAt() {

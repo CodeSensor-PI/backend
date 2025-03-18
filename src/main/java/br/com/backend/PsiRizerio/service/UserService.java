@@ -26,11 +26,11 @@ public class UserService {
 
     public User createUser(User user) {
         if (user == null || user.getEmail() == null || user.getCpf() == null || user.getNome() == null
-                || user.getSenha() == null || user.getFk_endereco() == null || user.getFk_plano() == null) {
+                || user.getSenha() == null || user.getFkEndereco() == null || user.getFkPlano() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário, Campos inválidos");
         }
 
-        if (userRepository.existsByEmailOrCpfIgnoreCase(user.getEmail(), user.getCpf())) {
+        if (userRepository.existsByCpfOrEmailIgnoreCase(user.getCpf(), user.getEmail())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ou CPF já cadastrados");
         }
 
@@ -46,12 +46,11 @@ public class UserService {
 
 
     public User update(Integer id, User user) {
-        if(user == null || user.getEmail() == null || user.getCpf() == null || user.getNome() == null
-                || user.getSenha() == null || user.getFk_endereco() == null || user.getFk_plano() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário, Campos inválidos");
+        if (userRepository.existsByEmailIgnoreCaseAndIdNot(user.getEmail(), id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ou CPF já cadastrados");
         }
 
-        if (userRepository.existsByEmailOrCpfAndIdNot(user.getEmail(), user.getCpf(), id)) {
+        if (userRepository.existsByCpfIgnoreCaseAndIdNot(user.getCpf(), id)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email ou CPF já cadastrados");
         }
 
@@ -63,8 +62,8 @@ public class UserService {
             userToUpdate.setEmail(user.getEmail());
             userToUpdate.setCpf(user.getCpf());
             userToUpdate.setSenha(user.getSenha());
-            userToUpdate.setFk_endereco(user.getFk_endereco());
-            userToUpdate.setFk_plano(user.getFk_plano());
+            userToUpdate.setFkEndereco(user.getFkEndereco());
+            userToUpdate.setFkPlano(user.getFkPlano());
             userToUpdate.setUpdatedAt(LocalDateTime.now());
             return userRepository.save(userToUpdate);
         } catch (Exception e) {
