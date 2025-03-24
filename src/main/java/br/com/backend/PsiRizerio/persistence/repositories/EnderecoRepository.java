@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco, Integer> {
     void deleteById(Integer id);
+
+    List<Endereco> findAll();
+
+    Endereco save(Endereco endereco);
 }

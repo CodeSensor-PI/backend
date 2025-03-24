@@ -3,6 +3,7 @@ package br.com.backend.PsiRizerio.controller;
 import br.com.backend.PsiRizerio.dto.PlanoDTO;
 import br.com.backend.PsiRizerio.service.PlanoService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +21,14 @@ public class PlanoController {
 
     @PostMapping
     @Operation(summary = "Cria um plano", description = "Cria um plano")
-    public ResponseEntity<PlanoDTO> create(PlanoDTO planoDTO) {
+    public ResponseEntity<PlanoDTO> create(@Valid @RequestBody PlanoDTO planoDTO) {
         PlanoDTO plano = planoService.createPlano(planoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(plano);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um plano", description = "Atualiza um plano")
-    public ResponseEntity<PlanoDTO> update(@RequestBody PlanoDTO planoDTO,
+    public ResponseEntity<PlanoDTO> update(@Valid @RequestBody PlanoDTO planoDTO,
                                            @PathVariable Integer id) {
         PlanoDTO plano = planoService.update(id, planoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(plano);

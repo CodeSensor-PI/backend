@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "plano")
@@ -19,13 +17,23 @@ public class Plano {
     @SequenceGenerator(name = "plano_seq", sequenceName = "PLANO_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "categoria", columnDefinition = "VARCHAR(25)", nullable = false)
+    @Column(name = "categoria", columnDefinition = "VARCHAR(25)", nullable = true)
     private String categoria;
 
-    @Column(name = "preco", columnDefinition = "DECIMAL(6,2)", nullable = false)
+    @Column(name = "preco", columnDefinition = "DECIMAL(6,2)", nullable = true)
     private Double preco;
 
+    public Plano(Integer id, String categoria, Double preco) {
+        this.id = id;
+        this.categoria = categoria;
+        this.preco = preco;
+    }
+
+    public Plano() {
+    }
+
     public Plano(Integer id) {
+        this.id = id;
     }
 
     public Integer getId() {

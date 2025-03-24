@@ -3,6 +3,8 @@ package br.com.backend.PsiRizerio.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,20 +12,25 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlanoDTO {
 
         @JsonProperty("id")
         private Integer id;
 
-        @JsonProperty("categoria")
+        @NotBlank
         private String categoria;
 
-        @JsonProperty("preco")
+        @NotNull
         private Double preco;
+
+        public PlanoDTO(Integer id, String categoria, Double preco) {
+                this.id = id;
+                this.categoria = categoria;
+                this.preco = preco;
+        }
+
+        public PlanoDTO() {
+        }
 
         public Integer getId() {
                 return id;

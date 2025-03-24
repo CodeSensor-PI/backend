@@ -1,8 +1,6 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.exception.schedule.FindSessaoException;
-import br.com.backend.PsiRizerio.exception.schedule.SaveSessaoException;
-import br.com.backend.PsiRizerio.exception.schedule.ConflictSessaoException;
+import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
 import br.com.backend.PsiRizerio.dto.SessaoDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
@@ -51,17 +49,13 @@ public class SessaoService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma consulta agendada dentro de 1 hora deste horário");
         }
 
-        try {
-            sessaoDTO.setCreatedAt(LocalDateTime.now());
-            sessaoDTO.setUpdatedAt(LocalDateTime.now());
-            Sessao sessaoEntity = scheduleMapper.toEntity(sessaoDTO);
-            sessaoRepository.save(sessaoEntity);
-            log.info("Tentando salvar: {}", sessaoDTO);
-            return scheduleMapper.toDto(sessaoEntity);
-        } catch (Exception e) {
-            log.error("Erro ao salvar consulta: {}", e.getMessage(), e);
-            throw new SaveSessaoException("Erro ao salvar consulta", e);
-        }
+        sessaoDTO.setCreatedAt(LocalDateTime.now());
+        sessaoDTO.setUpdatedAt(LocalDateTime.now());
+        Sessao sessaoEntity = scheduleMapper.toEntity(sessaoDTO);
+        sessaoRepository.save(sessaoEntity);
+        log.info("Tentando salvar: {}", sessaoDTO);
+        return scheduleMapper.toDto(sessaoEntity);
+
     }
 
     public SessaoDTO update(Integer id, SessaoDTO sessaoDTO) {
@@ -109,7 +103,7 @@ public class SessaoService {
         if (id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id inválido");
         }
-        Sessao sessao = sessaoRepository.findById(id).orElseThrow(() -> new FindSessaoException("Consulta não encontrada"));
+        Sessao sessao = sessaoRepository.findById(id).orElseThrow((EntidadeNaoEncontradaException::new));
 
         try {
             return scheduleMapper.toDto(sessao);

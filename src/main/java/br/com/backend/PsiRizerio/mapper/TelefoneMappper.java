@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Mapper
 public interface TelefoneMappper {
     Telefone toEntity(TelefoneDTO telefoneDTO);

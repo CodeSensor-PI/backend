@@ -4,6 +4,7 @@ import br.com.backend.PsiRizerio.dto.EnderecoDTO;
 import br.com.backend.PsiRizerio.service.EnderecoService;
 import br.com.backend.PsiRizerio.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class EnderecoController {
 
     @PostMapping
     @Operation(summary = "Cria um endereço", description = "Cria um endereço")
-    public ResponseEntity<EnderecoDTO> create(@RequestBody EnderecoDTO enderecoDTO) {
+    public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoDTO enderecoDTO) {
         EnderecoDTO endereco = enderecoService.createEndereco(enderecoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
     }
@@ -41,12 +42,12 @@ public class EnderecoController {
     @Operation(summary = "Busca um endereço por ID", description = "Busca um endereço por ID")
     public ResponseEntity<EnderecoDTO> findById(@PathVariable Integer id) {
         EnderecoDTO endereco = enderecoService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(endereco);
+        return ResponseEntity.ok(endereco);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um endereço", description = "Atualiza um endereço")
-    public ResponseEntity<EnderecoDTO> update(@PathVariable Integer id, @RequestBody EnderecoDTO enderecoDTO) {
+    public ResponseEntity<EnderecoDTO> update(@PathVariable Integer id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
         EnderecoDTO endereco = enderecoService.update(id, enderecoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }

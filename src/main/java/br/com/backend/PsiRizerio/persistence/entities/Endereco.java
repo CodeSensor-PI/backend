@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "endereco")
 public class Endereco {
@@ -34,6 +32,9 @@ public class Endereco {
     @Column(name = "cidade", columnDefinition = "VARCHAR(25)", nullable = false)
     private String cidade;
 
+    @Column(name = "bairro", columnDefinition = "VARCHAR(40)", nullable = false)
+    private String bairro;
+
     @Column(name = "uf", columnDefinition = "CHAR(2)", nullable = false)
     private String uf;
 
@@ -43,7 +44,19 @@ public class Endereco {
     @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Endereco(Integer id) {
+    public Endereco(Integer id, String cep, String logradouro, Integer numero, String cidade, String bairro, String uf, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.cep = cep;
+        this.logradouro = logradouro;
+        this.numero = numero;
+        this.cidade = cidade;
+        this.bairro = bairro;
+        this.uf = uf;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Endereco() {
     }
 
     public Integer getId() {
@@ -84,6 +97,14 @@ public class Endereco {
 
     public void setCidade(String cidade) {
         this.cidade = cidade;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
     public String getUf() {

@@ -1,18 +1,18 @@
 package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.dto.EnderecoDTO;
+import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
+import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
+import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
 import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.repositories.EnderecoRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,73 +29,46 @@ public class EnderecoService {
     }
 
     public EnderecoDTO createEndereco(EnderecoDTO enderecoDTO) {
-        if (enderecoDTO == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Endereço inválido");
-        }
-
-        try {
-            return enderecoMapper.toDto(enderecoRepository.save(enderecoMapper.toEntity(enderecoDTO)));
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar endereço: " + e.getMessage());
-        }
-
+        enderecoDTO.setCreatedAt(LocalDateTime.now());
+        enderecoDTO.setUpdatedAt(LocalDateTime.now());
+        Endereco enderecoToMapper = enderecoMapper.toEntity(enderecoDTO);
+        Endereco enderecoToSave = enderecoRepository.save(enderecoToMapper);
+        return enderecoMapper.toDto(enderecoToSave);
     }
 
     public EnderecoDTO update(Integer id, EnderecoDTO enderecoDTO) {
-        if (enderecoDTO == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Endereço inválido");
-        }
+        if (id == null) throw new EntidadeInvalidaException();
 
-        try {
-            var enderecoToUpdate = enderecoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado"));
-            enderecoToUpdate.setCep(enderecoDTO.getCep());
-            enderecoToUpdate.setCidade(enderecoDTO.getCidade());
-            enderecoToUpdate.setLogradouro(enderecoDTO.getLogradouro());
-            enderecoToUpdate.setNumero(enderecoDTO.getNumero());
-            enderecoToUpdate.setUf(enderecoDTO.getUf());
-            return enderecoMapper.toDto(enderecoRepository.save(enderecoToUpdate));
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar endereço: " + e.getMessage());
-        }
+        Endereco enderecoToUpdate = enderecoRepository.findById(id).orElseThrow(EntidadeInvalidaException::new);
+        enderecoToUpdate.setCep(enderecoDTO.getCep());
+        enderecoToUpdate.setCidade(enderecoDTO.getCidade());
+        enderecoToUpdate.setLogradouro(enderecoDTO.getLogradouro());
+        enderecoToUpdate.setBairro(enderecoDTO.getBairro());
+        enderecoToUpdate.setNumero(enderecoDTO.getNumero());
+        enderecoToUpdate.setUf(enderecoDTO.getUf());
+        enderecoToUpdate.setUpdatedAt(LocalDateTime.now());
+        return enderecoMapper.toDto(enderecoRepository.save(enderecoToUpdate));
     }
 
-
-
     public void delete(Integer id) {
-        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id inválido");
+        if (id == null) throw new EntidadeInvalidaException();
 
-        if (!enderecoRepository.existsById(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado");
+        if (!enderecoRepository.existsById(id)) throw new EntidadeNaoEncontradaException();
 
-        try {
-            enderecoRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar endereço: " + e.getMessage());
-        }
+        enderecoRepository.deleteById(id);
     }
 
     public EnderecoDTO findById(Integer id) {
-        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id inválido");
+        if (id == null) throw new EntidadeInvalidaException();
 
-        Endereco endereco = enderecoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Endereço não encontrado"));
+        Endereco endereco = enderecoRepository.findById(id).orElseThrow(EntidadeNaoEncontradaException::new);
 
-        try {
-            return enderecoMapper.toDto(endereco);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar endereço: " + e.getMessage());
-        }
+        return enderecoMapper.toDto(endereco);
     }
 
     public List<EnderecoDTO> findAll() {
-        if (enderecoRepository.findAll().isEmpty()) {
-            log.error("Nenhum endereço encontrado");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum endereço encontrado");
-        }
-
-        try {
-            List<Endereco> enderecos = enderecoRepository.findAll();
-            return enderecoMapper.toDto(enderecos);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar endereços: " + e.getMessage());
-        }
+        List<Endereco> enderecos = enderecoRepository.findAll().stream().toList();
+        if (enderecos.isEmpty()) throw new EntidadeSemConteudoException();
+        return enderecoMapper.toDto(enderecos);
     }
 }

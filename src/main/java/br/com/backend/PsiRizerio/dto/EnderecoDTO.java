@@ -3,6 +3,10 @@ package br.com.backend.PsiRizerio.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,38 +16,48 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class EnderecoDTO {
 
-    @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("cep")
+    @NotBlank
+    @Size(min = 8, max = 8)
     private String cep;
 
-    @JsonProperty("logradouro")
+    @NotBlank
     private String logradouro;
 
+    @NotBlank
     @JsonProperty("bairro")
     private String bairro;
 
-    @JsonProperty("numero")
+    @NotNull
     private Integer numero;
 
-    @JsonProperty("cidade")
+    @NotBlank
     private String cidade;
 
-    @JsonProperty("uf")
+    @NotBlank
+    @Size(min = 2, max = 2)
     private String uf;
 
-    @JsonProperty("createdAt")
     private LocalDateTime createdAt;
-
-    @JsonProperty("updatedAt")
     private LocalDateTime updatedAt;
+
+    public EnderecoDTO(Integer id, String cep, String logradouro, String bairro, Integer numero, String cidade, String uf, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.cep = cep;
+        this.logradouro = logradouro;
+        this.bairro = bairro;
+        this.numero = numero;
+        this.cidade = cidade;
+        this.uf = uf;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public EnderecoDTO() {
+    }
 
     public Integer getId() {
         return id;
@@ -53,51 +67,51 @@ public class EnderecoDTO {
         this.id = id;
     }
 
-    public String getCep() {
+    public @NotBlank @Size(min = 8, max = 8) String getCep() {
         return cep;
     }
 
-    public void setCep(String cep) {
+    public void setCep(@NotBlank @Size(min = 8, max = 8) String cep) {
         this.cep = cep;
     }
 
-    public String getLogradouro() {
+    public @NotBlank String getLogradouro() {
         return logradouro;
     }
 
-    public void setLogradouro(String logradouro) {
+    public void setLogradouro(@NotBlank String logradouro) {
         this.logradouro = logradouro;
     }
 
-    public String getBairro() {
+    public @NotBlank String getBairro() {
         return bairro;
     }
 
-    public void setBairro(String bairro) {
+    public void setBairro(@NotBlank String bairro) {
         this.bairro = bairro;
     }
 
-    public Integer getNumero() {
+    public @NotNull Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer numero) {
+    public void setNumero(@NotNull Integer numero) {
         this.numero = numero;
     }
 
-    public String getCidade() {
+    public @NotBlank String getCidade() {
         return cidade;
     }
 
-    public void setCidade(String cidade) {
+    public void setCidade(@NotBlank String cidade) {
         this.cidade = cidade;
     }
 
-    public String getUf() {
+    public @NotBlank @Size(min = 2, max = 2) String getUf() {
         return uf;
     }
 
-    public void setUf(String uf) {
+    public void setUf(@NotBlank @Size(min = 2, max = 2) String uf) {
         this.uf = uf;
     }
 

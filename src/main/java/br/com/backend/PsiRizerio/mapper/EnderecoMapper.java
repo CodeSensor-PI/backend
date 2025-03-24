@@ -8,11 +8,13 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface EnderecoMapper {
+
     Endereco toEntity(EnderecoDTO enderecoDTO);
 
     EnderecoDTO toDto(Endereco endereco);
 
-    List<Endereco> toEntity(List<EnderecoDTO> enderecoDTO);
+    List<EnderecoDTO> toDto(List<Endereco> enderecos);
 
-    List<EnderecoDTO> toDto(List<Endereco> endereco);
+    List<Endereco> toEntity(List<EnderecoDTO> enderecoDTOS);
+
 }
