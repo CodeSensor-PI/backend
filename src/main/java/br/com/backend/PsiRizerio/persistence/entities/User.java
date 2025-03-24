@@ -41,11 +41,11 @@ public class User {
         private Endereco fkEndereco;
 
         @CreatedDate
-        @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+        @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
         private LocalDateTime createdAt;
 
         @CreatedDate
-        @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+        @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
         private LocalDateTime updatedAt;
 
         public Integer getId() {

@@ -1,7 +1,8 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.UserDTO;
-import br.com.backend.PsiRizerio.persistence.entities.User;
+import br.com.backend.PsiRizerio.dto.userDTO.UsuarioCreateDTO;
+import br.com.backend.PsiRizerio.dto.userDTO.UsuarioResponseDTO;
+import br.com.backend.PsiRizerio.dto.userDTO.UsuarioUpdateDTO;
 import br.com.backend.PsiRizerio.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,30 +30,30 @@ public class UserController {
 
     @PostMapping
     @Operation(summary = "Cria um usuário", description = "Cria um usuário")
-    public ResponseEntity<UserDTO> create(@Valid @RequestBody UserDTO userDTO) {
-        UserDTO user = userService.createUser(userDTO);
+    public ResponseEntity<UsuarioCreateDTO> create(@Valid @RequestBody UsuarioCreateDTO usuarioCreateDTO) {
+        UsuarioCreateDTO user = userService.createUser(usuarioCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um usuário", description = "Atualiza um usuário")
-    public ResponseEntity<UserDTO> update(@PathVariable Integer id,
-                          @Valid @RequestBody UserDTO userDTO) {
-        UserDTO user = userService.update(id, userDTO);
+    public ResponseEntity<UsuarioUpdateDTO> update(@PathVariable Integer id,
+                                                     @Valid @RequestBody UsuarioUpdateDTO usuarioupdateDTO) {
+        UsuarioUpdateDTO user = userService.update(id, usuarioupdateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um usuário por ID", description = "Busca um usuário por ID")
-    public ResponseEntity<UserDTO> findById(@PathVariable Integer id) {
-        UserDTO user = userService.findById(id);
+    public ResponseEntity<UsuarioResponseDTO> findById(@PathVariable Integer id) {
+        UsuarioResponseDTO user = userService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os usuários", description = "Busca todos os usuários")
-    public ResponseEntity<List<UserDTO>> findAll() {
-        List<UserDTO> users = userService.findAll();
+    public ResponseEntity<List<UsuarioResponseDTO>> findAll() {
+        List<UsuarioResponseDTO> users = userService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 

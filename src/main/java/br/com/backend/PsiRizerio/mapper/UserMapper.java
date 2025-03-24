@@ -1,21 +1,28 @@
 package br.com.backend.PsiRizerio.mapper;
 
-import br.com.backend.PsiRizerio.dto.UserDTO;
+import br.com.backend.PsiRizerio.dto.EnderecoDTO;
+import br.com.backend.PsiRizerio.dto.userDTO.UsuarioCreateDTO;
+import br.com.backend.PsiRizerio.dto.userDTO.UsuarioResponseDTO;
+import br.com.backend.PsiRizerio.dto.userDTO.UsuarioUpdateDTO;
+import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.entities.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
-import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User toEntity(UserDTO userDTO);
+    User toEntity(UsuarioCreateDTO usuarioResponseDTO);
 
-    UserDTO toDto(User user);
+    UsuarioCreateDTO toDto(User user);
 
-    List<User> toEntity(List<UserDTO> userDTO);
+    List<User> toEntity(List<UsuarioResponseDTO> usuarioResponseDTO);
 
-    List<UserDTO> toDto(List<User> user);
+    List<UsuarioResponseDTO> toDtoList(List<User> user);
+
+    User toEntity(UsuarioUpdateDTO usuarioUpdateDTO);
+
+    UsuarioUpdateDTO toDtoUpdate(User user);
+
+    UsuarioResponseDTO toDtoResponse(User user);
 }
