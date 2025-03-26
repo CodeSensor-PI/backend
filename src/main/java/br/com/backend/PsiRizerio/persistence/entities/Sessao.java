@@ -8,9 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Builder
 @Data
@@ -24,8 +22,9 @@ public class Sessao {
     @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
     private Integer id;
 
+    @ManyToOne
     @JoinColumn(name = "fk_cliente", columnDefinition = "INT", nullable = false)
-    private Integer fkCliente;
+    private Usuario fkCliente;
 
     @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME", nullable = false)
     private LocalDateTime dtHrSessao;
@@ -39,10 +38,10 @@ public class Sessao {
     @Column(name = "anotacao", columnDefinition = "LONGTEXT", nullable = false)
     private String anotacao;
 
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
     public Integer getId() {
@@ -53,11 +52,11 @@ public class Sessao {
         this.id = id;
     }
 
-    public Integer getFkCliente() {
+    public Usuario getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(Integer fkCliente) {
+    public void setFkCliente(Usuario fkCliente) {
         this.fkCliente = fkCliente;
     }
 
