@@ -1,6 +1,9 @@
 package br.com.backend.PsiRizerio.controller;
 
 import br.com.backend.PsiRizerio.dto.EnderecoDTO;
+import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoCreateDTO;
+import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
+import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoUpdateDTO;
 import br.com.backend.PsiRizerio.service.EnderecoService;
 import br.com.backend.PsiRizerio.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,29 +29,30 @@ public class EnderecoController {
 
     @PostMapping
     @Operation(summary = "Cria um endereço", description = "Cria um endereço")
-    public ResponseEntity<EnderecoDTO> create(@Valid @RequestBody EnderecoDTO enderecoDTO) {
-        EnderecoDTO endereco = enderecoService.createEndereco(enderecoDTO);
+    public ResponseEntity<EnderecoCreateDTO> create(@Valid @RequestBody EnderecoCreateDTO enderecoDTO) {
+        EnderecoCreateDTO endereco = enderecoService.createEndereco(enderecoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os endereços", description = "Busca todos os endereços")
-    public ResponseEntity<List<EnderecoDTO>> findAll() {
-        List<EnderecoDTO> enderecos = enderecoService.findAll();
+    public ResponseEntity<List<EnderecoResponseDTO>> findAll() {
+        List<EnderecoResponseDTO> enderecos = enderecoService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(enderecos);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um endereço por ID", description = "Busca um endereço por ID")
-    public ResponseEntity<EnderecoDTO> findById(@PathVariable Integer id) {
-        EnderecoDTO endereco = enderecoService.findById(id);
+    public ResponseEntity<EnderecoResponseDTO> findById(@PathVariable Integer id) {
+        EnderecoResponseDTO endereco = enderecoService.findById(id);
         return ResponseEntity.ok(endereco);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um endereço", description = "Atualiza um endereço")
-    public ResponseEntity<EnderecoDTO> update(@PathVariable Integer id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
-        EnderecoDTO endereco = enderecoService.update(id, enderecoDTO);
+    public ResponseEntity<EnderecoUpdateDTO> update(@PathVariable Integer id,
+                                                      @Valid @RequestBody EnderecoUpdateDTO enderecoDTO) {
+        EnderecoUpdateDTO endereco = enderecoService.update(id, enderecoDTO);
         return ResponseEntity.status(HttpStatus.OK).body(endereco);
     }
 

@@ -13,4 +13,6 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Integer> {
     List<Endereco> findAll();
 
     Endereco save(Endereco endereco);
+
+    boolean existsByCepAndBairroAndNumeroAndLogradouroAndUfIgnoreCase(String cep, String bairro, String numero, String logradouro, String uf);
 }
