@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PlanoRepository extends JpaRepository<Plano, Integer> {
+
+    boolean existsByCategoria(String categoria);
+
+    boolean existsByCategoriaAndIdNot(String categoria, Integer id);
 }

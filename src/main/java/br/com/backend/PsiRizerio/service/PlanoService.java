@@ -1,15 +1,18 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.dto.PlanoDTO;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoCreateDTO;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoUpdateDTO;
+import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
+import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
+import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
 import br.com.backend.PsiRizerio.mapper.PlanoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Plano;
 import br.com.backend.PsiRizerio.persistence.repositories.PlanoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,65 +28,40 @@ public class PlanoService {
         this.planoMapper = planoMapper;
     }
 
-    public PlanoDTO createPlano(PlanoDTO planoDTO) {
-        if (planoDTO == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano inválido");
-        }
+    public PlanoCreateDTO createPlano(PlanoCreateDTO planoCreateDTO) {
+        if (planoRepository.existsByCategoria(planoCreateDTO.getCategoria())) throw new EntidadeConflitoException();
 
-        try {
-            return planoMapper.toDto(planoRepository.save(planoMapper.toEntity(planoDTO)));
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao salvar plano: " + e.getMessage());
-        }
+        Plano plano = planoMapper.toEntity(planoCreateDTO);
+        Plano planoToSave = planoRepository.save(plano);
+        return planoMapper.toDto(planoToSave);
     }
 
-    public PlanoDTO update(Integer id, PlanoDTO planoDTO) {
-        if (planoDTO == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Plano inválido");
+    public PlanoUpdateDTO update(Integer id, PlanoUpdateDTO planoUpdateDTO) {
+        Plano planoToUpdate = planoRepository.findById(id)
+                .orElseThrow((EntidadeNaoEncontradaException::new));
 
-        try {
-            var planoToUpdate = planoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano não encontrado"));
-            planoToUpdate.setCategoria(planoDTO.getCategoria());
-            planoToUpdate.setPreco(planoDTO.getPreco());
-            return planoMapper.toDto(planoRepository.save(planoToUpdate));
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar plano: " + e.getMessage());
-        }
+        if (planoRepository.existsByCategoriaAndIdNot(planoUpdateDTO.getCategoria(), id)) throw new EntidadeConflitoException();
+
+        planoToUpdate.setCategoria(planoUpdateDTO.getCategoria());
+        planoToUpdate.setPreco(planoUpdateDTO.getPreco());
+        return planoMapper.toDtoUpdate(planoRepository.save(planoToUpdate));
     }
 
-    public List<PlanoDTO> findAll() {
-        if (planoRepository.findAll().isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum plano encontrado");
+    public List<PlanoResponseDTO> findAll() {
+        if (planoRepository.findAll().isEmpty()) throw new EntidadeSemConteudoException();
 
-        if (planoRepository.findAll() == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum plano encontrado");
-
-        try {
-            return planoMapper.toDto(planoRepository.findAll());
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar planos: " + e.getMessage());
-        }
+        return planoMapper.toDtoList(planoRepository.findAll());
     }
 
-    public PlanoDTO findById(Integer id) {
-        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id inválido");
-
-        try {
-            Plano plano = planoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano não encontrado"));
-            return planoMapper.toDto(plano);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar plano: " + e.getMessage());
-        }
+    public PlanoResponseDTO findById(Integer id) {
+        Plano plano = planoRepository.findById(id)
+                .orElseThrow((EntidadeNaoEncontradaException::new));
+        return planoMapper.toDtoResponse(plano);
     }
 
     public void delete(Integer id) {
-        if (id == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id inválido");
+        if (!planoRepository.existsById(id)) throw new EntidadeNaoEncontradaException();
 
-        if (!planoRepository.existsById(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Plano não encontrado");
-
-        try {
-            planoRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao deletar plano: " + e.getMessage());
-        }
+        planoRepository.deleteById(id);
     }
-
-
 }

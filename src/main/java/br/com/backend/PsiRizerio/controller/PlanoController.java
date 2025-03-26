@@ -1,6 +1,8 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.PlanoDTO;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoCreateDTO;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoUpdateDTO;
 import br.com.backend.PsiRizerio.service.PlanoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -21,29 +23,29 @@ public class PlanoController {
 
     @PostMapping
     @Operation(summary = "Cria um plano", description = "Cria um plano")
-    public ResponseEntity<PlanoDTO> create(@Valid @RequestBody PlanoDTO planoDTO) {
-        PlanoDTO plano = planoService.createPlano(planoDTO);
+    public ResponseEntity<PlanoCreateDTO> create(@Valid @RequestBody PlanoCreateDTO planoCreateDTO) {
+        PlanoCreateDTO plano = planoService.createPlano(planoCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(plano);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um plano", description = "Atualiza um plano")
-    public ResponseEntity<PlanoDTO> update(@Valid @RequestBody PlanoDTO planoDTO,
+    public ResponseEntity<PlanoUpdateDTO> update(@Valid @RequestBody PlanoUpdateDTO planoUpdateDTO,
                                            @PathVariable Integer id) {
-        PlanoDTO plano = planoService.update(id, planoDTO);
+        PlanoUpdateDTO plano = planoService.update(id, planoUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK).body(plano);
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os planos", description = "Busca todos os planos")
-    public ResponseEntity<List<PlanoDTO>> findAll() {
+    public ResponseEntity<List<PlanoResponseDTO>> findAll() {
         return ResponseEntity.status(HttpStatus.OK).body(planoService.findAll());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um plano por ID", description = "Busca um plano por ID")
-    public ResponseEntity<PlanoDTO> findById(@PathVariable Integer id) {
-        PlanoDTO plano = planoService.findById(id);
+    public ResponseEntity<PlanoResponseDTO> findById(@PathVariable Integer id) {
+        PlanoResponseDTO plano = planoService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(plano);
     }
 
