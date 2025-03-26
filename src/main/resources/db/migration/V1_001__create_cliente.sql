@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS cliente(
     cpf char(14) not null,
     email varchar(80) not null,
     senha varchar(20) not null,
+    status varchar(7) not null check(status in ('ATIVO', 'INATIVO')),
     fk_plano int,
     fk_endereco int not null,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

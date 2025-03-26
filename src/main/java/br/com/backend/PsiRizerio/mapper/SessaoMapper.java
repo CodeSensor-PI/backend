@@ -1,6 +1,9 @@
 package br.com.backend.PsiRizerio.mapper;
 
 import br.com.backend.PsiRizerio.dto.SessaoDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoCreateDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoResponseDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoUpdateDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -10,11 +13,12 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface SessaoMapper {
-    Sessao toEntity(SessaoDTO sessaoDTO);
+    Sessao toEntity(SessaoCreateDTO sessaoCreateDTO);
+    Sessao toEntity(SessaoUpdateDTO sessaoUpdateDTO);
+    List<Sessao> toEntityList(List<SessaoCreateDTO> sessaoCreateDTOs);
 
-    SessaoDTO toDto(Sessao sessao);
-
-    List<SessaoDTO> toDto(List<Sessao> sessoes);
-
-    List<Sessao> toEntity(List<SessaoDTO> sessoes);
+    SessaoCreateDTO toDto(Sessao sessao);
+    SessaoUpdateDTO toDtoUpdate(Sessao sessao);
+    SessaoResponseDTO toDtoResponse(Sessao sessao);
+    List<SessaoResponseDTO> toDtoList(List<Sessao> sessoes);
 }

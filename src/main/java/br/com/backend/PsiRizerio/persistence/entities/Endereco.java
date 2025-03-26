@@ -27,7 +27,7 @@ public class Endereco {
     private String logradouro;
 
     @Column(name = "numero", columnDefinition = "VARCHAR(5)", nullable = false)
-    private Integer numero;
+    private String numero;
 
     @Column(name = "cidade", columnDefinition = "VARCHAR(25)", nullable = false)
     private String cidade;
@@ -38,13 +38,13 @@ public class Endereco {
     @Column(name = "uf", columnDefinition = "CHAR(2)", nullable = false)
     private String uf;
 
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    public Endereco(Integer id, String cep, String logradouro, Integer numero, String cidade, String bairro, String uf, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Endereco(Integer id, String cep, String logradouro, String numero, String cidade, String bairro, String uf, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.cep = cep;
         this.logradouro = logradouro;
@@ -83,11 +83,11 @@ public class Endereco {
         this.logradouro = logradouro;
     }
 
-    public Integer getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 

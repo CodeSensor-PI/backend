@@ -1,11 +1,10 @@
-package br.com.backend.PsiRizerio.dto.userDTO;
+package br.com.backend.PsiRizerio.dto.usuarioDTO;
 
 import br.com.backend.PsiRizerio.dto.EnderecoDTO;
-import br.com.backend.PsiRizerio.dto.PlanoDTO;
-import br.com.backend.PsiRizerio.persistence.entities.Endereco;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
+import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
@@ -23,10 +22,12 @@ public class UsuarioCreateDTO {
     @NotBlank
     private String email;
 
+    private StatusUsuario status = StatusUsuario.ATIVO;
+
     @NotBlank
     private String senha;
 
-    private PlanoDTO fkPlano;
+    private PlanoResponseDTO fkPlano;
 
     private EnderecoDTO fkEndereco;
 
@@ -52,6 +53,14 @@ public class UsuarioCreateDTO {
         return email;
     }
 
+    public StatusUsuario getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusUsuario status) {
+        this.status = status;
+    }
+
     public void setEmail(@Email @NotBlank String email) {
         this.email = email;
     }
@@ -64,11 +73,11 @@ public class UsuarioCreateDTO {
         this.senha = senha;
     }
 
-    public PlanoDTO getFkPlano() {
+    public PlanoResponseDTO getFkPlano() {
         return fkPlano;
     }
 
-    public void setFkPlano(PlanoDTO fkPlano) {
+    public void setFkPlano(PlanoResponseDTO fkPlano) {
         this.fkPlano = fkPlano;
     }
 

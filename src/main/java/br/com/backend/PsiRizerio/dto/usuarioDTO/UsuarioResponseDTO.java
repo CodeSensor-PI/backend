@@ -1,34 +1,23 @@
-package br.com.backend.PsiRizerio.dto.userDTO;
+package br.com.backend.PsiRizerio.dto.usuarioDTO;
 
 import br.com.backend.PsiRizerio.dto.EnderecoDTO;
-import br.com.backend.PsiRizerio.dto.PlanoDTO;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.br.CPF;
+import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
+import br.com.backend.PsiRizerio.enums.StatusUsuario;
 
 import java.time.LocalDateTime;
 
-public class UsuarioUpdateDTO {
+public class UsuarioResponseDTO {
 
     private Integer id;
-
     private String nome;
-
-    @CPF
     private String cpf;
-
-    @Email
     private String email;
-
     private String senha;
-
-    private PlanoDTO fkPlano;
-
+    private StatusUsuario status;
+    private PlanoResponseDTO fkPlano;
     private EnderecoDTO fkEndereco;
-
-    @NotNull
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public Integer getId() {
         return id;
@@ -46,19 +35,19 @@ public class UsuarioUpdateDTO {
         this.nome = nome;
     }
 
-    public @CPF String getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(@CPF String cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public @Email String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@Email String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -70,11 +59,19 @@ public class UsuarioUpdateDTO {
         this.senha = senha;
     }
 
-    public PlanoDTO getFkPlano() {
+    public StatusUsuario getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusUsuario status) {
+        this.status = status;
+    }
+
+    public PlanoResponseDTO getFkPlano() {
         return fkPlano;
     }
 
-    public void setFkPlano(PlanoDTO fkPlano) {
+    public void setFkPlano(PlanoResponseDTO fkPlano) {
         this.fkPlano = fkPlano;
     }
 
@@ -84,6 +81,14 @@ public class UsuarioUpdateDTO {
 
     public void setFkEndereco(EnderecoDTO fkEndereco) {
         this.fkEndereco = fkEndereco;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getUpdatedAt() {

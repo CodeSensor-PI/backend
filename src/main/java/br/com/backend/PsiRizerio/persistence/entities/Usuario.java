@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
+import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class Usuario {
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
         @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
@@ -31,6 +32,9 @@ public class User {
 
         @Column(name = "senha", columnDefinition = "VARCHAR(20)", nullable = false)
         private String senha;
+
+        @Column(name = "status", columnDefinition = "VARCHAR(20)")
+        private StatusUsuario status;
 
         @ManyToOne
         @JoinColumn(name = "fk_plano", referencedColumnName = "id", nullable = false)

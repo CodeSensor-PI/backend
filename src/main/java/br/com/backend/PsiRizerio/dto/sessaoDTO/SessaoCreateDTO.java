@@ -1,48 +1,32 @@
-package br.com.backend.PsiRizerio.persistence.entities;
+package br.com.backend.PsiRizerio.dto.sessaoDTO;
 
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "sessao")
-public class Sessao {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
+public class SessaoCreateDTO {
+
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT", nullable = false)
-    private Usuario fkCliente;
+    @NotNull
+    private UsuarioResponseDTO fkCliente;
 
-    @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME", nullable = false)
+    @Future
+    @NotNull
     private LocalDateTime dtHrSessao;
 
-    @Column(name = "tipo", columnDefinition = "VARCHAR(10)", nullable = false)
+    @NotBlank
     private TipoSessao tipo;
 
-    @Column(name = "status_sessao", columnDefinition = "VARCHAR(15)", nullable = false)
+    @NotNull
     private StatusSessao statusSessao;
 
-    @Column(name = "anotacao", columnDefinition = "LONGTEXT", nullable = false)
+    @NotBlank
     private String anotacao;
-
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
-
-    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
-    private LocalDateTime updatedAt;
 
     public Integer getId() {
         return id;
@@ -52,11 +36,11 @@ public class Sessao {
         this.id = id;
     }
 
-    public Usuario getFkCliente() {
+    public UsuarioResponseDTO getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(Usuario fkCliente) {
+    public void setFkCliente(UsuarioResponseDTO fkCliente) {
         this.fkCliente = fkCliente;
     }
 
@@ -98,13 +82,5 @@ public class Sessao {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
