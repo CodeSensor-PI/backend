@@ -1,45 +1,20 @@
-package br.com.backend.PsiRizerio.dto;
+package br.com.backend.PsiRizerio.dto.sessaoDTO;
 
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-@Data
-@Builder
-public class SessaoDTO {
-    @JsonProperty("id")
+public class SessaoResponseDTO {
+
     private Integer id;
-
-    @JsonProperty("fkCliente")
-    private Integer fkCliente;
-
-    @JsonProperty("dtHrSessao")
+    private UsuarioResponseDTO fkCliente;
     private LocalDateTime dtHrSessao;
-
-    @JsonProperty("tipo")
     private TipoSessao tipo;
-
-    @JsonProperty("statusSessao")
     private StatusSessao statusSessao;
-
-    @JsonProperty("anotacao")
     private String anotacao;
-
-    @JsonProperty("createdAt")
     private LocalDateTime createdAt;
-
-    @JsonProperty("updatedAt")
-    private LocalDateTime updatedAt;
 
     public Integer getId() {
         return id;
@@ -49,11 +24,11 @@ public class SessaoDTO {
         this.id = id;
     }
 
-    public Integer getFkCliente() {
+    public UsuarioResponseDTO getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(Integer fkCliente) {
+    public void setFkCliente(UsuarioResponseDTO fkCliente) {
         this.fkCliente = fkCliente;
     }
 
@@ -95,13 +70,5 @@ public class SessaoDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
