@@ -1,8 +1,8 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.userDTO.UsuarioCreateDTO;
-import br.com.backend.PsiRizerio.dto.userDTO.UsuarioResponseDTO;
-import br.com.backend.PsiRizerio.dto.userDTO.UsuarioUpdateDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioCreateDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioUpdateDTO;
 import br.com.backend.PsiRizerio.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,10 +57,15 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Deleta um usuário", description = "Deleta um usuário")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{id}/desativar")
+    public ResponseEntity<UsuarioUpdateDTO> deactivateUser(@PathVariable Integer id) {
+        UsuarioUpdateDTO user = userService.desativarUsuario(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @PutMapping("/{id}/ativar")
+    public ResponseEntity<UsuarioUpdateDTO> activateUser(@PathVariable Integer id) {
+        UsuarioUpdateDTO user = userService.ativarUsuario(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
