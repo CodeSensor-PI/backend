@@ -31,48 +31,46 @@ public class EnderecoService {
         this.enderecoMapper = enderecoMapper;
     }
 
-    public EnderecoCreateDTO createEndereco(EnderecoCreateDTO enderecoDTO) {
-        if (enderecoRepository.existsByCepAndBairroAndNumeroAndLogradouroAndUfIgnoreCase(enderecoDTO.getCep(),
-                enderecoDTO.getBairro(), enderecoDTO.getNumero(), enderecoDTO.getLogradouro(), enderecoDTO.getUf())){
+    public Endereco createEndereco(Endereco endereco) {
+        if (enderecoRepository.existsByCepAndBairroAndNumeroAndLogradouroAndUfIgnoreCase(
+                endereco.getCep(), endereco.getBairro(), endereco.getNumero(), endereco.getLogradouro(), endereco.getUf())) {
             throw new EntidadeConflitoException();
         }
 
-        enderecoDTO.setCreatedAt(LocalDateTime.now());
-        Endereco enderecoToMapper = enderecoMapper.toEntity(enderecoDTO);
-        Endereco enderecoToSave = enderecoRepository.save(enderecoToMapper);
-        return enderecoMapper.toDto(enderecoToSave);
+        endereco.setCreatedAt(LocalDateTime.now());
+        return enderecoRepository.save(endereco);
     }
 
-    public EnderecoUpdateDTO update(Integer id, EnderecoUpdateDTO enderecoDTO) {
+    public Endereco update(Integer id, Endereco endereco) {
         Endereco enderecoToUpdate = enderecoRepository.findById(id)
                 .orElseThrow(EntidadeInvalidaException::new);
 
-        enderecoToUpdate.setCep(enderecoDTO.getCep());
-        enderecoToUpdate.setCidade(enderecoDTO.getCidade());
-        enderecoToUpdate.setLogradouro(enderecoDTO.getLogradouro());
-        enderecoToUpdate.setBairro(enderecoDTO.getBairro());
-        enderecoToUpdate.setNumero(enderecoDTO.getNumero());
-        enderecoToUpdate.setUf(enderecoDTO.getUf());
+        endereco.setId(id);
+        enderecoToUpdate.setCep(endereco.getCep());
+        enderecoToUpdate.setBairro(endereco.getBairro());
+        enderecoToUpdate.setNumero(endereco.getNumero());
+        enderecoToUpdate.setLogradouro(endereco.getLogradouro());
+        enderecoToUpdate.setUf(endereco.getUf());
         enderecoToUpdate.setUpdatedAt(LocalDateTime.now());
+        return enderecoRepository.save(enderecoToUpdate);
+    }
 
-        return enderecoMapper.toDtoUpdate(enderecoRepository.save(enderecoToUpdate));
+    public Endereco findById(Integer id) {
+        Endereco endereco = enderecoRepository.findById(id)
+                .orElseThrow(EntidadeNaoEncontradaException::new);
+        return endereco;
+    }
+
+    public List<Endereco> findAll() {
+        List<Endereco> enderecos = enderecoRepository.findAll();
+
+        if (enderecos.isEmpty()) throw new EntidadeSemConteudoException();
+
+        return enderecos;
     }
 
     public void delete(Integer id) {
         Endereco endereco = enderecoRepository.findById(id).orElseThrow(EntidadeNaoEncontradaException::new);
         enderecoRepository.deleteById(id);
-    }
-
-    public EnderecoResponseDTO findById(Integer id) {
-        Endereco endereco = enderecoRepository.findById(id).orElseThrow(EntidadeNaoEncontradaException::new);
-        return enderecoMapper.toDtoResponse(endereco);
-    }
-
-    public List<EnderecoResponseDTO> findAll() {
-        List<Endereco> enderecos = enderecoRepository.findAll();
-
-        if (enderecos.isEmpty()) throw new EntidadeSemConteudoException();
-
-        return enderecoMapper.toDtoList(enderecos);
     }
 }

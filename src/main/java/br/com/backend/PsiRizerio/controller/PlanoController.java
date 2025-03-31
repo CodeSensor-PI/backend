@@ -3,6 +3,8 @@ package br.com.backend.PsiRizerio.controller;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoCreateDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoUpdateDTO;
+import br.com.backend.PsiRizerio.mapper.PlanoMapper;
+import br.com.backend.PsiRizerio.persistence.entities.Plano;
 import br.com.backend.PsiRizerio.service.PlanoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -16,37 +18,42 @@ import java.util.List;
 @RequestMapping("/planos")
 public class PlanoController {
     private final PlanoService planoService;
+    private final PlanoMapper planoMapper;
 
-    public PlanoController(PlanoService planoService) {
+    public PlanoController(PlanoService planoService, PlanoMapper planoMapper) {
         this.planoService = planoService;
+        this.planoMapper = planoMapper;
     }
 
     @PostMapping
     @Operation(summary = "Cria um plano", description = "Cria um plano")
-    public ResponseEntity<PlanoCreateDTO> create(@Valid @RequestBody PlanoCreateDTO planoCreateDTO) {
-        PlanoCreateDTO plano = planoService.createPlano(planoCreateDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(plano);
+    public ResponseEntity<PlanoResponseDTO> create(@Valid @RequestBody PlanoCreateDTO planoCreateDTO) {
+        Plano plano = planoMapper.toEntity(planoCreateDTO);
+        Plano planoCreated = planoService.createPlano(plano);
+        return ResponseEntity.status(HttpStatus.CREATED).body(planoMapper.toDtoResponse(planoCreated));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um plano", description = "Atualiza um plano")
-    public ResponseEntity<PlanoUpdateDTO> update(@Valid @RequestBody PlanoUpdateDTO planoUpdateDTO,
+    public ResponseEntity<PlanoResponseDTO> update(@Valid @RequestBody PlanoUpdateDTO planoUpdateDTO,
                                            @PathVariable Integer id) {
-        PlanoUpdateDTO plano = planoService.update(id, planoUpdateDTO);
-        return ResponseEntity.status(HttpStatus.OK).body(plano);
+        Plano plano = planoMapper.toEntity(planoUpdateDTO);
+        Plano planoUpdated = planoService.update(id, plano);
+        return ResponseEntity.status(HttpStatus.OK).body(planoMapper.toDtoResponse(planoUpdated));
     }
 
     @GetMapping
     @Operation(summary = "Busca todos os planos", description = "Busca todos os planos")
     public ResponseEntity<List<PlanoResponseDTO>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(planoService.findAll());
+        List<Plano> planos = planoService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(planoMapper.toDtoList(planos));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Busca um plano por ID", description = "Busca um plano por ID")
     public ResponseEntity<PlanoResponseDTO> findById(@PathVariable Integer id) {
-        PlanoResponseDTO plano = planoService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(plano);
+        Plano plano = planoService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(planoMapper.toDtoResponse(plano));
     }
 
     @DeleteMapping("/{id}")

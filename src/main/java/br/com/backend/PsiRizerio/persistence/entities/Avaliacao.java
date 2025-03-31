@@ -19,10 +19,10 @@ public class Avaliacao {
     @SequenceGenerator(name = "avaliacao_seq", sequenceName = "AVALIACAO_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "nota", columnDefinition = "INT", nullable = false)
+    @Column(name = "nota", columnDefinition = "INT")
     private Integer nota;
 
-    @Column(name = "feedback", columnDefinition = "longtext", nullable = false)
+    @Column(name = "feedback", columnDefinition = "longtext")
     private String comentario;
 
     public Integer getId() {

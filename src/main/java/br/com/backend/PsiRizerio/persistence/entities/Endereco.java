@@ -20,22 +20,22 @@ public class Endereco {
     @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "cep", columnDefinition = "CHAR(9)", nullable = false)
+    @Column(name = "cep", columnDefinition = "CHAR(9)")
     private String cep;
 
-    @Column(name = "logradouro", columnDefinition = "VARCHAR(60)", nullable = false)
+    @Column(name = "logradouro", columnDefinition = "VARCHAR(60)")
     private String logradouro;
 
-    @Column(name = "numero", columnDefinition = "VARCHAR(5)", nullable = false)
+    @Column(name = "numero", columnDefinition = "VARCHAR(5)")
     private String numero;
 
-    @Column(name = "cidade", columnDefinition = "VARCHAR(25)", nullable = false)
+    @Column(name = "cidade", columnDefinition = "VARCHAR(25)")
     private String cidade;
 
-    @Column(name = "bairro", columnDefinition = "VARCHAR(40)", nullable = false)
+    @Column(name = "bairro", columnDefinition = "VARCHAR(40)")
     private String bairro;
 
-    @Column(name = "uf", columnDefinition = "CHAR(2)", nullable = false)
+    @Column(name = "uf", columnDefinition = "CHAR(2)")
     private String uf;
 
     @Column(name = "createdAt", columnDefinition = "TIMESTAMP")

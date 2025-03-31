@@ -14,34 +14,35 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "usuarios")
 public class Usuario {
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
         @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
         private Integer id;
 
-        @Column(name = "nome", columnDefinition = "VARCHAR(60)", nullable = false)
+        @Column(name = "nome", columnDefinition = "VARCHAR(60)")
         private String nome;
 
-        @Column(name = "cpf", columnDefinition = "CHAR(14)", nullable = false, unique = true)
+        @Column(name = "cpf", columnDefinition = "CHAR(14)", unique = true)
         private String cpf;
 
-        @Column(name = "email", columnDefinition = "VARCHAR(80)", nullable = false, unique = true)
+        @Column(name = "email", columnDefinition = "VARCHAR(80)", unique = true)
         private String email;
 
-        @Column(name = "senha", columnDefinition = "VARCHAR(20)", nullable = false)
+        @Column(name = "senha", columnDefinition = "VARCHAR(20)")
         private String senha;
 
+        @Enumerated(EnumType.STRING)
         @Column(name = "status", columnDefinition = "VARCHAR(20)")
         private StatusUsuario status;
 
         @ManyToOne
-        @JoinColumn(name = "fk_plano", referencedColumnName = "id", nullable = false)
+        @JoinColumn(name = "fk_plano", referencedColumnName = "id")
         private Plano fkPlano;
 
         @ManyToOne
-        @JoinColumn(name = "fk_endereco", referencedColumnName = "id", nullable = false)
+        @JoinColumn(name = "fk_endereco", referencedColumnName = "id")
         private Endereco fkEndereco;
 
         @CreatedDate

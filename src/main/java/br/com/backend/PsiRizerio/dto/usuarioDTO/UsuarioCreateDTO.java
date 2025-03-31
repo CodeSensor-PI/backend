@@ -1,6 +1,7 @@
 package br.com.backend.PsiRizerio.dto.usuarioDTO;
 
 import br.com.backend.PsiRizerio.dto.EnderecoDTO;
+import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.validation.constraints.Email;
@@ -29,7 +30,7 @@ public class UsuarioCreateDTO {
 
     private PlanoResponseDTO fkPlano;
 
-    private EnderecoDTO fkEndereco;
+    private EnderecoResponseDTO fkEndereco;
 
     private LocalDateTime createdAt;
 
@@ -81,11 +82,11 @@ public class UsuarioCreateDTO {
         this.fkPlano = fkPlano;
     }
 
-    public EnderecoDTO getFkEndereco() {
+    public EnderecoResponseDTO getFkEndereco() {
         return fkEndereco;
     }
 
-    public void setFkEndereco(EnderecoDTO fkEndereco) {
+    public void setFkEndereco(EnderecoResponseDTO fkEndereco) {
         this.fkEndereco = fkEndereco;
     }
 

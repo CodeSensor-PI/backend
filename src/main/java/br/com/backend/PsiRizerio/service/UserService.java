@@ -38,74 +38,69 @@ public class UserService {
         this.enderecoMapper = enderecoMapper;
     }
 
-    public UsuarioCreateDTO createUser(UsuarioCreateDTO usuarioCreateDTO) {
-        if (usuarioRepository.existsByEmailOrCpfIgnoreCase(usuarioCreateDTO.getEmail(), usuarioCreateDTO.getCpf())) throw new EntidadeConflitoException();
+    public Usuario createUser(Usuario usuario) {
+        if (usuarioRepository.existsByEmailOrCpfIgnoreCase(usuario.getEmail(), usuario.getCpf())
+        && usuario.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
 
-        if (!isValidEmail(usuarioCreateDTO.getEmail())) throw new EntidadeInvalidaException();
+        if (!isValidEmail(usuario.getEmail())) throw new EntidadeInvalidaException();
 
-        usuarioCreateDTO.setCreatedAt(LocalDateTime.now());
-        Usuario usuarioToMapper = usuarioMapper.toEntity(usuarioCreateDTO);
-        Usuario usuarioToSave = usuarioRepository.save(usuarioToMapper);
-        return usuarioMapper.toDto(usuarioToSave);
+        usuario.setCreatedAt(LocalDateTime.now());
+        return usuarioRepository.save(usuario);
     }
 
-    public UsuarioUpdateDTO update(Integer id, UsuarioUpdateDTO usuarioupdateDTO) {
+    public Usuario update(Integer id, Usuario usuario) {
         Usuario usersToUpdate = usuarioRepository.findById(id)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
 
-        if (usuarioRepository.existsByCpfIgnoreCaseAndIdNot(usuarioupdateDTO.getCpf(), id) ||
-                usuarioRepository.existsByEmailIgnoreCaseAndIdNot(usuarioupdateDTO.getEmail(), id)) {
+        if (usuarioRepository.existsByCpfIgnoreCaseAndIdNot(usuario.getCpf(), id) ||
+                usuarioRepository.existsByEmailIgnoreCaseAndIdNot(usuario.getEmail(), id)) {
             throw new EntidadeConflitoException();
         }
 
-        if (!isValidEmail(usuarioupdateDTO.getEmail())) throw new EntidadeInvalidaException();
+        if (!isValidEmail(usuario.getEmail())) throw new EntidadeInvalidaException();
 
-        Usuario usuarioAtualizado = usuarioMapper.toEntity(usuarioupdateDTO);
 
-        usersToUpdate.setNome(usuarioAtualizado.getNome());
-        usersToUpdate.setCpf(usuarioAtualizado.getCpf());
-        usersToUpdate.setEmail(usuarioAtualizado.getEmail());
-        usersToUpdate.setFkEndereco(usuarioAtualizado.getFkEndereco());
-        usersToUpdate.setFkPlano(usuarioAtualizado.getFkPlano());
+        usersToUpdate.setNome(usuario.getNome());
+        usersToUpdate.setCpf(usuario.getCpf());
+        usersToUpdate.setEmail(usuario.getEmail());
+        usersToUpdate.setFkEndereco(usuario.getFkEndereco());
+        usersToUpdate.setFkPlano(usuario.getFkPlano());
         usersToUpdate.setUpdatedAt(LocalDateTime.now());
 
-        Usuario usuarioToSave = usuarioRepository.save(usersToUpdate);
-        return usuarioMapper.toDtoUpdate(usuarioToSave);
+        return usuarioRepository.save(usersToUpdate);
     }
 
-    public UsuarioResponseDTO findById(Integer id) {
+    public Usuario findById(Integer id) {
         if (id == null) throw new EntidadeInvalidaException();
 
         Usuario usuario = usuarioRepository.findById(id).orElseThrow((EntidadeNaoEncontradaException::new));
 
-        return usuarioMapper.toDtoResponse(usuario);
+        return usuario;
     }
 
-    public UsuarioUpdateDTO desativarUsuario(Integer id) {
+    public Usuario desativarUsuario(Integer id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
         usuario.setStatus(StatusUsuario.INATIVO);
         usuario.setUpdatedAt(LocalDateTime.now());
-        Usuario usuarioUpdated = usuarioRepository.save(usuario);
-        return usuarioMapper.toDtoUpdate(usuarioUpdated);
+        return usuarioRepository.save(usuario);
     }
 
-    public UsuarioUpdateDTO ativarUsuario(Integer id) {
+    public Usuario ativarUsuario(Integer id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
         usuario.setStatus(StatusUsuario.ATIVO);
         usuario.setUpdatedAt(LocalDateTime.now());
-        Usuario usuarioUpdated = usuarioRepository.save(usuario);
 
-        return usuarioMapper.toDtoUpdate(usuarioUpdated);
+        return usuarioRepository.save(usuario);
     }
 
-    public List<UsuarioResponseDTO> findAll() {
+    public List<Usuario> findAll() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         if (usuarios.isEmpty()) throw new EntidadeNaoEncontradaException();
-        return usuarioMapper.toDtoList(usuarios);
+        return usuarios;
     }
 
     public static boolean isValidEmail(String email) {

@@ -23,19 +23,21 @@ public class Sessao {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT", nullable = false)
+    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
     private Usuario fkCliente;
 
-    @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME", nullable = false)
+    @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME")
     private LocalDateTime dtHrSessao;
 
-    @Column(name = "tipo", columnDefinition = "VARCHAR(10)", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo", columnDefinition = "VARCHAR(10)")
     private TipoSessao tipo;
 
-    @Column(name = "status_sessao", columnDefinition = "VARCHAR(15)", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status_sessao", columnDefinition = "VARCHAR(15)")
     private StatusSessao statusSessao;
 
-    @Column(name = "anotacao", columnDefinition = "LONGTEXT", nullable = false)
+    @Column(name = "anotacao", columnDefinition = "LONGTEXT")
     private String anotacao;
 
     @Column(name = "createdAt", columnDefinition = "TIMESTAMP")

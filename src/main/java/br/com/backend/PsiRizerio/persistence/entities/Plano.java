@@ -17,10 +17,10 @@ public class Plano {
     @SequenceGenerator(name = "plano_seq", sequenceName = "PLANO_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "categoria", columnDefinition = "VARCHAR(25)", nullable = true)
+    @Column(name = "categoria", columnDefinition = "VARCHAR(25)")
     private String categoria;
 
-    @Column(name = "preco", columnDefinition = "DECIMAL(6,2)", nullable = true)
+    @Column(name = "preco", columnDefinition = "DECIMAL(6,2)")
     private Double preco;
 
     public Plano(Integer id, String categoria, Double preco) {

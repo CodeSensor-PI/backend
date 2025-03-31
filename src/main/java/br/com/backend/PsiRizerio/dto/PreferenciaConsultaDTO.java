@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto;
 
+import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,7 +41,7 @@ public class PreferenciaConsultaDTO {
     private LocalDateTime updatedAt;
 
     @JsonProperty("fk_user")
-    private Integer fkUser;
+    private Usuario fkUser;
 
     public Integer getId() {
         return id;
@@ -98,11 +99,11 @@ public class PreferenciaConsultaDTO {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getFkUser() {
+    public Usuario getFkUser() {
         return fkUser;
     }
 
-    public void setFkUser(Integer fkUser) {
+    public void setFkUser(Usuario fkUser) {
         this.fkUser = fkUser;
     }
 }
