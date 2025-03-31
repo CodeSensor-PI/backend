@@ -1,6 +1,5 @@
 package br.com.backend.PsiRizerio.dto.usuarioDTO;
 
-import br.com.backend.PsiRizerio.dto.EnderecoDTO;
 import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;

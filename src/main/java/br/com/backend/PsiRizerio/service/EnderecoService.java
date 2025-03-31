@@ -1,9 +1,5 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.dto.EnderecoDTO;
-import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoCreateDTO;
-import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
-import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoUpdateDTO;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
 import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
@@ -11,8 +7,6 @@ import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
 import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.repositories.EnderecoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

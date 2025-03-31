@@ -1,13 +1,10 @@
 package br.com.backend.PsiRizerio.mapper;
 
-import br.com.backend.PsiRizerio.dto.SessaoDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoCreateDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoResponseDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoUpdateDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
