@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Builder
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "telefone")
 public class Telefone {
@@ -38,7 +35,21 @@ public class Telefone {
 
     @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
     @ManyToOne
+    @JsonIgnore
     private Usuario fkCliente;
+
+    public Telefone() {
+    }
+
+    public Telefone(Integer id, String ddd, String numero, String tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Usuario fkCliente) {
+        this.id = id;
+        this.ddd = ddd;
+        this.numero = numero;
+        this.tipo = tipo;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.fkCliente = fkCliente;
+    }
 
     public Integer getId() {
         return id;

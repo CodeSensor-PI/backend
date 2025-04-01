@@ -16,6 +16,7 @@ import br.com.backend.PsiRizerio.persistence.repositories.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,13 +30,15 @@ public class UserService {
     private final UsuarioMapper usuarioMapper;
     private final EnderecoRepository enderecoRepository;
     private final EnderecoMapper enderecoMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserService(UsuarioRepository usuarioRepository, UsuarioMapper mapper, EnderecoRepository enderecoRepository, EnderecoMapper enderecoMapper) {
+    private UserService(UsuarioRepository usuarioRepository, UsuarioMapper mapper, EnderecoRepository enderecoRepository, EnderecoMapper enderecoMapper, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = mapper;
         this.enderecoRepository = enderecoRepository;
         this.enderecoMapper = enderecoMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario createUser(Usuario usuario) {
@@ -43,6 +46,9 @@ public class UserService {
         && usuario.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
 
         if (!isValidEmail(usuario.getEmail())) throw new EntidadeInvalidaException();
+
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
 
         usuario.setCreatedAt(LocalDateTime.now());
         return usuarioRepository.save(usuario);

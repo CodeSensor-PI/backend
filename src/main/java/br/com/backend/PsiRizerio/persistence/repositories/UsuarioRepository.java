@@ -12,7 +12,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     void deleteById(Integer id);
 
     Optional<Usuario> findById(Integer id);
-    Optional<Usuario> findByEmail(String email);
+    Usuario findByEmail(String email);
     Optional<Usuario> findByCpf(String cpf);
 
     boolean existsByEmailOrCpfIgnoreCase(String email, String cpf);
@@ -22,5 +22,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     boolean existsByCpfIgnoreCaseAndIdNot(String cpf, Integer id);
 
     boolean existsByCpfOrEmailAndIdNot(String cpf, String email, Integer id);
+
+    boolean existsByEmail(String email);
 
 }

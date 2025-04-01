@@ -1,6 +1,7 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.Builder;
@@ -9,11 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
-@Data
-@Builder
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "usuarios")
 public class Usuario {
         @Id
@@ -30,7 +27,7 @@ public class Usuario {
         @Column(name = "email", columnDefinition = "VARCHAR(80)", unique = true)
         private String email;
 
-        @Column(name = "senha", columnDefinition = "VARCHAR(20)")
+        @Column(name = "senha", columnDefinition = "VARCHAR(100)")
         private String senha;
 
         @Enumerated(EnumType.STRING)
@@ -39,10 +36,12 @@ public class Usuario {
 
         @ManyToOne
         @JoinColumn(name = "fk_plano", referencedColumnName = "id")
+        @JsonIgnore
         private Plano fkPlano;
 
         @ManyToOne
         @JoinColumn(name = "fk_endereco", referencedColumnName = "id")
+        @JsonIgnore
         private Endereco fkEndereco;
 
         @CreatedDate
@@ -52,6 +51,25 @@ public class Usuario {
         @CreatedDate
         @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
         private LocalDateTime updatedAt;
+
+        public Usuario(String email, String encode) {
+        }
+
+        public Usuario() {
+        }
+
+        public Usuario(Integer id, String nome, String cpf, String email, String senha, StatusUsuario status, Plano fkPlano, Endereco fkEndereco, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                this.id = id;
+                this.nome = nome;
+                this.cpf = cpf;
+                this.email = email;
+                this.senha = senha;
+                this.status = status;
+                this.fkPlano = fkPlano;
+                this.fkEndereco = fkEndereco;
+                this.createdAt = createdAt;
+                this.updatedAt = updatedAt;
+        }
 
         public Integer getId() {
                 return id;
@@ -123,5 +141,13 @@ public class Usuario {
 
         public void setUpdatedAt(LocalDateTime updatedAt) {
                 this.updatedAt = updatedAt;
+        }
+
+        public StatusUsuario getStatus() {
+                return status;
+        }
+
+        public void setStatus(StatusUsuario status) {
+                this.status = status;
         }
 }
