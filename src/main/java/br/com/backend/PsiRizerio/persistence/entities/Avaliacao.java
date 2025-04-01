@@ -19,11 +19,11 @@ public class Avaliacao {
     @SequenceGenerator(name = "avaliacao_seq", sequenceName = "AVALIACAO_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "nota", columnDefinition = "INT", nullable = false)
+    @Column(name = "nota")
     private Integer nota;
 
-    @Column(name = "feedback", columnDefinition = "longtext", nullable = false)
-    private String comentario;
+    @Column(name = "feedback", columnDefinition = "longtext")
+    private String feedback;
 
     public Integer getId() {
         return id;
@@ -41,12 +41,12 @@ public class Avaliacao {
         this.nota = nota;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getFeedback() {
+        return feedback;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }
 

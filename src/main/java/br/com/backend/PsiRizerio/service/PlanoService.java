@@ -28,35 +28,33 @@ public class PlanoService {
         this.planoMapper = planoMapper;
     }
 
-    public PlanoCreateDTO createPlano(PlanoCreateDTO planoCreateDTO) {
-        if (planoRepository.existsByCategoria(planoCreateDTO.getCategoria())) throw new EntidadeConflitoException();
+    public Plano createPlano(Plano plano) {
+        if (planoRepository.existsByCategoria(plano.getCategoria())) throw new EntidadeConflitoException();
 
-        Plano plano = planoMapper.toEntity(planoCreateDTO);
-        Plano planoToSave = planoRepository.save(plano);
-        return planoMapper.toDto(planoToSave);
+        return planoRepository.save(plano);
     }
 
-    public PlanoUpdateDTO update(Integer id, PlanoUpdateDTO planoUpdateDTO) {
+    public Plano update(Integer id, Plano plano) {
         Plano planoToUpdate = planoRepository.findById(id)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
 
-        if (planoRepository.existsByCategoriaAndIdNot(planoUpdateDTO.getCategoria(), id)) throw new EntidadeConflitoException();
+        if (planoRepository.existsByCategoriaAndIdNot(plano.getCategoria(), id)) throw new EntidadeConflitoException();
 
-        planoToUpdate.setCategoria(planoUpdateDTO.getCategoria());
-        planoToUpdate.setPreco(planoUpdateDTO.getPreco());
-        return planoMapper.toDtoUpdate(planoRepository.save(planoToUpdate));
+        planoToUpdate.setCategoria(plano.getCategoria());
+        planoToUpdate.setPreco(plano.getPreco());
+        return planoRepository.save(planoToUpdate);
     }
 
-    public List<PlanoResponseDTO> findAll() {
+    public List<Plano> findAll() {
         if (planoRepository.findAll().isEmpty()) throw new EntidadeSemConteudoException();
 
-        return planoMapper.toDtoList(planoRepository.findAll());
+        return planoRepository.findAll();
     }
 
-    public PlanoResponseDTO findById(Integer id) {
+    public Plano findById(Integer id) {
         Plano plano = planoRepository.findById(id)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
-        return planoMapper.toDtoResponse(plano);
+        return plano;
     }
 
     public void delete(Integer id) {

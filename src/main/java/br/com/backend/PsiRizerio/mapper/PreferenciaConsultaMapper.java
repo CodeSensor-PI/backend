@@ -11,4 +11,5 @@ public interface PreferenciaConsultaMapper {
     PreferenciaConsulta toEntity(PreferenciaConsultaDTO preferenciaConsultaDTO);
 
     PreferenciaConsultaDTO toDto(PreferenciaConsulta preferenciaConsulta);
+
 }

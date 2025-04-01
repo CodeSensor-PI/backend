@@ -5,21 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 public class PlanoUpdateDTO {
 
-    private Integer id;
-
-    @NotBlank
     private String categoria;
-
-    @NotNull
     private Double preco;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getCategoria() {
         return categoria;

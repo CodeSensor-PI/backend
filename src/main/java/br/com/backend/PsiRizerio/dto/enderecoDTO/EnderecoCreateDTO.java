@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 
 public class EnderecoCreateDTO {
 
-    private Integer id;
-
     @NotBlank
     @Size(min = 8, max = 8)
     @Pattern(regexp = "\\d{8}")
@@ -35,14 +33,6 @@ public class EnderecoCreateDTO {
     private String uf;
 
     private LocalDateTime createdAt;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getCep() {
         return cep;

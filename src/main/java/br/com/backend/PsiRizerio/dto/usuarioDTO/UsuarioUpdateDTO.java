@@ -1,9 +1,10 @@
 package br.com.backend.PsiRizerio.dto.usuarioDTO;
 
-import br.com.backend.PsiRizerio.dto.EnderecoDTO;
+import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -11,34 +12,30 @@ import java.time.LocalDateTime;
 
 public class UsuarioUpdateDTO {
 
-    private Integer id;
-
+    @NotBlank
     private String nome;
 
     @CPF
+    @NotBlank
     private String cpf;
 
     @Email
+    @NotBlank
     private String email;
 
-    private String senha;
+    private StatusUsuario status = StatusUsuario.ATIVO;
 
-    private StatusUsuario status;
+    @NotBlank
+    private String senha;
 
     private PlanoResponseDTO fkPlano;
 
-    private EnderecoDTO fkEndereco;
+    private EnderecoResponseDTO fkEndereco;
+
+    private LocalDateTime createdAt;
 
     @NotNull
     private LocalDateTime updatedAt = LocalDateTime.now();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
@@ -88,12 +85,20 @@ public class UsuarioUpdateDTO {
         this.fkPlano = fkPlano;
     }
 
-    public EnderecoDTO getFkEndereco() {
+    public EnderecoResponseDTO getFkEndereco() {
         return fkEndereco;
     }
 
-    public void setFkEndereco(EnderecoDTO fkEndereco) {
+    public void setFkEndereco(EnderecoResponseDTO fkEndereco) {
         this.fkEndereco = fkEndereco;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getUpdatedAt() {

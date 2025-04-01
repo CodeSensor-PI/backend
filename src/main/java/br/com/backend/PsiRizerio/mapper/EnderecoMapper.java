@@ -1,6 +1,5 @@
 package br.com.backend.PsiRizerio.mapper;
 
-import br.com.backend.PsiRizerio.dto.EnderecoDTO;
 import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoCreateDTO;
 import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoUpdateDTO;

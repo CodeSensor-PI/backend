@@ -21,26 +21,27 @@ public class PreferenciaConsulta {
     @SequenceGenerator(name = "preferencia_consulta_seq", sequenceName = "PREFERENCIA_CONSULTA_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "frequencia", columnDefinition = "VARCHAR(10)", nullable = false)
+    @Column(name = "frequencia", columnDefinition = "VARCHAR(10)")
     private String frequencia;
 
-    @Column(name = "dia_semana", columnDefinition = "VARCHAR(10)", nullable = false)
+    @Column(name = "dia_semana", columnDefinition = "VARCHAR(10)")
     private String diaSemana;
 
-    @Column(name = "horario", columnDefinition = "VARCHAR(5)", nullable = false)
+    @Column(name = "horario", columnDefinition = "VARCHAR(5)")
     private String horario;
 
-    @Column(name = "plataforma_atendimento" , columnDefinition = "VARCHAR(15)", nullable = false)
+    @Column(name = "plataforma_atendimento" , columnDefinition = "VARCHAR(15)")
     private String plataformaAtendimento;
 
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "fk_user", columnDefinition = "INT", nullable = false)
-    private Integer fkUser;
+    @ManyToOne
+    @JoinColumn(name = "fk_user", referencedColumnName = "id")
+    private Usuario fkUser;
 
     public Integer getId() {
         return id;
@@ -98,11 +99,11 @@ public class PreferenciaConsulta {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getFkUser() {
+    public Usuario getFkUser() {
         return fkUser;
     }
 
-    public void setFkUser(Integer fkUser) {
+    public void setFkUser(Usuario fkUser) {
         this.fkUser = fkUser;
     }
 }

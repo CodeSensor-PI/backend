@@ -21,23 +21,24 @@ public class Telefone {
     @SequenceGenerator(name = "telefone_seq", sequenceName = "TELEFONE_SEQ", allocationSize = 1)
     private Integer id;
 
-    @Column(name = "ddd", columnDefinition = "CHAR(2)", nullable = false)
+    @Column(name = "ddd", columnDefinition = "CHAR(2)")
     private String ddd;
 
-    @Column(name = "numero", columnDefinition = "CHAR(14)", nullable = false)
+    @Column(name = "numero", columnDefinition = "CHAR(14)")
     private String numero;
 
-    @Column(name = "tipo", columnDefinition = "VARCHAR(15)", nullable = false)
+    @Column(name = "tipo", columnDefinition = "VARCHAR(15)")
     private String tipo;
 
-    @Column(name = "createdAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT", nullable = false)
-    private Integer fkCliente;
+    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
+    @ManyToOne
+    private Usuario fkCliente;
 
     public Integer getId() {
         return id;
@@ -87,11 +88,11 @@ public class Telefone {
         this.updatedAt = updatedAt;
     }
 
-    public Integer getFkCliente() {
+    public Usuario getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(Integer fkCliente) {
+    public void setFkCliente(Usuario fkCliente) {
         this.fkCliente = fkCliente;
     }
 }

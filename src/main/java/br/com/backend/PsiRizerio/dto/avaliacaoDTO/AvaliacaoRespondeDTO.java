@@ -1,28 +1,11 @@
-package br.com.backend.PsiRizerio.dto;
+package br.com.backend.PsiRizerio.dto.avaliacaoDTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class AvaliacaoDTO {
+public class AvaliacaoRespondeDTO {
 
-    @JsonProperty("id")
     private Integer id;
-
-    @JsonProperty("nota")
     private Integer nota;
-
-    @JsonProperty("feedback")
     private String feedback;
 
     public Integer getId() {

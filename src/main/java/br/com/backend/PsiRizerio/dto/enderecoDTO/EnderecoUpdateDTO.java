@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto.enderecoDTO;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -7,32 +8,29 @@ import java.time.LocalDateTime;
 
 public class EnderecoUpdateDTO {
 
-    private Integer id;
-
+    @NotBlank
     @Size(min = 8, max = 8)
     @Pattern(regexp = "\\d{8}")
     private String cep;
 
+    @NotBlank
     private String logradouro;
+
+    @NotBlank
     private String bairro;
 
+    @NotBlank
     @Size(min = 1, max = 5)
     private String numero;
 
+    @NotBlank
     private String cidade;
 
+    @NotBlank
     @Size(min = 2, max = 2)
     private String uf;
 
     private LocalDateTime updatedAt;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getCep() {
         return cep;
