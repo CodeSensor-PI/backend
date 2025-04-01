@@ -1,15 +1,22 @@
 package br.com.backend.PsiRizerio.mapper;
 
-import br.com.backend.PsiRizerio.dto.PreferenciaConsultaDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaConsultaDTO.PrefenciaConsultaResponseDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaConsultaDTO.PreferenciaConsultaCreateDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaConsultaDTO.PreferenciaConsultaUpdateDTO;
 import br.com.backend.PsiRizerio.persistence.entities.PreferenciaConsulta;
 import org.mapstruct.Mapper;
-import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PreferenciaConsultaMapper {
-    PreferenciaConsulta toEntity(PreferenciaConsultaDTO preferenciaConsultaDTO);
+    PreferenciaConsulta toEntity(PreferenciaConsultaCreateDTO preferenciaConsultaCreateDTO);
+    PreferenciaConsulta toEntity(PreferenciaConsultaUpdateDTO preferenciaConsultaUpdateDTO);
+    List<PreferenciaConsulta> toEntityList(List<PreferenciaConsultaCreateDTO> preferenciaConsultaCreateDTOs);
 
-    PreferenciaConsultaDTO toDto(PreferenciaConsulta preferenciaConsulta);
+    PreferenciaConsultaUpdateDTO toDtoUpdate(PreferenciaConsulta preferenciaConsulta);
+    PreferenciaConsultaCreateDTO toDtoCreate(PreferenciaConsulta preferenciaConsulta);
+    PrefenciaConsultaResponseDTO toDtoResponse(PreferenciaConsulta preferenciaConsulta);
+    List<PrefenciaConsultaResponseDTO> toDtoList(List<PreferenciaConsulta> preferenciaConsultas);
 
 }
