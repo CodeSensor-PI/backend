@@ -4,6 +4,7 @@ import br.com.backend.PsiRizerio.dto.LoginDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import br.com.backend.PsiRizerio.persistence.repositories.UsuarioRepository;
 import br.com.backend.PsiRizerio.security.JwtUtil;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/auth")
@@ -51,8 +56,12 @@ public class AuthController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String jwt = jwtUtils.generateToken(userDetails.getUsername());
 
-            System.out.println("Usuário autenticado: " + SecurityContextHolder.getContext().getAuthentication());
-            return ResponseEntity.ok("Token:" + jwt);
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", jwt);
+            response.put("username", userDetails.getUsername());
+            response.put("roles", userDetails.getAuthorities());
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
