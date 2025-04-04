@@ -27,4 +27,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRecursoNaoEncontradoException(EntidadeSemConteudoException esc) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(esc.getMessage());
     }
+
+    @ExceptionHandler(EntidadeNaoAutorizadaException.class)
+    public ResponseEntity<String> handleRecursoNaoEncontradoException(EntidadeNaoAutorizadaException enpe) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(enpe.getMessage());
+    }
 }
