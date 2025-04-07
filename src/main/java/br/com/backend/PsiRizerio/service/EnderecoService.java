@@ -37,7 +37,7 @@ public class EnderecoService {
 
     public Endereco update(Integer id, Endereco endereco) {
         Endereco enderecoToUpdate = enderecoRepository.findById(id)
-                .orElseThrow(EntidadeInvalidaException::new);
+                .orElseThrow(EntidadeNaoEncontradaException::new);
 
         endereco.setId(id);
         enderecoToUpdate.setCep(endereco.getCep());
