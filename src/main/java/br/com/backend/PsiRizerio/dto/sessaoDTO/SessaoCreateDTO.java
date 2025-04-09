@@ -18,7 +18,7 @@ public class SessaoCreateDTO {
     @NotNull
     private LocalDateTime dtHrSessao;
 
-    @NotBlank
+    @NotNull
     private TipoSessao tipo;
 
     @NotNull

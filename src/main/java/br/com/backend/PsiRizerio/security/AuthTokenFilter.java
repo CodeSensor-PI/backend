@@ -31,7 +31,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             "/swagger-ui.html",
             "/error",
             "/auth",
-            "/**"
+            "/**",
+            "/sessoes"
     );
 
     @Override
