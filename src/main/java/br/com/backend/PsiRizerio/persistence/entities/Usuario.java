@@ -3,15 +3,12 @@ package br.com.backend.PsiRizerio.persistence.entities;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "cliente")
 public class Usuario {
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
