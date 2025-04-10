@@ -37,7 +37,6 @@ public class SessaoService {
         Integer clienteId = sessao.getFkCliente().getId();
         Usuario usuario = usuarioRepository.findById(clienteId)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
-
         sessao.setFkCliente(usuario);
 
         return sessaoRepository.save(sessao);
