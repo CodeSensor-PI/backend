@@ -1,6 +1,7 @@
 package br.com.backend.PsiRizerio.dto.sessaoDTO;
 
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.validation.constraints.*;
@@ -11,7 +12,7 @@ public class SessaoUpdateDTO {
 
     private Integer id;
 
-    private UsuarioResponseDTO fkCliente;
+    private UsuarioSessaoResponseDTO fkCliente;
 
     @Future
     private LocalDateTime dtHrSessao;
@@ -32,11 +33,11 @@ public class SessaoUpdateDTO {
         this.id = id;
     }
 
-    public UsuarioResponseDTO getFkCliente() {
+    public UsuarioSessaoResponseDTO getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(UsuarioResponseDTO fkCliente) {
+    public void setFkCliente(UsuarioSessaoResponseDTO fkCliente) {
         this.fkCliente = fkCliente;
     }
 
