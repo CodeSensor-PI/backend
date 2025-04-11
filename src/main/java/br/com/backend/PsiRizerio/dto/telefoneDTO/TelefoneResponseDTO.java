@@ -2,15 +2,15 @@ package br.com.backend.PsiRizerio.dto.telefoneDTO;
 
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public class TelefoneRespondeDTO {
+public class TelefoneResponseDTO {
 
     private Integer id;
     private String ddd;
     private String numero;
+    private String nomeContato;
     private TipoTelefone tipo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -38,6 +38,14 @@ public class TelefoneRespondeDTO {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public String getNomeContato() {
+        return nomeContato;
+    }
+
+    public void setNomeContato(String nomeContato) {
+        this.nomeContato = nomeContato;
     }
 
     public TipoTelefone getTipo() {

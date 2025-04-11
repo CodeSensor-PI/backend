@@ -16,6 +16,9 @@ public class TelefoneCreateDTO {
     @NotBlank
     private String numero;
 
+    @NotBlank
+    private String nomeContato;
+
     @NotNull
     private TipoTelefone tipo;
 
@@ -38,6 +41,14 @@ public class TelefoneCreateDTO {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public String getNomeContato() {
+        return nomeContato;
+    }
+
+    public void setNomeContato(String nomeContato) {
+        this.nomeContato = nomeContato;
     }
 
     public TipoTelefone getTipo() {
