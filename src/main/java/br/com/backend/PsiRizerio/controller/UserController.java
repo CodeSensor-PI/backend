@@ -1,8 +1,6 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioCreateDTO;
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioUpdateDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.*;
 import br.com.backend.PsiRizerio.mapper.UsuarioMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import br.com.backend.PsiRizerio.service.UserService;
@@ -73,5 +71,14 @@ public class UserController {
     public ResponseEntity<UsuarioUpdateDTO> activateUser(@PathVariable Integer id) {
         Usuario usuario = userService.ativarUsuario(id);
         return ResponseEntity.status(HttpStatus.OK).body(usuarioMapper.toDtoUpdate(usuario));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioTokenDTO> login(@RequestBody UsuarioLoginDTO usuarioLoginDto) {
+
+        final Usuario usuario = usuarioMapper.toEntity(usuarioLoginDto);
+        UsuarioTokenDTO usuarioTokenDto = this.userService.autenticar(usuario);
+
+        return ResponseEntity.status(200).body(usuarioTokenDto);
     }
 }
