@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "cliente")
 public class Usuario {
         @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-        @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
 
         @Column(name = "nome", columnDefinition = "VARCHAR(60)")
