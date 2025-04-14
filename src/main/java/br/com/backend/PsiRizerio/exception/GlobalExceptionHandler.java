@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntidadeConflitoException.class)
-    public ResponseEntity<String> handleRecursoNaoEncontradoException(EntidadeConflitoException ec) {
+    public ResponseEntity<String> handleRecursoConflitoException(EntidadeConflitoException ec) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ec.getMessage());
     }
 
@@ -19,17 +19,22 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EntidadeInvalidaException.class)
-    public ResponseEntity<String> handleRecursoNaoEncontradoException(EntidadeInvalidaException eie) {
+    public ResponseEntity<String> handleRecursoInvalidoException(EntidadeInvalidaException eie) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(eie.getMessage());
     }
 
     @ExceptionHandler(EntidadeSemConteudoException.class)
-    public ResponseEntity<String> handleRecursoNaoEncontradoException(EntidadeSemConteudoException esc) {
+    public ResponseEntity<String> handleRecursoSemConteudoException(EntidadeSemConteudoException esc) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(esc.getMessage());
     }
 
     @ExceptionHandler(EntidadeNaoAutorizadaException.class)
-    public ResponseEntity<String> handleRecursoNaoEncontradoException(EntidadeNaoAutorizadaException enpe) {
+    public ResponseEntity<String> handleRecursoNaoAutorizadoException(EntidadeNaoAutorizadaException enpe) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(enpe.getMessage());
+    }
+
+    @ExceptionHandler(EntidadePrecondicaoFalhaException.class)
+    public ResponseEntity<String> handleRecursoPrecondicaoFalhaException(EntidadePrecondicaoFalhaException enpe) {
+        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(enpe.getMessage());
     }
 }
