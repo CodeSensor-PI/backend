@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
+import br.com.backend.PsiRizerio.enums.TipoTelefone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,8 @@ public class Telefone {
     private String numero;
 
     @Column(name = "tipo", columnDefinition = "VARCHAR(15)")
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoTelefone tipo;
 
     @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
@@ -33,15 +35,14 @@ public class Telefone {
     @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
     @ManyToOne
-    @JsonIgnore
+    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
     private Usuario fkCliente;
 
     public Telefone() {
     }
 
-    public Telefone(Integer id, String ddd, String numero, String tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Usuario fkCliente) {
+    public Telefone(Integer id, String ddd, String numero, TipoTelefone tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Usuario fkCliente) {
         this.id = id;
         this.ddd = ddd;
         this.numero = numero;
@@ -75,11 +76,11 @@ public class Telefone {
         this.numero = numero;
     }
 
-    public String getTipo() {
+    public TipoTelefone getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoTelefone tipo) {
         this.tipo = tipo;
     }
 

@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto.telefoneDTO;
 
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ public class TelefoneUpdateDTO {
     private LocalDateTime createdAt;
 
     @NotNull
-    private Usuario fkUsuario;
+    private UsuarioSessaoResponseDTO fkCliente;
 
     public String getDdd() {
         return ddd;
@@ -55,11 +56,11 @@ public class TelefoneUpdateDTO {
         this.createdAt = createdAt;
     }
 
-    public Usuario getFkUsuario() {
-        return fkUsuario;
+    public UsuarioSessaoResponseDTO getFkCliente() {
+        return fkCliente;
     }
 
-    public void setFkUsuario(Usuario fkUsuario) {
-        this.fkUsuario = fkUsuario;
+    public void setFkCliente(UsuarioSessaoResponseDTO fkCliente) {
+        this.fkCliente = fkCliente;
     }
 }
