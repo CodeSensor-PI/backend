@@ -2,6 +2,7 @@ package br.com.backend.PsiRizerio.controller;
 
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioCreateDTO;
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSenhaUpdateDTO;
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.UsuarioMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
@@ -47,6 +48,14 @@ public class UserController {
         Usuario usuario = usuarioMapper.toEntity(usuarioupdateDTO);
         Usuario usuarioUpdated = userService.update(id, usuario);
         return ResponseEntity.status(HttpStatus.OK).body(usuarioMapper.toDtoResponse(usuarioUpdated));
+    }
+
+    @PutMapping("/{id}/alterar-senha")
+    public ResponseEntity<Usuario> updateSenha(@PathVariable Integer id,
+                                               @Valid @RequestBody UsuarioSenhaUpdateDTO usuarioSenhaUpdateDTO,
+                                               Usuario usuario) {
+        userService.updateSenha(id, usuarioSenhaUpdateDTO.getSenha(), usuarioSenhaUpdateDTO.getNovaSenha());
+        return ResponseEntity.ok().body(usuario);
     }
 
     @GetMapping("/{id}")
