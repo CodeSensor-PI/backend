@@ -10,18 +10,10 @@ import java.time.LocalDateTime;
 
 public class TelefoneUpdateDTO {
 
-    @NotBlank
     private String ddd;
-
-    @NotBlank
     private String numero;
-
-    @NotNull
     private TipoTelefone tipo;
-
-    private LocalDateTime createdAt;
-
-    @NotNull
+    private LocalDateTime updateAt;
     private UsuarioSessaoResponseDTO fkCliente;
 
     public String getDdd() {
@@ -48,12 +40,12 @@ public class TelefoneUpdateDTO {
         this.tipo = tipo;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
     }
 
     public UsuarioSessaoResponseDTO getFkCliente() {

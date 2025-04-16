@@ -7,6 +7,7 @@ import br.com.backend.PsiRizerio.persistence.repositories.TelefoneRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,7 +24,7 @@ public class TelefoneService {
     public Telefone createTelefone(Telefone telefone) {
         telefone.setFkCliente(usuarioRepository.findById(telefone.getFkCliente().getId())
                 .orElseThrow((EntidadeNaoEncontradaException::new)));
-        telefone.setCreatedAt(telefone.getCreatedAt());
+        telefone.setCreatedAt(LocalDateTime.now());
         return telefoneRepository.save(telefone);
     }
 
@@ -34,6 +35,7 @@ public class TelefoneService {
         telefoneToUpdate.setDdd(telefone.getDdd());
         telefoneToUpdate.setNumero(telefone.getNumero());
         telefoneToUpdate.setTipo(telefone.getTipo());
+        telefoneToUpdate.setUpdatedAt(LocalDateTime.now());
         return telefoneRepository.save(telefoneToUpdate);
     }
 

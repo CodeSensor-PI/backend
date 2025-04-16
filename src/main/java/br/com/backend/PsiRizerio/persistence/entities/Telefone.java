@@ -36,7 +36,7 @@ public class Telefone {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
+    @JoinColumn(name = "fk_cliente", referencedColumnName = "id")
     private Usuario fkCliente;
 
     public Telefone() {
