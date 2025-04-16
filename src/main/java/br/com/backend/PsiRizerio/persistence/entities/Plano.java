@@ -13,8 +13,7 @@ import lombok.NoArgsConstructor;
 public class Plano {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "plano_seq")
-    @SequenceGenerator(name = "plano_seq", sequenceName = "PLANO_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "categoria", columnDefinition = "VARCHAR(25)")

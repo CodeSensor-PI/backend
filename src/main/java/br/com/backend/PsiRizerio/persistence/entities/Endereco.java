@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 public class Endereco {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "endereco_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "USERS_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "cep", columnDefinition = "CHAR(9)")
