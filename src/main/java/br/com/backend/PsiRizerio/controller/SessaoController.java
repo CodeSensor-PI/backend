@@ -46,7 +46,7 @@ public class SessaoController {
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoResponse(sessao));
     }
 
-    @GetMapping("/horario")
+    @GetMapping("/horarios")
     public ResponseEntity<List<SessaoResponseDTO>> findByHorario(@RequestParam LocalDateTime start,
                                                                  @RequestParam LocalDateTime end) {
         List<Sessao> sessoes = sessaoService.findByDtHrSessaoBetween(start, end);
@@ -64,5 +64,11 @@ public class SessaoController {
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         sessaoService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/usuarios/{id}")
+    public ResponseEntity<List<SessaoResponseDTO>> findByUsuario(@PathVariable Integer id) {
+        List<Sessao> sessoes = sessaoService.findByUsuarioId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
     }
 }

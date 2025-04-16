@@ -6,7 +6,9 @@ import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class SessaoUpdateDTO {
 
@@ -15,7 +17,11 @@ public class SessaoUpdateDTO {
     private UsuarioSessaoResponseDTO fkCliente;
 
     @Future
-    private LocalDateTime dtHrSessao;
+
+    private LocalDate data;
+
+    @Future
+    private LocalTime hora;
 
     private TipoSessao tipo;
 
@@ -41,12 +47,20 @@ public class SessaoUpdateDTO {
         this.fkCliente = fkCliente;
     }
 
-    public LocalDateTime getDtHrSessao() {
-        return dtHrSessao;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDtHrSessao(LocalDateTime dtHrSessao) {
-        this.dtHrSessao = dtHrSessao;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     public TipoSessao getTipo() {

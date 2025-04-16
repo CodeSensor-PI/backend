@@ -1,8 +1,10 @@
 package br.com.backend.PsiRizerio.dto.telefoneDTO;
 
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +16,7 @@ public class TelefoneRespondeDTO {
     private TipoTelefone tipo;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Usuario fkUsuario;
+    private UsuarioSessaoResponseDTO fkCliente;
 
     public Integer getId() {
         return id;
@@ -64,11 +66,11 @@ public class TelefoneRespondeDTO {
         this.updatedAt = updatedAt;
     }
 
-    public Usuario getFkUsuario() {
-        return fkUsuario;
+    public UsuarioSessaoResponseDTO getFkCliente() {
+        return fkCliente;
     }
 
-    public void setFkUsuario(Usuario fkUsuario) {
-        this.fkUsuario = fkUsuario;
+    public void setFkCliente(UsuarioSessaoResponseDTO fkCliente) {
+        this.fkCliente = fkCliente;
     }
 }
