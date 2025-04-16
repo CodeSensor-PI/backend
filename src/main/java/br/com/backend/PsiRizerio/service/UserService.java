@@ -6,6 +6,7 @@ import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
 import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
+import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
 import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.mapper.UsuarioMapper;
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
@@ -43,7 +44,7 @@ public class UserService {
 
     public Usuario createUser(Usuario usuario) {
         if (usuarioRepository.existsByEmailOrCpfIgnoreCase(usuario.getEmail(), usuario.getCpf())
-        && usuario.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
+                && usuario.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
 
         if (!isValidEmail(usuario.getEmail())) throw new EntidadeInvalidaException();
 
@@ -108,6 +109,22 @@ public class UserService {
         if (usuarios.isEmpty()) throw new EntidadeNaoEncontradaException();
         return usuarios;
     }
+
+    public Usuario updateSenha(Integer id, String senhaAtual, String novaSenha) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(EntidadeNaoEncontradaException::new);
+
+        if (!usuario.getSenha().equals(senhaAtual)) {
+            throw new EntidadePrecondicaoFalhaException();
+        } else if (senhaAtual.equals(novaSenha)) {
+            throw new EntidadeConflitoException();
+        }
+
+        usuario.setSenha(novaSenha);
+        System.out.println(usuario.getSenha());
+        return usuarioRepository.save(usuario);
+    }
+
 
     public static boolean isValidEmail(String email) {
         return email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
