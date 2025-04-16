@@ -24,6 +24,9 @@ public class Telefone {
     @Column(name = "numero", columnDefinition = "CHAR(14)")
     private String numero;
 
+    @Column(name = "nomeContato", columnDefinition = "VARCHAR(60)")
+    private String nomeContato;
+
     @Column(name = "tipo", columnDefinition = "VARCHAR(15)")
     private String tipo;
 
@@ -41,10 +44,11 @@ public class Telefone {
     public Telefone() {
     }
 
-    public Telefone(Integer id, String ddd, String numero, String tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Usuario fkCliente) {
+    public Telefone(Integer id, String ddd, String numero, String nomeContato, String tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Usuario fkCliente) {
         this.id = id;
         this.ddd = ddd;
         this.numero = numero;
+        this.nomeContato = nomeContato;
         this.tipo = tipo;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -73,6 +77,14 @@ public class Telefone {
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public String getNomeContato() {
+        return nomeContato;
+    }
+
+    public void setNomeContato(String nomeContato) {
+        this.nomeContato = nomeContato;
     }
 
     public String getTipo() {
