@@ -48,11 +48,11 @@ public class UserController {
     }
 
     @PutMapping("/{id}/alterar-senha")
-    public ResponseEntity<Usuario> updateSenha(@PathVariable Integer id,
+    public ResponseEntity<Void> updateSenha(@PathVariable Integer id,
                                                @Valid @RequestBody UsuarioSenhaUpdateDTO usuarioSenhaUpdateDTO,
                                                Usuario usuario) {
         userService.updateSenha(id, usuarioSenhaUpdateDTO.getSenha(), usuarioSenhaUpdateDTO.getNovaSenha());
-        return ResponseEntity.ok().body(usuario);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
