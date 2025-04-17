@@ -1,8 +1,7 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioCreateDTO;
+import br.com.backend.PsiRizerio.dto.usuarioDTO.*;
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioTokenDTO;
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioUpdateDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
 import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
@@ -10,16 +9,13 @@ import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
 import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.mapper.UsuarioMapper;
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import br.com.backend.PsiRizerio.persistence.repositories.EnderecoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.UsuarioRepository;
 
-import br.com.backend.PsiRizerio.security.AutenticacaoProvider;
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,7 +47,7 @@ public class UserService {
 
     public Usuario createUser(Usuario usuario) {
         if (usuarioRepository.existsByEmailOrCpfIgnoreCase(usuario.getEmail(), usuario.getCpf())
-        && usuario.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
+                && usuario.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
 
         if (!isValidEmail(usuario.getEmail())) throw new EntidadeInvalidaException();
 
@@ -137,22 +133,23 @@ public class UserService {
         return usuarioMapper.toDtoToken(usuarioAutenticado, token);
     }
 
-    public Usuario updateSenha(Integer id, String senhaAtual, String novaSenha) {
+    public void updateSenha(Integer id, String senhaAtual, String novaSenha) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
-        if (!usuario.getSenha().equals(senhaAtual)) {
+        if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
             throw new EntidadePrecondicaoFalhaException();
-        } else if (senhaAtual.equals(novaSenha)) {
+        }
+
+        if (senhaAtual.equals(novaSenha)) {
             throw new EntidadeConflitoException();
         }
 
-        usuario.setSenha(novaSenha);
-        System.out.println(usuario.getSenha());
-        return usuarioRepository.save(usuario);
+        String novaSenhaCripto = passwordEncoder.encode(novaSenha);
+
+        usuario.setSenha(novaSenhaCripto);
+        usuarioRepository.save(usuario);
     }
-
-
 
     public static boolean isValidEmail(String email) {
         return email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
