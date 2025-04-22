@@ -47,6 +47,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(usuarioMapper.toDtoResponse(usuarioUpdated));
     }
 
+    @PutMapping("/{id}/alterar-senha")
+    public ResponseEntity<Void> updateSenha(@PathVariable Integer id,
+                                               @Valid @RequestBody UsuarioSenhaUpdateDTO usuarioSenhaUpdateDTO,
+                                               Usuario usuario) {
+        userService.updateSenha(id, usuarioSenhaUpdateDTO.getSenha(), usuarioSenhaUpdateDTO.getNovaSenha());
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Busca um usuário por ID", description = "Busca um usuário por ID")
     public ResponseEntity<UsuarioResponseDTO> findById(@PathVariable Integer id) {

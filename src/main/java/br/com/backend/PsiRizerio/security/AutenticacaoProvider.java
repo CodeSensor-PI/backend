@@ -23,6 +23,11 @@ public class AutenticacaoProvider implements AuthenticationProvider {
   public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
 
     final String username = authentication.getName();
+
+    if (authentication.getCredentials() == null) {
+      throw new BadCredentialsException("Credenciais não informadas");
+    }
+
     final String password = authentication.getCredentials().toString();
 
     UserDetails userDetails = this.usuarioAutorizacaoService.loadUserByUsername(username);
