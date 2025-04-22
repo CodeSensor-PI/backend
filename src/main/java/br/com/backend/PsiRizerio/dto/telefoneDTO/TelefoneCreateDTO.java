@@ -1,8 +1,11 @@
 package br.com.backend.PsiRizerio.dto.telefoneDTO;
 
+import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
 import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,9 +14,11 @@ import java.time.LocalDateTime;
 public class TelefoneCreateDTO {
 
     @NotBlank
+    @Min(value = 1)
     private String ddd;
 
     @NotBlank
+    @Min(value = 9)
     private String numero;
 
     @NotBlank
@@ -25,7 +30,7 @@ public class TelefoneCreateDTO {
     private LocalDateTime createdAt;
 
     @NotNull
-    private Usuario fkUsuario;
+    private UsuarioSessaoResponseDTO fkCliente;
 
     public String getDdd() {
         return ddd;
@@ -67,11 +72,11 @@ public class TelefoneCreateDTO {
         this.createdAt = createdAt;
     }
 
-    public Usuario getFkUsuario() {
-        return fkUsuario;
+    public UsuarioSessaoResponseDTO getFkCliente() {
+        return fkCliente;
     }
 
-    public void setFkUsuario(Usuario fkUsuario) {
-        this.fkUsuario = fkUsuario;
+    public void setFkCliente(UsuarioSessaoResponseDTO fkCliente) {
+        this.fkCliente = fkCliente;
     }
 }

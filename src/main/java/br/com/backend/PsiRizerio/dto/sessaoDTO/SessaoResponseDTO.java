@@ -4,14 +4,19 @@ import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class SessaoResponseDTO {
 
     private Integer id;
     private UsuarioSessaoResponseDTO fkCliente;
-    private LocalDateTime dtHrSessao;
+    private LocalDate data;
+    private LocalTime hora;
     private TipoSessao tipo;
     private StatusSessao statusSessao;
     private String anotacao;
@@ -33,12 +38,20 @@ public class SessaoResponseDTO {
         this.fkCliente = fkCliente;
     }
 
-    public LocalDateTime getDtHrSessao() {
-        return dtHrSessao;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDtHrSessao(LocalDateTime dtHrSessao) {
-        this.dtHrSessao = dtHrSessao;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     public TipoSessao getTipo() {

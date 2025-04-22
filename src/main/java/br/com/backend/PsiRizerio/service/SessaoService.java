@@ -38,6 +38,7 @@ public class SessaoService {
         Usuario usuario = usuarioRepository.findById(clienteId)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
         sessao.setFkCliente(usuario);
+        sessao.setCreatedAt(LocalDateTime.now());
 
         return sessaoRepository.save(sessao);
     }
@@ -49,6 +50,7 @@ public class SessaoService {
         if (sessaoRepository.existsByDtHrSessaoBetweenAndIdNot(sessao.getDtHrSessao(), sessao.getDtHrSessao().plusHours(1), id)) throw new EntidadeConflitoException();
 
         sessaoToUpdate.setDtHrSessao(sessao.getDtHrSessao());
+        sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
         return sessaoRepository.save(sessaoToUpdate);
     }
 
@@ -71,6 +73,12 @@ public class SessaoService {
 
     public List<Sessao> findByDtHrSessaoBetween(LocalDateTime start, LocalDateTime end) {
         return sessaoRepository.findByDtHrSessaoBetween(start, end);
+    }
+
+    public List<Sessao> findByUsuarioId(Integer usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow((EntidadeNaoEncontradaException::new));
+        return sessaoRepository.findByFkCliente(usuario);
     }
 
 }

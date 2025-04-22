@@ -7,7 +7,9 @@ import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.validation.constraints.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class SessaoCreateDTO {
 
@@ -18,7 +20,11 @@ public class SessaoCreateDTO {
 
     @Future
     @NotNull
-    private LocalDateTime dtHrSessao;
+    private LocalDate data;
+
+    @Future
+    @NotNull
+    private LocalTime hora;
 
     @NotNull
     private TipoSessao tipo;
@@ -46,12 +52,20 @@ public class SessaoCreateDTO {
         this.fkCliente = fkCliente;
     }
 
-    public LocalDateTime getDtHrSessao() {
-        return dtHrSessao;
+    public LocalDate getData() {
+        return data;
     }
 
-    public void setDtHrSessao(LocalDateTime dtHrSessao) {
-        this.dtHrSessao = dtHrSessao;
+    public void setData(LocalDate data) {
+        this.data = data;
+    }
+
+    public LocalTime getHora() {
+        return hora;
+    }
+
+    public void setHora(LocalTime hora) {
+        this.hora = hora;
     }
 
     public TipoSessao getTipo() {
