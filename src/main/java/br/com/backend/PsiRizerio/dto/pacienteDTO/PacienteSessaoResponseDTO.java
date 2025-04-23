@@ -1,12 +1,9 @@
-package br.com.backend.PsiRizerio.dto.usuarioDTO;
+package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
-import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 
-import java.time.LocalDateTime;
-
-public class UsuarioSessaoResponseDTO {
+public class PacienteSessaoResponseDTO {
 
     private Integer id;
     private String nome;

@@ -1,7 +1,6 @@
 package br.com.backend.PsiRizerio.dto.preferenciaDTO;
 
 import br.com.backend.PsiRizerio.enums.DiaSemana;
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

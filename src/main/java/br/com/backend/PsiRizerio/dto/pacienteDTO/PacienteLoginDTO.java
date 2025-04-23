@@ -1,8 +1,8 @@
-package br.com.backend.PsiRizerio.dto.usuarioDTO;
+package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class UsuarioLoginDTO {
+public class PacienteLoginDTO {
 
   @Schema(description = "E-mail do usuário", example = "john@doe.com")
   private String email;

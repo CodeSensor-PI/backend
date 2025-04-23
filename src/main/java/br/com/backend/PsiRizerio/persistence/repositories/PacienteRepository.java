@@ -1,20 +1,19 @@
 package br.com.backend.PsiRizerio.persistence.repositories;
 
-import br.com.backend.PsiRizerio.mapper.UsuarioMapper;
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
+import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    Usuario save(Usuario usuario);
+public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
+    Paciente save(Paciente paciente);
 
     void deleteById(Integer id);
-    Optional<Usuario> findById(Integer id);
-    Optional<Usuario> findByEmail(String email);
-    Optional<Usuario> findByCpf(String cpf);
+    Optional<Paciente> findById(Integer id);
+    Optional<Paciente> findByEmail(String email);
+    Optional<Paciente> findByCpf(String cpf);
 
     boolean existsByEmailOrCpfIgnoreCase(String email, String cpf);
 

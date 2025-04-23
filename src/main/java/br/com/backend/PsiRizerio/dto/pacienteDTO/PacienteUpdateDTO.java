@@ -1,4 +1,4 @@
-package br.com.backend.PsiRizerio.dto.usuarioDTO;
+package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
 import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import java.time.LocalDateTime;
 
-public class UsuarioUpdateDTO {
+public class PacienteUpdateDTO {
 
     @NotBlank
     private String nome;

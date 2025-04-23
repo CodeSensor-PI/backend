@@ -27,7 +27,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 A API utiliza um banco de dados **Mysql**. Você pode rodá-lo localmente ou via Docker:
 
 ```sh
-docker run --name meu-mysql -e MYSQL_ROOT_PASSWORD=senha -e MYSQL_DATABASE=meubanco -e MYSQL_USER=usuario -e MYSQL_PASSWORD=senha -p 3306:3306 -d mysql
+docker run --name meu-mysql -e MYSQL_ROOT_PASSWORD=senha -e MYSQL_DATABASE=meubanco -e MYSQL_USER=paciente -e MYSQL_PASSWORD=senha -p 3306:3306 -d mysql
 ```
 
 ### ▶️ Rodando a Aplicação

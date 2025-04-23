@@ -1,6 +1,6 @@
-package br.com.backend.PsiRizerio.dto.usuarioDTO;
+package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
-public class UsuarioTokenDTO {
+public class PacienteTokenDTO {
 
   private Long id;
   private String nome;

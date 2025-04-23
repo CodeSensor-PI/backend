@@ -1,8 +1,5 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.dto.planoDTO.PlanoCreateDTO;
-import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
-import br.com.backend.PsiRizerio.dto.planoDTO.PlanoUpdateDTO;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
@@ -18,7 +15,7 @@ import java.util.List;
 
 @Service
 public class PlanoService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
     private final PlanoRepository planoRepository;
     private final PlanoMapper planoMapper;
 
