@@ -6,7 +6,7 @@ import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.service.EnderecoService;
-import br.com.backend.PsiRizerio.service.UserService;
+import br.com.backend.PsiRizerio.service.PacienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/enderecos")
 public class EnderecoController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
     private final EnderecoService enderecoService;
     private final EnderecoMapper enderecoMapper;
 

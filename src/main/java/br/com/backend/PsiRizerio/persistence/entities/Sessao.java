@@ -24,7 +24,7 @@ public class Sessao {
 
     @ManyToOne
     @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
-    private Usuario fkCliente;
+    private Paciente fkCliente;
 
     @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME")
     private LocalDateTime dtHrSessao;
@@ -54,11 +54,11 @@ public class Sessao {
         this.id = id;
     }
 
-    public Usuario getFkCliente() {
+    public Paciente getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(Usuario fkCliente) {
+    public void setFkCliente(Paciente fkCliente) {
         this.fkCliente = fkCliente;
     }
 

@@ -1,12 +1,7 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -37,12 +32,12 @@ public class Telefone {
 
     @ManyToOne
     @JoinColumn(name = "fk_cliente", referencedColumnName = "id")
-    private Usuario fkCliente;
+    private Paciente fkCliente;
 
     public Telefone() {
     }
 
-    public Telefone(Integer id, String ddd, String numero, TipoTelefone tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Usuario fkCliente) {
+    public Telefone(Integer id, String ddd, String numero, TipoTelefone tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Paciente fkCliente) {
         this.id = id;
         this.ddd = ddd;
         this.numero = numero;
@@ -100,11 +95,11 @@ public class Telefone {
         this.updatedAt = updatedAt;
     }
 
-    public Usuario getFkCliente() {
+    public Paciente getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(Usuario fkCliente) {
+    public void setFkCliente(Paciente fkCliente) {
         this.fkCliente = fkCliente;
     }
 }

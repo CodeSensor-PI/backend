@@ -1,7 +1,7 @@
 package br.com.backend.PsiRizerio.persistence.repositories;
 
+import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,7 +26,7 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
 
     List<Sessao> findByDtHrSessaoBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Sessao> findByFkCliente(Usuario usuario);
+    List<Sessao> findByFkCliente(Paciente paciente);
 
     @Query("SELECT s FROM Sessao s WHERE s.fkCliente = :id")
     List<Sessao> findByFkCliente(Integer id);

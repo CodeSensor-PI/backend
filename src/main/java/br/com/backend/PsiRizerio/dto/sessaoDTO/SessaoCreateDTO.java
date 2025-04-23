@@ -1,11 +1,9 @@
 package br.com.backend.PsiRizerio.dto.sessaoDTO;
 
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioResponseDTO;
-import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
+import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.validation.constraints.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +14,7 @@ public class SessaoCreateDTO {
     private Integer id;
 
     @NotNull
-    private UsuarioSessaoResponseDTO fkCliente;
+    private PacienteSessaoResponseDTO fkCliente;
 
     @Future
     @NotNull
@@ -44,11 +42,11 @@ public class SessaoCreateDTO {
         this.id = id;
     }
 
-    public UsuarioSessaoResponseDTO getFkCliente() {
+    public PacienteSessaoResponseDTO getFkCliente() {
         return fkCliente;
     }
 
-    public void setFkCliente(UsuarioSessaoResponseDTO fkCliente) {
+    public void setFkCliente(PacienteSessaoResponseDTO fkCliente) {
         this.fkCliente = fkCliente;
     }
 

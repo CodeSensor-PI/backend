@@ -1,4 +1,4 @@
-package br.com.backend.PsiRizerio.dto.usuarioDTO;
+package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UsuarioCreateDTO {
+public class PacienteCreateDTO {
 
     @NotBlank
     private String nome;

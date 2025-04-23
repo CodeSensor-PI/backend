@@ -1,12 +1,12 @@
-package br.com.backend.PsiRizerio.dto.usuarioDTO;
+package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
+import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class UsuarioDetalhesDTO implements UserDetails {
+public class PacienteDetalhesDTO implements UserDetails {
 
   private final String nome;
 
@@ -14,10 +14,10 @@ public class UsuarioDetalhesDTO implements UserDetails {
 
   private final String senha;
 
-  public UsuarioDetalhesDTO(Usuario usuario) {
-    this.nome = usuario.getNome();
-    this.email = usuario.getEmail();
-    this.senha = usuario.getSenha();
+  public PacienteDetalhesDTO(Paciente paciente) {
+    this.nome = paciente.getNome();
+    this.email = paciente.getEmail();
+    this.senha = paciente.getSenha();
   }
 
   public String getNome() {
