@@ -1,7 +1,11 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
+import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -34,5 +38,17 @@ public class Psicologo {
     @ManyToOne
     @JoinColumn(name = "roles", columnDefinition = "INT")
     private Roles fkRoles;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "VARCHAR(20)")
+    private StatusUsuario status;
+
+    @CreatedDate
+    @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdAt;
+
+    @CreatedDate
+    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
+    private LocalDateTime updatedAt;
 
 }
