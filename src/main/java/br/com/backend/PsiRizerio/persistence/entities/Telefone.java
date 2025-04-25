@@ -2,10 +2,16 @@ package br.com.backend.PsiRizerio.persistence.entities;
 
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "telefone")
 public class Telefone {
 
@@ -31,75 +37,7 @@ public class Telefone {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "fk_cliente", referencedColumnName = "id")
-    private Paciente fkCliente;
+    @JoinColumn(name = "fk_paciente", referencedColumnName = "id")
+    private Paciente fkPaciente;
 
-    public Telefone() {
-    }
-
-    public Telefone(Integer id, String ddd, String numero, TipoTelefone tipo, LocalDateTime createdAt, LocalDateTime updatedAt, Paciente fkCliente) {
-        this.id = id;
-        this.ddd = ddd;
-        this.numero = numero;
-        this.tipo = tipo;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.fkCliente = fkCliente;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDdd() {
-        return ddd;
-    }
-
-    public void setDdd(String ddd) {
-        this.ddd = ddd;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public TipoTelefone getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoTelefone tipo) {
-        this.tipo = tipo;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Paciente getFkCliente() {
-        return fkCliente;
-    }
-
-    public void setFkCliente(Paciente fkCliente) {
-        this.fkCliente = fkCliente;
-    }
 }
