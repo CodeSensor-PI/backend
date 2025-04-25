@@ -2,13 +2,10 @@ package br.com.backend.PsiRizerio.dto.telefoneDTO;
 
 import br.com.backend.PsiRizerio.dto.usuarioDTO.UsuarioSessaoResponseDTO;
 import br.com.backend.PsiRizerio.enums.TipoTelefone;
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public class TelefoneRespondeDTO {
+public class TelefoneResponseDTO {
 
     private Integer id;
     private String ddd;
