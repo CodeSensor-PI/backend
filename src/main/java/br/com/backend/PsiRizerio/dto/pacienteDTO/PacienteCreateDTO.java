@@ -4,11 +4,12 @@ import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PacienteCreateDTO {
 
     @NotBlank
@@ -22,7 +23,4 @@ public class PacienteCreateDTO {
 
     @NotBlank
     private String senha;
-
-    private PlanoResponseDTO fkPlano;
-
 }
