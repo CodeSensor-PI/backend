@@ -33,10 +33,10 @@ public class SessaoService {
 
         if (sessaoRepository.existsByDtHrSessaoBetween(sessao.getDtHrSessao(), sessao.getDtHrSessao().plusHours(1))) throw new EntidadeConflitoException();
 
-        Integer clienteId = sessao.getFkCliente().getId();
-        Paciente paciente = pacienteRepository.findById(clienteId)
+        Integer pacienteId = sessao.getFkPaciente().getId();
+        Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
-        sessao.setFkCliente(paciente);
+        sessao.setFkPaciente(paciente);
         sessao.setCreatedAt(LocalDateTime.now());
 
         return sessaoRepository.save(sessao);
@@ -74,10 +74,10 @@ public class SessaoService {
         return sessaoRepository.findByDtHrSessaoBetween(start, end);
     }
 
-    public List<Sessao> findByUsuarioId(Integer usuarioId) {
-        Paciente paciente = pacienteRepository.findById(usuarioId)
+    public List<Sessao> findByPacienteId(Integer pacienteId) {
+        Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
-        return sessaoRepository.findByFkCliente(paciente);
+        return sessaoRepository.findByFkPaciente(paciente);
     }
 
 }

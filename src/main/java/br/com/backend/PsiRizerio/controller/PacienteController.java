@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/pacientes")
-@Tag(name = "Crud de usuario - Controller", description = "Crud de usuario")
+@Tag(name = "Crud de pacientes - Controller", description = "Crud de pacientes")
 public class PacienteController {
 
     private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
@@ -30,7 +30,7 @@ public class PacienteController {
     }
 
     @PostMapping
-    @Operation(summary = "Cria um usuário", description = "Cria um usuário")
+    @Operation(summary = "Cria um paciente", description = "Cria um paciente")
     public ResponseEntity<PacienteResponseDTO> create(@Valid @RequestBody PacienteCreateDTO pacienteCreateDTO) {
         Paciente paciente = pacienteMapper.toEntity(pacienteCreateDTO);
         Paciente pacienteCreated = pacienteService.createUser(paciente);
@@ -38,10 +38,10 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualiza um usuário", description = "Atualiza um usuário")
+    @Operation(summary = "Atualiza um paciente", description = "Atualiza um paciente")
     public ResponseEntity<PacienteResponseDTO> update(@PathVariable Integer id,
-                                                      @Valid @RequestBody PacienteUpdateDTO usuarioupdateDTO) {
-        Paciente paciente = pacienteMapper.toEntity(usuarioupdateDTO);
+                                                      @Valid @RequestBody PacienteUpdateDTO pacienteUpdateDTO) {
+        Paciente paciente = pacienteMapper.toEntity(pacienteUpdateDTO);
         Paciente pacienteUpdated = pacienteService.update(id, paciente);
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoResponse(pacienteUpdated));
     }
@@ -55,28 +55,28 @@ public class PacienteController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Busca um usuário por ID", description = "Busca um usuário por ID")
+    @Operation(summary = "Busca um paciente por ID", description = "Busca um paciente por ID")
     public ResponseEntity<PacienteResponseDTO> findById(@PathVariable Integer id) {
         Paciente user = pacienteService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoResponse(user));
     }
 
     @GetMapping
-    @Operation(summary = "Busca todos os usuários", description = "Busca todos os usuários")
+    @Operation(summary = "Busca todos os pacientes", description = "Busca todos os pacientes")
     public ResponseEntity<List<PacienteResponseDTO>> findAll() {
         List<Paciente> pacientes = pacienteService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoList(pacientes));
     }
 
     @PutMapping("/{id}/desativar")
-    public ResponseEntity<PacienteUpdateDTO> deactivateUser(@PathVariable Integer id) {
-        Paciente paciente = pacienteService.desativarUsuario(id);
+    public ResponseEntity<PacienteUpdateDTO> desactivateUser(@PathVariable Integer id) {
+        Paciente paciente = pacienteService.desativarPaciente(id);
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoUpdate(paciente));
     }
 
     @PutMapping("/{id}/ativar")
     public ResponseEntity<PacienteUpdateDTO> activateUser(@PathVariable Integer id) {
-        Paciente paciente = pacienteService.ativarUsuario(id);
+        Paciente paciente = pacienteService.ativarPaciente(id);
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoUpdate(paciente));
     }
 
