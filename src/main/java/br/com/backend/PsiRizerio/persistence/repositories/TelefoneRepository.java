@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface TelefoneRepository extends JpaRepository<Telefone, Integer> {
 
-    @Query("SELECT t FROM Telefone t WHERE t.fkCliente.id = :id")
-    List<Telefone> findByFkCliente(Integer id);
+    @Query("SELECT t FROM Telefone t WHERE t.fkPaciente.id = :id")
+    List<Telefone> findByFkPaciente(Integer id);
 }

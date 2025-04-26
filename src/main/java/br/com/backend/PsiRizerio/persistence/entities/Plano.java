@@ -1,13 +1,13 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "plano")
 public class Plano {
@@ -21,41 +21,4 @@ public class Plano {
 
     @Column(name = "preco", columnDefinition = "DECIMAL(6,2)")
     private Double preco;
-
-    public Plano(Integer id, String categoria, Double preco) {
-        this.id = id;
-        this.categoria = categoria;
-        this.preco = preco;
-    }
-
-    public Plano() {
-    }
-
-    public Plano(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
 }

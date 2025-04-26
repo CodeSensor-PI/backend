@@ -65,9 +65,9 @@ public class SessaoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<List<SessaoResponseDTO>> findByUsuario(@PathVariable Integer id) {
-        List<Sessao> sessoes = sessaoService.findByUsuarioId(id);
+    @GetMapping("/pacientes/{id}")
+    public ResponseEntity<List<SessaoResponseDTO>> findByPaciente(@PathVariable Integer id) {
+        List<Sessao> sessoes = sessaoService.findByPacienteId(id);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
     }
 }

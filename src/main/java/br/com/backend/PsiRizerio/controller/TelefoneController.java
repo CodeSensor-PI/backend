@@ -1,7 +1,7 @@
 package br.com.backend.PsiRizerio.controller;
 
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneCreateDTO;
- import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneResponseDTO;
+import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneResponseDTO;
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.TelefoneMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
@@ -30,7 +30,7 @@ public class TelefoneController {
     public ResponseEntity<TelefoneResponseDTO> createTelefone(@Valid @RequestBody TelefoneCreateDTO telefoneCreateDTO) {
         Telefone telefone = telefoneMappper.toEntity(telefoneCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(telefoneMappper.toResponseDTO(telefoneService.createTelefone(telefone)));
+                .body(telefoneMappper.toDtoResponse(telefoneService.createTelefone(telefone)));
     }
 
     @GetMapping
@@ -44,12 +44,12 @@ public class TelefoneController {
     public ResponseEntity<TelefoneResponseDTO> findById(@PathVariable Integer id) {
         Telefone telefone = telefoneService.findById(id);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(telefoneMappper.toResponseDTO(telefone));
+                .body(telefoneMappper.toDtoResponse(telefone));
     }
 
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<List<TelefoneResponseDTO>> findByUsuarioId(@PathVariable Integer id) {
-        List<Telefone> telefones = telefoneService.findByFkCliente(id);
+    @GetMapping("/pacientes/{id}")
+    public ResponseEntity<List<TelefoneResponseDTO>> findByPacienteId(@PathVariable Integer id) {
+        List<Telefone> telefones = telefoneService.findByFkPaciente(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(telefoneMappper.toDtoList(telefones));
     }
@@ -59,7 +59,7 @@ public class TelefoneController {
                                                       @Valid @RequestBody TelefoneUpdateDTO telefoneUpdateDTO) {
         Telefone telefone = telefoneMappper.toEntity(telefoneUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(telefoneMappper.toResponseDTO(telefoneService.update(id, telefone)));
+                .body(telefoneMappper.toDtoResponse(telefoneService.update(id, telefone)));
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,6 @@
 package br.com.backend.PsiRizerio.persistence.entities;
 
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "cliente")
-public class Usuario {
+@Table(name = "paciente")
+public class Paciente {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;

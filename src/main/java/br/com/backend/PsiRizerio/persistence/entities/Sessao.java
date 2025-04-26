@@ -3,12 +3,9 @@ package br.com.backend.PsiRizerio.persistence.entities;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Builder
 @Getter
@@ -24,14 +21,11 @@ public class Sessao {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
-    private Usuario fkCliente;
+    @JoinColumn(name = "fk_paciente", columnDefinition = "INT")
+    private Paciente fkPaciente;
 
-    @Column(name = "data", columnDefinition = "DATE")
-    private LocalDate data;
-
-    @Column(name = "hora", columnDefinition = "TIMESTAMP")
-    private LocalTime hora;
+    @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME")
+    private LocalDateTime dtHrSessao;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", columnDefinition = "VARCHAR(10)")

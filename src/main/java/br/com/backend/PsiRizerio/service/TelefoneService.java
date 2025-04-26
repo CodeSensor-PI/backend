@@ -2,9 +2,8 @@ package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import br.com.backend.PsiRizerio.persistence.repositories.TelefoneRepository;
-import br.com.backend.PsiRizerio.persistence.repositories.UsuarioRepository;
+import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,15 +13,15 @@ import java.util.List;
 public class TelefoneService {
 
     private final TelefoneRepository telefoneRepository;
-    private final UsuarioRepository usuarioRepository;
+    private final PacienteRepository pacienteRepository;
 
-    public TelefoneService(TelefoneRepository telefoneRepository, UsuarioRepository usuarioRepository) {
+    public TelefoneService(TelefoneRepository telefoneRepository, PacienteRepository pacienteRepository) {
         this.telefoneRepository = telefoneRepository;
-        this.usuarioRepository = usuarioRepository;
+        this.pacienteRepository = pacienteRepository;
     }
 
     public Telefone createTelefone(Telefone telefone) {
-        telefone.setFkCliente(usuarioRepository.findById(telefone.getFkCliente().getId())
+        telefone.setFkPaciente(pacienteRepository.findById(telefone.getFkPaciente().getId())
                 .orElseThrow((EntidadeNaoEncontradaException::new)));
         telefone.setCreatedAt(LocalDateTime.now());
         return telefoneRepository.save(telefone);
@@ -44,8 +43,8 @@ public class TelefoneService {
                 .orElseThrow((EntidadeNaoEncontradaException::new));
     }
 
-    public List<Telefone> findByFkCliente(Integer id) {
-        List<Telefone> telefones = telefoneRepository.findByFkCliente(id);
+    public List<Telefone> findByFkPaciente(Integer id) {
+        List<Telefone> telefones = telefoneRepository.findByFkPaciente(id);
         if (telefones.isEmpty()) throw new EntidadeNaoEncontradaException();
         return telefones;
     }

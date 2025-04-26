@@ -1,13 +1,12 @@
 package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
-import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
+import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
-import br.com.backend.PsiRizerio.persistence.entities.Usuario;
 import br.com.backend.PsiRizerio.persistence.repositories.SessaoRepository;
-import br.com.backend.PsiRizerio.persistence.repositories.UsuarioRepository;
+import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,13 @@ public class SessaoService {
     private final SessaoRepository sessaoRepository;
 
     private final SessaoMapper sessaoMapper;
-    private final UsuarioRepository usuarioRepository;
+    private final PacienteRepository pacienteRepository;
 
     @Autowired
-    public SessaoService(SessaoRepository sessaoRepository, SessaoMapper sessaoMapper, UsuarioRepository usuarioRepository) {
+    public SessaoService(SessaoRepository sessaoRepository, SessaoMapper sessaoMapper, PacienteRepository pacienteRepository) {
         this.sessaoRepository = sessaoRepository;
         this.sessaoMapper = sessaoMapper;
-        this.usuarioRepository = usuarioRepository;
+        this.pacienteRepository = pacienteRepository;
     }
 
     public Sessao createSessao(Sessao sessao) {
@@ -36,10 +35,10 @@ public class SessaoService {
 
         if (sessaoRepository.existsByDataAndHoraBetween(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1))) throw new EntidadeConflitoException();
 
-        Integer clienteId = sessao.getFkCliente().getId();
-        Usuario usuario = usuarioRepository.findById(clienteId)
+        Integer pacienteId = sessao.getFkPaciente().getId();
+        Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
-        sessao.setFkCliente(usuario);
+        sessao.setFkPaciente(paciente);
         sessao.setCreatedAt(LocalDateTime.now());
 
         return sessaoRepository.save(sessao);
@@ -76,10 +75,10 @@ public class SessaoService {
         return sessaoRepository.findByDataAndHoraBetween(data, hora, hora2);
     }
 
-    public List<Sessao> findByUsuarioId(Integer usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
+    public List<Sessao> findByPacienteId(Integer pacienteId) {
+        Paciente paciente = pacienteRepository.findById(pacienteId)
                 .orElseThrow((EntidadeNaoEncontradaException::new));
-        return sessaoRepository.findByFkCliente(usuario);
+        return sessaoRepository.findByFkPaciente(paciente);
     }
 
 }
