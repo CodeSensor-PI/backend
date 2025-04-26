@@ -47,12 +47,12 @@ public class PsicologoController {
         return psicologoMapper.toDtoResponse(psicologoService.update(id, psicologo));
     }
 
-    @PostMapping("/{id}/ativar")
+    @PutMapping("/{id}/ativar")
     public void ativarPsicologo(@PathVariable Integer id) {
         psicologoService.ativarPsicologo(id);
     }
 
-    @PostMapping("/{id}/desativar")
+    @PutMapping("/{id}/desativar")
     public void desativarPsicologo(@PathVariable Integer id) {
         psicologoService.desativarPsicologo(id);
     }

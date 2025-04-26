@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto.psicologoDTO;
 
+import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import br.com.backend.PsiRizerio.persistence.entities.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,5 @@ public class PsicologoResponseDTO {
     private String email;
     private String telefone;
     private Roles fkRoles;
+    private StatusUsuario status;
 }
