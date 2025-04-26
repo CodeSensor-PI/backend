@@ -32,7 +32,6 @@ public class PsicologoService {
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
 
-
     public Psicologo createPsicologo(Psicologo psicologo) {
         if (psicologoRepository.existsByEmailOrCrpIgnoreCase(psicologo.getEmail(), psicologo.getCrp())
                 && psicologo.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();

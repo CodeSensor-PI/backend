@@ -17,7 +17,6 @@ public class PsicologoResponseDTO {
     private String nome;
     private String crp;
     private String email;
-    private String senha;
     private String telefone;
     private Roles fkRoles;
 }

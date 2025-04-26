@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto.psicologoDTO;
 
+import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import br.com.backend.PsiRizerio.persistence.entities.Roles;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,5 +25,7 @@ public class PsicologoCreateDTO {
     @NotBlank
     private String telefone;
     private Roles fkRoles;
+
+    private StatusUsuario status = StatusUsuario.ATIVO;
 
 }
