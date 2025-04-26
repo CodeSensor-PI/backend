@@ -20,13 +20,13 @@ public class AutenticacaoService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-    Optional<Paciente> usuarioOpt = pacienteRepository.findByEmail(username);
+    Optional<Paciente> pacienteOpt = pacienteRepository.findByEmail(username);
 
-    if (usuarioOpt.isEmpty()) {
+    if (pacienteOpt.isEmpty()) {
 
-      throw new UsernameNotFoundException(String.format("usuario: %s nao encontrado", username));
+      throw new UsernameNotFoundException(String.format("paciente: %s nao encontrado", username));
     }
 
-    return new PacienteDetalhesDTO(usuarioOpt.get());
+    return new PacienteDetalhesDTO(pacienteOpt.get());
   }
 }

@@ -1,11 +1,12 @@
 package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PacienteSenhaUpdateDTO {
     @NotBlank
     private String senha;

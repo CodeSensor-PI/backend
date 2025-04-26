@@ -3,15 +3,13 @@ package br.com.backend.PsiRizerio.persistence.entities;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,8 +21,8 @@ public class Sessao {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "fk_cliente", columnDefinition = "INT")
-    private Paciente fkCliente;
+    @JoinColumn(name = "fk_paciente", columnDefinition = "INT")
+    private Paciente fkPaciente;
 
     @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME")
     private LocalDateTime dtHrSessao;
@@ -46,67 +44,4 @@ public class Sessao {
     @Column(name = "updatedAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Paciente getFkCliente() {
-        return fkCliente;
-    }
-
-    public void setFkCliente(Paciente fkCliente) {
-        this.fkCliente = fkCliente;
-    }
-
-    public LocalDateTime getDtHrSessao() {
-        return dtHrSessao;
-    }
-
-    public void setDtHrSessao(LocalDateTime dtHrSessao) {
-        this.dtHrSessao = dtHrSessao;
-    }
-
-    public TipoSessao getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoSessao tipo) {
-        this.tipo = tipo;
-    }
-
-    public StatusSessao getStatusSessao() {
-        return statusSessao;
-    }
-
-    public void setStatusSessao(StatusSessao statusSessao) {
-        this.statusSessao = statusSessao;
-    }
-
-    public String getAnotacao() {
-        return anotacao;
-    }
-
-    public void setAnotacao(String anotacao) {
-        this.anotacao = anotacao;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }

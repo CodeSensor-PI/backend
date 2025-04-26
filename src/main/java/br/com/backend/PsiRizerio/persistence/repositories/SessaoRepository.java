@@ -26,8 +26,8 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
 
     List<Sessao> findByDtHrSessaoBetween(LocalDateTime start, LocalDateTime end);
 
-    List<Sessao> findByFkCliente(Paciente paciente);
+    List<Sessao> findByFkPaciente(Paciente paciente);
 
-    @Query("SELECT s FROM Sessao s WHERE s.fkCliente = :id")
-    List<Sessao> findByFkCliente(Integer id);
+    @Query("SELECT s FROM Sessao s WHERE s.fkPaciente = :id")
+    List<Sessao> findByFkPaciente(Integer id);
 }

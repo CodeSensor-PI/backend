@@ -21,7 +21,7 @@ public class TelefoneService {
     }
 
     public Telefone createTelefone(Telefone telefone) {
-        telefone.setFkCliente(pacienteRepository.findById(telefone.getFkCliente().getId())
+        telefone.setFkPaciente(pacienteRepository.findById(telefone.getFkPaciente().getId())
                 .orElseThrow((EntidadeNaoEncontradaException::new)));
         telefone.setCreatedAt(LocalDateTime.now());
         return telefoneRepository.save(telefone);
@@ -43,8 +43,8 @@ public class TelefoneService {
                 .orElseThrow((EntidadeNaoEncontradaException::new));
     }
 
-    public List<Telefone> findByFkCliente(Integer id) {
-        List<Telefone> telefones = telefoneRepository.findByFkCliente(id);
+    public List<Telefone> findByFkPaciente(Integer id) {
+        List<Telefone> telefones = telefoneRepository.findByFkPaciente(id);
         if (telefones.isEmpty()) throw new EntidadeNaoEncontradaException();
         return telefones;
     }

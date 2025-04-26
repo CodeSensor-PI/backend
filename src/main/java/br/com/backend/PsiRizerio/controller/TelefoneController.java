@@ -1,7 +1,7 @@
 package br.com.backend.PsiRizerio.controller;
 
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneCreateDTO;
-import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneRespondeDTO;
+import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneResponseDTO;
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.TelefoneMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
@@ -27,35 +27,35 @@ public class TelefoneController {
     }
 
     @PostMapping
-    public ResponseEntity<TelefoneRespondeDTO> createTelefone(@Valid @RequestBody TelefoneCreateDTO telefoneCreateDTO) {
+    public ResponseEntity<TelefoneResponseDTO> createTelefone(@Valid @RequestBody TelefoneCreateDTO telefoneCreateDTO) {
         Telefone telefone = telefoneMappper.toEntity(telefoneCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(telefoneMappper.toDtoResponse(telefoneService.createTelefone(telefone)));
     }
 
     @GetMapping
-    public ResponseEntity<List<TelefoneRespondeDTO>> findAll() {
+    public ResponseEntity<List<TelefoneResponseDTO>> findAll() {
         List<Telefone> telefones = telefoneService.findAll();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(telefoneMappper.toDtoList(telefones));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TelefoneRespondeDTO> findById(@PathVariable Integer id) {
+    public ResponseEntity<TelefoneResponseDTO> findById(@PathVariable Integer id) {
         Telefone telefone = telefoneService.findById(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(telefoneMappper.toDtoResponse(telefone));
     }
 
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<List<TelefoneRespondeDTO>> findByUsuarioId(@PathVariable Integer id) {
-        List<Telefone> telefones = telefoneService.findByFkCliente(id);
+    @GetMapping("/pacientes/{id}")
+    public ResponseEntity<List<TelefoneResponseDTO>> findByPacienteId(@PathVariable Integer id) {
+        List<Telefone> telefones = telefoneService.findByFkPaciente(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(telefoneMappper.toDtoList(telefones));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TelefoneRespondeDTO> update(@PathVariable Integer id,
+    public ResponseEntity<TelefoneResponseDTO> update(@PathVariable Integer id,
                                                       @Valid @RequestBody TelefoneUpdateDTO telefoneUpdateDTO) {
         Telefone telefone = telefoneMappper.toEntity(telefoneUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK)

@@ -1,7 +1,7 @@
 package br.com.backend.PsiRizerio.mapper;
 
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneCreateDTO;
-import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneRespondeDTO;
+import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneResponseDTO;
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneUpdateDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
 import org.mapstruct.Mapper;
@@ -16,6 +16,6 @@ public interface TelefoneMapper {
 
     TelefoneCreateDTO toDto(Telefone telefone);
     TelefoneUpdateDTO toDtoUpdate(Telefone telefone);
-    TelefoneRespondeDTO toDtoResponse(Telefone telefone);
-    List<TelefoneRespondeDTO> toDtoList(List<Telefone> telefones);
+    TelefoneResponseDTO toDtoResponse(Telefone telefone);
+    List<TelefoneResponseDTO> toDtoList(List<Telefone> telefones);
 }

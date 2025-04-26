@@ -43,7 +43,7 @@ public class PacienteService {
     }
 
     public Paciente createUser(Paciente paciente) {
-        if (pacienteRepository.existsByEmailOrCpfIgnoreCase(paciente.getEmail(), paciente.getCpf())
+        if (pacienteRepository.existsByEmailIgnoreCase(paciente.getEmail())
                 && paciente.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
 
         if (!isValidEmail(paciente.getEmail())) throw new EntidadeInvalidaException();
@@ -85,7 +85,7 @@ public class PacienteService {
         return paciente;
     }
 
-    public Paciente desativarUsuario(Integer id) {
+    public Paciente desativarPaciente(Integer id) {
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
@@ -94,7 +94,7 @@ public class PacienteService {
         return pacienteRepository.save(paciente);
     }
 
-    public Paciente ativarUsuario(Integer id) {
+    public Paciente ativarPaciente(Integer id) {
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
@@ -120,7 +120,7 @@ public class PacienteService {
         Paciente pacienteAutenticado =
                 pacienteRepository.findByEmail(paciente.getEmail())
                         .orElseThrow(
-                                () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
+                                () -> new ResponseStatusException(404, "Email do paciente não cadastrado", null)
                         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
