@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto.preferenciaDTO;
 
+import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteResponseDTO;
 import br.com.backend.PsiRizerio.enums.DiaSemana;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,8 @@ public class PreferenciaCreateDTO {
 
     @NotBlank
     private String horario;
+
+    private PacienteResponseDTO fkPaciente;
 
     private LocalDateTime createdAt;
 }
