@@ -26,15 +26,12 @@ public class PacienteUpdateDTO {
 
     private StatusUsuario status = StatusUsuario.ATIVO;
 
-    @NotBlank
     private String nome;
 
     @CPF
-    @NotBlank
     private String cpf;
 
     @Email
-    @NotBlank
     private String email;
 
     private EnderecoResponseDTO fkEndereco;
