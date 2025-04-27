@@ -5,7 +5,9 @@ import br.com.backend.PsiRizerio.enums.TipoSessao;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Builder
 @Getter
@@ -24,8 +26,11 @@ public class Sessao {
     @JoinColumn(name = "fk_paciente", columnDefinition = "INT")
     private Paciente fkPaciente;
 
-    @Column(name = "dt_hr_sessao", columnDefinition = "DATETIME")
-    private LocalDateTime dtHrSessao;
+    @Column(name = "data", columnDefinition = "DATE")
+    private LocalDate data;
+
+    @Column(name = "hora", columnDefinition = "TIME")
+    private LocalTime hora;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", columnDefinition = "VARCHAR(10)")

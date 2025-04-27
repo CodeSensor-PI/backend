@@ -10,7 +10,9 @@ import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -29,9 +31,9 @@ public class SessaoService {
     }
 
     public Sessao createSessao(Sessao sessao) {
-        if (sessaoRepository.existsByDtHrSessao(sessao.getDtHrSessao())) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHora(sessao.getData(), sessao.getHora())) throw new EntidadeConflitoException();
 
-        if (sessaoRepository.existsByDtHrSessaoBetween(sessao.getDtHrSessao(), sessao.getDtHrSessao().plusHours(1))) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHoraBetween(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1))) throw new EntidadeConflitoException();
 
         Integer pacienteId = sessao.getFkPaciente().getId();
         Paciente paciente = pacienteRepository.findById(pacienteId)
@@ -46,9 +48,8 @@ public class SessaoService {
         Sessao sessaoToUpdate = sessaoRepository.findById(id)
                 .orElseThrow((EntidadeConflitoException::new));
 
-        if (sessaoRepository.existsByDtHrSessaoBetweenAndIdNot(sessao.getDtHrSessao(), sessao.getDtHrSessao().plusHours(1), id)) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1), id)) throw new EntidadeConflitoException();
 
-        sessaoToUpdate.setDtHrSessao(sessao.getDtHrSessao());
         sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
         return sessaoRepository.save(sessaoToUpdate);
     }
@@ -70,8 +71,8 @@ public class SessaoService {
         sessaoRepository.deleteById(id);
     }
 
-    public List<Sessao> findByDtHrSessaoBetween(LocalDateTime start, LocalDateTime end) {
-        return sessaoRepository.findByDtHrSessaoBetween(start, end);
+    public List<Sessao> findByDtHrSessaoBetween(LocalDate data, LocalTime hora, LocalTime hora2) {
+        return sessaoRepository.findByDataAndHoraBetween(data, hora, hora2);
     }
 
     public List<Sessao> findByPacienteId(Integer pacienteId) {

@@ -6,26 +6,24 @@ import br.com.backend.PsiRizerio.mapper.SessaoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.service.SessaoService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/sessoes")
+@RequiredArgsConstructor
 public class SessaoController {
 
     private final SessaoService sessaoService;
 
     private final SessaoMapper sessaoMapper;
-
-    public SessaoController(SessaoService sessaoService, SessaoMapper sessaoMapper) {
-        this.sessaoService = sessaoService;
-        this.sessaoMapper = sessaoMapper;
-    }
 
     @PostMapping
     public ResponseEntity<SessaoResponseDTO> createSessao(@Valid @RequestBody SessaoCreateDTO sessaoCreateDTO) {
@@ -47,9 +45,10 @@ public class SessaoController {
     }
 
     @GetMapping("/horarios")
-    public ResponseEntity<List<SessaoResponseDTO>> findByHorario(@RequestParam LocalDateTime start,
-                                                                 @RequestParam LocalDateTime end) {
-        List<Sessao> sessoes = sessaoService.findByDtHrSessaoBetween(start, end);
+    public ResponseEntity<List<SessaoResponseDTO>> findByHorario(@RequestParam LocalDate data,
+                                                                 @RequestParam LocalTime hora,
+                                                                 @RequestParam LocalTime hora2) {
+        List<Sessao> sessoes = sessaoService.findByDtHrSessaoBetween(data, hora, hora2);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
     }
 
