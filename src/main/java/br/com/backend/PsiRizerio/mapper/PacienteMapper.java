@@ -13,12 +13,14 @@ public interface PacienteMapper {
     List<Paciente> toEntityList(List<PacienteCreateDTO> pacienteCreateDTOS);
     Paciente toEntity(PacienteLoginDTO pacienteLoginDto);
     Paciente toEntity(PacienteSenhaUpdateDTO pacienteSenhaUpdateDTO);
+    Paciente toEntity(PacientePrimeiroLoginDTO pacientePrimeiroLoginDTO);
 
     PacienteCreateDTO toDto(Paciente paciente);
     PacienteUpdateDTO toDtoUpdate(Paciente paciente);
     PacienteResponseDTO toDtoResponse(Paciente paciente);
     List<PacienteResponseDTO> toDtoList(List<Paciente> pacientes);
     PacienteSenhaUpdateDTO toDtoUpdateSenha(Paciente paciente);
+    PacientePrimeiroLoginDTO toDtoPrimeiroLogin(Paciente paciente);
     PacienteTokenDTO toDtoToken(Paciente paciente, String token);
 
 
