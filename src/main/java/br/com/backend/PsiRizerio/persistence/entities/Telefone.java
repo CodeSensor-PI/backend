@@ -30,6 +30,9 @@ public class Telefone {
     @Enumerated(EnumType.STRING)
     private TipoTelefone tipo;
 
+    @Column(name = "nome_contato", columnDefinition = "VARCHAR(45)")
+    private String nomeContato;
+
     @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
