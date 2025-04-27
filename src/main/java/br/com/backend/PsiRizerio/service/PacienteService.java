@@ -34,7 +34,7 @@ public class PacienteService {
     private final AuthenticationManager authenticationManager;
     private final PacienteMapper pacienteMapper;
 
-    public PacienteService(PacienteRepository pacienteRepository, PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager, PacienteMapper pacienteMapper) {
+    public PacienteService(PacienteRepository pacienteRepository, PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager, PacienteMapper pacienteMapper, EnderecoService enderecoService) {
         this.pacienteRepository = pacienteRepository;
         this.passwordEncoder = passwordEncoder;
         this.gerenciadorTokenJwt = gerenciadorTokenJwt;
@@ -146,6 +146,22 @@ public class PacienteService {
 
         paciente.setSenha(novaSenhaCripto);
         pacienteRepository.save(paciente);
+    }
+
+    public Paciente addDadosPrimeiroLogin(Integer id, Paciente paciente) {
+        Paciente pacienteToUpdate = pacienteRepository.findById(id)
+                .orElseThrow((EntidadeNaoEncontradaException::new));
+
+        if (pacienteRepository.existsByCpf(paciente.getCpf())) throw new EntidadeConflitoException();
+
+        if (paciente.getFkEndereco() == null && paciente.getFkEndereco().getId() == null) throw new EntidadeInvalidaException();
+
+        pacienteToUpdate.setDataNasc(paciente.getDataNasc());
+        pacienteToUpdate.setFkEndereco(paciente.getFkEndereco());
+        pacienteToUpdate.setCpf(paciente.getCpf());
+        pacienteToUpdate.setUpdatedAt(LocalDateTime.now());
+
+        return pacienteRepository.save(pacienteToUpdate);
     }
 
     public static boolean isValidEmail(String email) {
