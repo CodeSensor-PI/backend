@@ -20,6 +20,10 @@ public class Preferencia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @OneToOne
+    @JoinColumn(name = "fk_paciente", referencedColumnName = "id")
+    private Paciente paciente;
+
     @Column(name = "dia_semana", columnDefinition = "VARCHAR(10)")
     @Enumerated(EnumType.STRING)
     private DiaSemana diaSemana;
