@@ -2,6 +2,8 @@ package br.com.backend.PsiRizerio.dto.pacienteDTO;
 
 import br.com.backend.PsiRizerio.dto.enderecoDTO.EnderecoResponseDTO;
 import br.com.backend.PsiRizerio.dto.planoDTO.PlanoResponseDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaResponseDTO;
+import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -20,18 +22,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class PacienteUpdateDTO {
 
-    @NotBlank
+    private PlanoResponseDTO fkPlano;
+
+    private StatusUsuario status = StatusUsuario.ATIVO;
+
     private String nome;
 
     @CPF
-    @NotBlank
     private String cpf;
 
     @Email
-    @NotBlank
     private String email;
-
-    private StatusUsuario status = StatusUsuario.ATIVO;
 
     private EnderecoResponseDTO fkEndereco;
 

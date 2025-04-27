@@ -34,7 +34,7 @@ public class PacienteService {
     private final AuthenticationManager authenticationManager;
     private final PacienteMapper pacienteMapper;
 
-    public PacienteService(PacienteRepository pacienteRepository, PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager, PacienteMapper pacienteMapper) {
+    public PacienteService(PacienteRepository pacienteRepository, PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager, PacienteMapper pacienteMapper, EnderecoService enderecoService) {
         this.pacienteRepository = pacienteRepository;
         this.passwordEncoder = passwordEncoder;
         this.gerenciadorTokenJwt = gerenciadorTokenJwt;
@@ -56,26 +56,44 @@ public class PacienteService {
     }
 
     public Paciente update(Integer id, Paciente paciente) {
-        Paciente usersToUpdate = pacienteRepository.findById(id)
-                .orElseThrow((EntidadeNaoEncontradaException::new));
+        Paciente pacienteToUpdate = pacienteRepository.findById(id)
+                .orElseThrow(EntidadeNaoEncontradaException::new);
 
-        if (pacienteRepository.existsByCpfIgnoreCaseAndIdNot(paciente.getCpf(), id) ||
-                pacienteRepository.existsByEmailIgnoreCaseAndIdNot(paciente.getEmail(), id)) {
+        if (paciente.getCpf() != null && pacienteRepository.existsByCpfIgnoreCaseAndIdNot(paciente.getCpf(), id)) {
             throw new EntidadeConflitoException();
         }
 
-        if (!isValidEmail(paciente.getEmail())) throw new EntidadeInvalidaException();
+        if (paciente.getEmail() != null) {
+            if (pacienteRepository.existsByEmailIgnoreCaseAndIdNot(paciente.getEmail(), id)) {
+                throw new EntidadeConflitoException();
+            }
+            if (!isValidEmail(paciente.getEmail())) {
+                throw new EntidadeInvalidaException();
+            }
+            pacienteToUpdate.setEmail(paciente.getEmail());
+        }
 
+        if (paciente.getNome() != null) {
+            pacienteToUpdate.setNome(paciente.getNome());
+        }
 
-        usersToUpdate.setNome(paciente.getNome());
-        usersToUpdate.setCpf(paciente.getCpf());
-        usersToUpdate.setEmail(paciente.getEmail());
-        usersToUpdate.setFkEndereco(paciente.getFkEndereco());
-        usersToUpdate.setFkPlano(paciente.getFkPlano());
-        usersToUpdate.setUpdatedAt(LocalDateTime.now());
+        if (paciente.getCpf() != null) {
+            pacienteToUpdate.setCpf(paciente.getCpf());
+        }
 
-        return pacienteRepository.save(usersToUpdate);
+        if (paciente.getFkEndereco() != null && paciente.getFkEndereco().getId() != null) {
+            pacienteToUpdate.setFkEndereco(paciente.getFkEndereco());
+        }
+
+        if (paciente.getFkPlano() != null && paciente.getFkPlano().getId() != null) {
+            pacienteToUpdate.setFkPlano(paciente.getFkPlano());
+        }
+
+        pacienteToUpdate.setUpdatedAt(LocalDateTime.now());
+
+        return pacienteRepository.save(pacienteToUpdate);
     }
+
 
     public Paciente findById(Integer id) {
         if (id == null) throw new EntidadeInvalidaException();
@@ -146,6 +164,22 @@ public class PacienteService {
 
         paciente.setSenha(novaSenhaCripto);
         pacienteRepository.save(paciente);
+    }
+
+    public Paciente addDadosPrimeiroLogin(Integer id, Paciente paciente) {
+        Paciente pacienteToUpdate = pacienteRepository.findById(id)
+                .orElseThrow((EntidadeNaoEncontradaException::new));
+
+        if (pacienteRepository.existsByCpf(paciente.getCpf())) throw new EntidadeConflitoException();
+
+        if (paciente.getFkEndereco() == null && paciente.getFkEndereco().getId() == null) throw new EntidadeInvalidaException();
+
+        pacienteToUpdate.setDataNasc(paciente.getDataNasc());
+        pacienteToUpdate.setFkEndereco(paciente.getFkEndereco());
+        pacienteToUpdate.setCpf(paciente.getCpf());
+        pacienteToUpdate.setUpdatedAt(LocalDateTime.now());
+
+        return pacienteRepository.save(pacienteToUpdate);
     }
 
     public static boolean isValidEmail(String email) {

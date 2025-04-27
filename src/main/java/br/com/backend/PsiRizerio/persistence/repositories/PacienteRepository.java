@@ -21,6 +21,6 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
 
     boolean existsByCpfIgnoreCaseAndIdNot(String cpf, Integer id);
 
-    boolean existsByCpfOrEmailAndIdNot(String cpf, String email, Integer id);
+    boolean existsByCpf(String cpf);
 
 }

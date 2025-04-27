@@ -88,4 +88,14 @@ public class PacienteController {
 
         return ResponseEntity.status(200).body(pacienteTokenDto);
     }
+
+    @PutMapping("/primeiroLogin/{id}")
+    public ResponseEntity<PacienteResponseDTO> completeInfos(
+            @PathVariable Integer id, @RequestBody PacientePrimeiroLoginDTO pacientePrimeiroLoginDTO) {
+
+        Paciente paciente = pacienteMapper.toEntity(pacientePrimeiroLoginDTO);
+        Paciente pacienteUpdated = pacienteService.addDadosPrimeiroLogin(id, paciente);
+
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoResponse(pacienteUpdated));
+    }
 }

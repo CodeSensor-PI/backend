@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.dto.preferenciaDTO;
 
+import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteResponseDTO;
 import br.com.backend.PsiRizerio.enums.DiaSemana;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,11 +13,12 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrefenciaResponseDTO {
+public class PreferenciaResponseDTO {
 
     private Integer id;
     private DiaSemana diaSemana;
     private String horario;
+    private PacienteResponseDTO fkPaciente;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

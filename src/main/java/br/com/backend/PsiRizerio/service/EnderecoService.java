@@ -26,9 +26,12 @@ public class EnderecoService {
     }
 
     public Endereco createEndereco(Endereco endereco) {
-        if (enderecoRepository.existsByCepAndBairroAndNumeroAndLogradouroAndUfIgnoreCase(
-                endereco.getCep(), endereco.getBairro(), endereco.getNumero(), endereco.getLogradouro(), endereco.getUf())) {
-            throw new EntidadeConflitoException();
+
+        boolean enderecoExiste = enderecoRepository.findEndereco(
+                endereco.getCep(), endereco.getBairro(), endereco.getNumero(), endereco.getLogradouro(), endereco.getUf(), endereco.getCidade());
+
+        if (enderecoExiste) {
+            return findById(endereco.getId());
         }
 
         endereco.setCreatedAt(LocalDateTime.now());

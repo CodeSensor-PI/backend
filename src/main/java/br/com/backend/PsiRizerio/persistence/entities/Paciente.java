@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,6 +16,8 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "paciente")
 public class Paciente {
+        //colocar fkPsicologo
+
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
@@ -31,6 +34,9 @@ public class Paciente {
         @Column(name = "senha", columnDefinition = "VARCHAR(100)")
         private String senha;
 
+        @Column(name = "dat_nasc", columnDefinition = "DATE")
+        private LocalDate dataNasc;
+
         @Enumerated(EnumType.STRING)
         @Column(name = "status", columnDefinition = "VARCHAR(20)")
         private StatusUsuario status;
@@ -42,10 +48,6 @@ public class Paciente {
         @ManyToOne
         @JoinColumn(name = "fk_endereco", referencedColumnName = "id")
         private Endereco fkEndereco;
-
-        @OneToOne
-        @JoinColumn(name = "fk_preferencia", referencedColumnName = "id")
-        private Preferencia preferencia;
 
         @CreatedDate
         @Column(name = "createdAt", columnDefinition = "TIMESTAMP")
