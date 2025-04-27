@@ -1,6 +1,6 @@
 package br.com.backend.PsiRizerio.mapper;
 
-import br.com.backend.PsiRizerio.dto.preferenciaDTO.PrefenciaResponseDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaResponseDTO;
 import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaCreateDTO;
 import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaUpdateDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Preferencia;
@@ -16,7 +16,7 @@ public interface PreferenciaMapper {
 
     PreferenciaUpdateDTO toDtoUpdate(Preferencia preferencia);
     PreferenciaCreateDTO toDtoCreate(Preferencia preferencia);
-    PrefenciaResponseDTO toDtoResponse(Preferencia preferencia);
-    List<PrefenciaResponseDTO> toDtoList(List<Preferencia> preferencia);
+    PreferenciaResponseDTO toDtoResponse(Preferencia preferencia);
+    List<PreferenciaResponseDTO> toDtoList(List<Preferencia> preferencia);
 
 }

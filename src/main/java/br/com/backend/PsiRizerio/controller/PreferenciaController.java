@@ -1,6 +1,6 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.preferenciaDTO.PrefenciaResponseDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaResponseDTO;
 import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaCreateDTO;
 import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.PreferenciaMapper;
@@ -27,7 +27,7 @@ public class PreferenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<PrefenciaResponseDTO> createPreferencia(
+    public ResponseEntity<PreferenciaResponseDTO> createPreferencia(
             @Valid @RequestBody PreferenciaCreateDTO preferenciaCreateDTO) {
         Preferencia preferencia = preferenciaMapper.toEntity(preferenciaCreateDTO);
         return ResponseEntity.status(201)
@@ -35,21 +35,21 @@ public class PreferenciaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PrefenciaResponseDTO>> findPreferencia() {
+    public ResponseEntity<List<PreferenciaResponseDTO>> findPreferencia() {
         List<Preferencia> preferencias = preferenciaService.findAllPreferencias();
         return ResponseEntity.status(200)
                 .body(preferenciaMapper.toDtoList(preferencias));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PrefenciaResponseDTO> findPreferenciaById(@PathVariable Integer id) {
+    public ResponseEntity<PreferenciaResponseDTO> findPreferenciaById(@PathVariable Integer id) {
         Preferencia preferencia = preferenciaService.findPreferenciaById(id);
         return ResponseEntity.status(200)
                 .body(preferenciaMapper.toDtoResponse(preferencia));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PrefenciaResponseDTO> updatePreferencia(@PathVariable Integer id,
+    public ResponseEntity<PreferenciaResponseDTO> updatePreferencia(@PathVariable Integer id,
                                                                   @Valid @RequestBody PreferenciaUpdateDTO preferenciaUpdateDTO) {
         Preferencia preferencia = preferenciaMapper.toEntity(preferenciaUpdateDTO);
         return ResponseEntity.status(200)
