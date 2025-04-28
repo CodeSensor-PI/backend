@@ -14,4 +14,6 @@ public interface PsicologoRepository extends JpaRepository<Psicologo, Integer> {
 
 
     Optional<Psicologo> findByEmailIgnoreCase(String email);
+
+    Optional<Psicologo> findByEmail(String username);
 }
