@@ -7,6 +7,7 @@ import br.com.backend.PsiRizerio.mapper.TelefoneMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
 import br.com.backend.PsiRizerio.service.TelefoneService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/telefones")
 public class TelefoneController {
 
     private final TelefoneService telefoneService;
 
     private final TelefoneMapper telefoneMappper;
-
-    public TelefoneController(TelefoneService telefoneService, TelefoneMapper telefoneMappper) {
-        this.telefoneService = telefoneService;
-        this.telefoneMappper = telefoneMappper;
-    }
 
     @PostMapping
     public ResponseEntity<TelefoneResponseDTO> createTelefone(@Valid @RequestBody TelefoneCreateDTO telefoneCreateDTO) {

@@ -15,16 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/preferencias")
 public class PreferenciaController {
 
     private final PreferenciaService preferenciaService;
     private final PreferenciaMapper preferenciaMapper;
-
-    public PreferenciaController(PreferenciaService preferenciaService, PreferenciaMapper preferenciaMapper) {
-        this.preferenciaService = preferenciaService;
-        this.preferenciaMapper = preferenciaMapper;
-    }
 
     @PostMapping
     public ResponseEntity<PreferenciaResponseDTO> createPreferencia(

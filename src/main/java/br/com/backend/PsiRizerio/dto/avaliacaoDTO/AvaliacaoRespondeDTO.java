@@ -1,7 +1,11 @@
 package br.com.backend.PsiRizerio.dto.avaliacaoDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+import lombok.Data;
 
+@Builder
+@Data
 public class AvaliacaoRespondeDTO {
 
     private Integer id;

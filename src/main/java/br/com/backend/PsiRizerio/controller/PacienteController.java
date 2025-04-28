@@ -7,6 +7,7 @@ import br.com.backend.PsiRizerio.service.PacienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "/pacientes")
 @Tag(name = "Crud de pacientes - Controller", description = "Crud de pacientes")
 public class PacienteController {
@@ -23,11 +25,6 @@ public class PacienteController {
     private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
     private final PacienteService pacienteService;
     private final PacienteMapper pacienteMapper;
-
-    public PacienteController(PacienteService pacienteService, PacienteMapper pacienteMapper) {
-        this.pacienteService = pacienteService;
-        this.pacienteMapper = pacienteMapper;
-    }
 
     @PostMapping
     @Operation(summary = "Cria um paciente", description = "Cria um paciente")
