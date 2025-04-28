@@ -46,7 +46,7 @@ public class PsicologoService {
     }
 
     public Psicologo update(Integer id, Psicologo psicologo) {
-        Psicologo usersToUpdate = psicologoRepository.findById(id)
+        Psicologo psicologoToUpdate = psicologoRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
         if (psicologoRepository.existsByCrpIgnoreCaseAndIdNot(psicologo.getCrp(), id) ||
@@ -56,14 +56,14 @@ public class PsicologoService {
 
         if (!isValidEmail(psicologo.getEmail())) throw new EntidadeInvalidaException();
 
-        usersToUpdate.setNome(psicologo.getNome());
-        usersToUpdate.setCrp(psicologo.getCrp());
-        usersToUpdate.setEmail(psicologo.getEmail());
-        usersToUpdate.setTelefone(psicologo.getTelefone());
-        usersToUpdate.setFkRoles(psicologo.getFkRoles());
-        usersToUpdate.setUpdatedAt(LocalDateTime.now());
+        psicologoToUpdate.setNome(psicologo.getNome());
+        psicologoToUpdate.setCrp(psicologo.getCrp());
+        psicologoToUpdate.setEmail(psicologo.getEmail());
+        psicologoToUpdate.setTelefone(psicologo.getTelefone());
+        psicologoToUpdate.setFkRoles(psicologo.getFkRoles());
+        psicologoToUpdate.setUpdatedAt(LocalDateTime.now());
 
-        return psicologoRepository.save(usersToUpdate);
+        return psicologoRepository.save(psicologoToUpdate);
     }
 
     public Psicologo findById(Integer id) {
