@@ -50,6 +50,9 @@ public class SessaoService {
 
         if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1), id)) throw new EntidadeConflitoException();
 
+        sessaoToUpdate.setData(sessao.getData());
+        sessaoToUpdate.setHora(sessao.getHora());
+        sessaoToUpdate.setAnotacao(sessao.getAnotacao());
         sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
         return sessaoRepository.save(sessaoToUpdate);
     }

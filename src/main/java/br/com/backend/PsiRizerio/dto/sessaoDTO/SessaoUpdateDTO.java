@@ -24,10 +24,8 @@ public class SessaoUpdateDTO {
     private PacienteSessaoResponseDTO fkPaciente;
 
     @Future
-
     private LocalDate data;
 
-    @Future
     private LocalTime hora;
 
     private TipoSessao tipo;
