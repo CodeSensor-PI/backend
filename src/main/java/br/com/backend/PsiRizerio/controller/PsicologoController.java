@@ -61,8 +61,8 @@ public class PsicologoController {
     public ResponseEntity<PsicologoTokenDTO> login(@RequestBody PsicologoLoginDTO psicologoLoginDTO) {
 
         final Psicologo psicologo = psicologoMapper.toEntity(psicologoLoginDTO);
-        PsicologoTokenDTO pacienteTokenDto = this.psicologoService.autenticar(psicologo);
+        PsicologoTokenDTO psicologoTokenDTO = this.psicologoService.autenticar(psicologo);
 
-        return ResponseEntity.status(200).body(pacienteTokenDto);
+        return ResponseEntity.status(200).body(psicologoTokenDTO);
     }
 }

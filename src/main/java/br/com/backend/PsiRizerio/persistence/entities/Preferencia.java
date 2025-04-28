@@ -22,7 +22,7 @@ public class Preferencia {
 
     @OneToOne
     @JoinColumn(name = "fk_paciente", referencedColumnName = "id")
-    private Paciente paciente;
+    private Paciente fkPaciente;
 
     @Column(name = "dia_semana", columnDefinition = "VARCHAR(10)")
     @Enumerated(EnumType.STRING)
