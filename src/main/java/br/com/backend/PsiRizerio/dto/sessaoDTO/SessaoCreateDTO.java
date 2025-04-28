@@ -28,7 +28,6 @@ public class SessaoCreateDTO {
     @NotNull
     private LocalDate data;
 
-    @Future
     @NotNull
     private LocalTime hora;
 
