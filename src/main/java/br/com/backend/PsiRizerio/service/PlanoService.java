@@ -6,6 +6,7 @@ import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
 import br.com.backend.PsiRizerio.mapper.PlanoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Plano;
 import br.com.backend.PsiRizerio.persistence.repositories.PlanoRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PlanoService {
     private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
     private final PlanoRepository planoRepository;
     private final PlanoMapper planoMapper;
-
-    @Autowired
-    public PlanoService(PlanoRepository planoRepository, PlanoMapper planoMapper) {
-        this.planoRepository = planoRepository;
-        this.planoMapper = planoMapper;
-    }
 
     public Plano createPlano(Plano plano) {
         if (planoRepository.existsByCategoria(plano.getCategoria())) throw new EntidadeConflitoException();

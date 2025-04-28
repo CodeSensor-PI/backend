@@ -4,21 +4,18 @@ import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
 import br.com.backend.PsiRizerio.persistence.repositories.TelefoneRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TelefoneService {
 
     private final TelefoneRepository telefoneRepository;
     private final PacienteRepository pacienteRepository;
-
-    public TelefoneService(TelefoneRepository telefoneRepository, PacienteRepository pacienteRepository) {
-        this.telefoneRepository = telefoneRepository;
-        this.pacienteRepository = pacienteRepository;
-    }
 
     public Telefone createTelefone(Telefone telefone) {
         telefone.setFkPaciente(pacienteRepository.findById(telefone.getFkPaciente().getId())

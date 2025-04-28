@@ -11,6 +11,7 @@ import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PacienteService {
 
     private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
@@ -33,14 +35,6 @@ public class PacienteService {
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
     private final PacienteMapper pacienteMapper;
-
-    public PacienteService(PacienteRepository pacienteRepository, PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager, PacienteMapper pacienteMapper, EnderecoService enderecoService) {
-        this.pacienteRepository = pacienteRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
-        this.authenticationManager = authenticationManager;
-        this.pacienteMapper = pacienteMapper;
-    }
 
     public Paciente createUser(Paciente paciente) {
         if (pacienteRepository.existsByEmailIgnoreCase(paciente.getEmail())

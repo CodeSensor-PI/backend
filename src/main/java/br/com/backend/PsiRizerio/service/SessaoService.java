@@ -7,6 +7,7 @@ import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.persistence.repositories.SessaoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +17,13 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SessaoService {
 
     private final SessaoRepository sessaoRepository;
 
     private final SessaoMapper sessaoMapper;
     private final PacienteRepository pacienteRepository;
-
-    @Autowired
-    public SessaoService(SessaoRepository sessaoRepository, SessaoMapper sessaoMapper, PacienteRepository pacienteRepository) {
-        this.sessaoRepository = sessaoRepository;
-        this.sessaoMapper = sessaoMapper;
-        this.pacienteRepository = pacienteRepository;
-    }
 
     public Sessao createSessao(Sessao sessao) {
         if (sessaoRepository.existsByDataAndHora(sessao.getData(), sessao.getHora())) throw new EntidadeConflitoException();

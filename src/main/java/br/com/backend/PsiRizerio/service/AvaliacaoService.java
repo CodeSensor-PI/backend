@@ -5,21 +5,18 @@ import br.com.backend.PsiRizerio.dto.avaliacaoDTO.AvaliacaoRespondeDTO;
 import br.com.backend.PsiRizerio.mapper.AvaliacaoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Avaliacao;
 import br.com.backend.PsiRizerio.persistence.repositories.AvaliacaoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AvaliacaoService {
 
     private final AvaliacaoRepository avaliacaoRepository;
     private final AvaliacaoMapper avaliacaoMapper;
-
-    public AvaliacaoService(AvaliacaoRepository avaliacaoRepository, AvaliacaoMapper avaliacaoMapper) {
-        this.avaliacaoRepository = avaliacaoRepository;
-        this.avaliacaoMapper = avaliacaoMapper;
-    }
 
     public AvaliacaoRespondeDTO createAvaliacao(AvaliacaoCreateDTO avaliacaoCreateDTO) {
         Avaliacao avaliacao = avaliacaoMapper.toEntity(avaliacaoCreateDTO);

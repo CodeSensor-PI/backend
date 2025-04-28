@@ -1,29 +1,23 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
-import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
 import br.com.backend.PsiRizerio.mapper.EnderecoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.repositories.EnderecoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EnderecoService {
 
     private final EnderecoRepository enderecoRepository;
     private final EnderecoMapper enderecoMapper;
 
-    @Autowired
-    public EnderecoService(EnderecoRepository enderecoRepository, EnderecoMapper enderecoMapper) {
-        this.enderecoRepository = enderecoRepository;
-        this.enderecoMapper = enderecoMapper;
-    }
 
     public Endereco createEndereco(Endereco endereco) {
 
