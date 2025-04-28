@@ -65,4 +65,11 @@ public class PsicologoController {
 
         return ResponseEntity.status(200).body(psicologoTokenDTO);
     }
+
+    @PutMapping("/{id}/alterar-senha")
+    public ResponseEntity<Void> updateSenha(@PathVariable Integer id,
+                                            @Valid @RequestBody PsicologoSenhaUpdateDTO psicologoSenhaUpdateDTO) {
+        psicologoService.updateSenha(id, psicologoSenhaUpdateDTO.getSenha(), psicologoSenhaUpdateDTO.getNovaSenha());
+        return ResponseEntity.ok().build();
+    }
 }
