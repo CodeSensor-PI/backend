@@ -2,6 +2,7 @@ package br.com.backend.PsiRizerio.controller;
 
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoCreateDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoResponseDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.service.SessaoService;
@@ -53,8 +54,8 @@ public class SessaoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SessaoResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody SessaoCreateDTO sessaoCreateDTO) {
-        Sessao sessao = sessaoMapper.toEntity(sessaoCreateDTO);
+    public ResponseEntity<SessaoResponseDTO> update(@PathVariable Integer id, @Valid @RequestBody SessaoUpdateDTO sessaoUpdateDTO) {
+        Sessao sessao = sessaoMapper.toEntity(sessaoUpdateDTO);
         Sessao sessaoUpdated = sessaoService.update(id, sessao);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoResponse(sessaoUpdated));
     }
