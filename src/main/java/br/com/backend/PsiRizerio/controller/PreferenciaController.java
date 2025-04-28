@@ -1,7 +1,7 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaCreateDTO;
 import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaResponseDTO;
+import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaCreateDTO;
 import br.com.backend.PsiRizerio.dto.preferenciaDTO.PreferenciaUpdateDTO;
 import br.com.backend.PsiRizerio.mapper.PreferenciaMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Preferencia;
