@@ -18,8 +18,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sessoes")
 @RequiredArgsConstructor
+@RequestMapping("/sessoes")
 public class SessaoController {
 
     private final SessaoService sessaoService;

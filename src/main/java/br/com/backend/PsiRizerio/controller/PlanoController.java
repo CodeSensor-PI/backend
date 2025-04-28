@@ -8,6 +8,7 @@ import br.com.backend.PsiRizerio.persistence.entities.Plano;
 import br.com.backend.PsiRizerio.service.PlanoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/planos")
 public class PlanoController {
     private final PlanoService planoService;
     private final PlanoMapper planoMapper;
-
-    public PlanoController(PlanoService planoService, PlanoMapper planoMapper) {
-        this.planoService = planoService;
-        this.planoMapper = planoMapper;
-    }
 
     @PostMapping
     @Operation(summary = "Cria um plano", description = "Cria um plano")
