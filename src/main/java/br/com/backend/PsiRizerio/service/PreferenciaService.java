@@ -6,21 +6,18 @@ import br.com.backend.PsiRizerio.exception.EntidadeSemConteudoException;
 import br.com.backend.PsiRizerio.mapper.PreferenciaMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Preferencia;
 import br.com.backend.PsiRizerio.persistence.repositories.PreferenciaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PreferenciaService {
 
     private final PreferenciaRepository preferenciaRepository;
     private final PreferenciaMapper preferenciaMapper;
-
-    public PreferenciaService(PreferenciaRepository preferenciaRepository, PreferenciaMapper preferenciaMapper) {
-        this.preferenciaRepository = preferenciaRepository;
-        this.preferenciaMapper = preferenciaMapper;
-    }
 
     public Preferencia createPreferencia(Preferencia preferencia) {
         if (preferenciaRepository.existsByHorarioAndDiaSemana(preferencia.getHorario(), preferencia.getDiaSemana())) {
