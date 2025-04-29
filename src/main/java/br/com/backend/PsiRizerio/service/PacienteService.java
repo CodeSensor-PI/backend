@@ -7,7 +7,9 @@ import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
 import br.com.backend.PsiRizerio.mapper.PacienteMapper;
+import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
+import br.com.backend.PsiRizerio.persistence.repositories.EnderecoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
@@ -35,12 +37,20 @@ public class PacienteService {
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
     private final PacienteMapper pacienteMapper;
+    private final EnderecoRepository enderecoRepository;
 
     public Paciente createUser(Paciente paciente) {
         if (pacienteRepository.existsByEmailIgnoreCase(paciente.getEmail())
                 && paciente.getStatus() == StatusUsuario.ATIVO) throw new EntidadeConflitoException();
 
         if (!isValidEmail(paciente.getEmail())) throw new EntidadeInvalidaException();
+
+        if (paciente.getFkEndereco() != null && paciente.getFkEndereco().getId() != null) {
+            Integer enderecoId = paciente.getFkEndereco().getId();
+            Endereco endereco = enderecoRepository.findById(enderecoId)
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Endereço não encontrado com ID: " + enderecoId));
+            paciente.setFkEndereco(endereco);
+        }
 
         String senhaCriptografada = passwordEncoder.encode(paciente.getSenha());
         paciente.setSenha(senhaCriptografada);
@@ -76,7 +86,10 @@ public class PacienteService {
         }
 
         if (paciente.getFkEndereco() != null && paciente.getFkEndereco().getId() != null) {
-            pacienteToUpdate.setFkEndereco(paciente.getFkEndereco());
+            Integer enderecoId = paciente.getFkEndereco().getId();
+            Endereco endereco = enderecoRepository.findById(enderecoId)
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException("Endereço não encontrado com ID: " + enderecoId));
+            pacienteToUpdate.setFkEndereco(endereco);
         }
 
         if (paciente.getFkPlano() != null && paciente.getFkPlano().getId() != null) {

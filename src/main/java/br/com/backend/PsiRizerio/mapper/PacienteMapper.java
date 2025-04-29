@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {EnderecoMapper.class})
 public interface PacienteMapper {
     Paciente toEntity(PacienteCreateDTO pacienteCreateDTO);
     Paciente toEntity(PacienteUpdateDTO pacienteUpdateDTO);
@@ -22,6 +22,5 @@ public interface PacienteMapper {
     PacienteSenhaUpdateDTO toDtoUpdateSenha(Paciente paciente);
     PacientePrimeiroLoginDTO toDtoPrimeiroLogin(Paciente paciente);
     PacienteTokenDTO toDtoToken(Paciente paciente, String token);
-
 
 }
