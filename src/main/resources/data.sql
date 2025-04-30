@@ -1,6 +1,6 @@
 -- Inserir plano
-INSERT IGNORE INTO plano (id, categoria, preco) VALUES (1, 'Mensal', 400.00),
-(2, 'Semanal', 100.00);
+INSERT IGNORE INTO plano (id, categoria, preco) VALUES (1, 'PLANO', 400.00),
+(2, 'AVULSO', 100.00);
 
 -- Inserir endereço
 INSERT IGNORE INTO endereco (id, cep, logradouro, numero, bairro, cidade, uf, created_at, updated_at)
