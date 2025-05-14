@@ -10,4 +10,6 @@ public interface PreferenciaRepository extends JpaRepository<Preferencia, Intege
     boolean existsByHorarioAndDiaSemana(String horario, DiaSemana diaSemana);
 
     boolean existsByHorarioAndDiaSemanaAndIdNot(String horario, DiaSemana diaSemana, Integer id);
+
+    findPreferenciaByFkPaciente
 }

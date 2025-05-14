@@ -37,9 +37,11 @@ public class PreferenciaService {
             throw new EntidadeConflitoException();
         }
 
+        preferenciaToUpdate.setHorario(preferencia.getHorario());
+        preferenciaToUpdate.setDiaSemana(preferencia.getDiaSemana());
         preferenciaToUpdate.setUpdatedAt(LocalDateTime.now());
 
-        return preferenciaRepository.save(preferencia);
+        return preferenciaRepository.save(preferenciaToUpdate);
     }
 
     public Preferencia findPreferenciaById(Integer id) {
