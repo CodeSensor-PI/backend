@@ -1,5 +1,7 @@
 package br.com.backend.PsiRizerio.service;
 
+import br.com.backend.PsiRizerio.enums.StatusSessao;
+import br.com.backend.PsiRizerio.enums.TipoSessao;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
@@ -48,6 +50,15 @@ public class SessaoService {
         sessaoToUpdate.setData(sessao.getData());
         sessaoToUpdate.setHora(sessao.getHora());
         sessaoToUpdate.setAnotacao(sessao.getAnotacao());
+        sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
+        return sessaoRepository.save(sessaoToUpdate);
+    }
+
+    public Sessao cancelarSessao(Integer id, Sessao sessao) {
+        Sessao sessaoToUpdate = sessaoRepository.findById(id)
+                .orElseThrow((EntidadeNaoEncontradaException::new));
+
+        sessaoToUpdate.setStatusSessao(StatusSessao.CANCELADA);
         sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
         return sessaoRepository.save(sessaoToUpdate);
     }

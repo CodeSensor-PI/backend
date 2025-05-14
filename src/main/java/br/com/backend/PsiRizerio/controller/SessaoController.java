@@ -71,4 +71,12 @@ public class SessaoController {
         List<Sessao> sessoes = sessaoService.findByPacienteId(id);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
     }
+
+    @PutMapping
+    @RequestMapping("/cancelar/{id}")
+    public ResponseEntity<SessaoResponseDTO> cancelarSessao(@PathVariable Integer id, @Valid @RequestBody SessaoUpdateDTO sessaoUpdateDTO) {
+        Sessao sessao = sessaoMapper.toEntity(sessaoUpdateDTO);
+        Sessao sessaoUpdated = sessaoService.cancelarSessao(id, sessao);
+        return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoResponse(sessaoUpdated));
+    }
 }
