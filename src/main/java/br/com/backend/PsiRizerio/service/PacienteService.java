@@ -90,17 +90,21 @@ public class PacienteService {
             Endereco endereco = enderecoRepository.findById(enderecoId)
                     .orElseThrow(() -> new EntidadeNaoEncontradaException("Endereço não encontrado com ID: " + enderecoId));
             pacienteToUpdate.setFkEndereco(endereco);
+        } else {
+            pacienteToUpdate.setFkEndereco(null);
         }
 
         if (paciente.getFkPlano() != null && paciente.getFkPlano().getId() != null) {
             pacienteToUpdate.setFkPlano(paciente.getFkPlano());
         }
 
+        // Directly update the status field
+        pacienteToUpdate.setStatus(paciente.getStatus());
+
         pacienteToUpdate.setUpdatedAt(LocalDateTime.now());
 
         return pacienteRepository.save(pacienteToUpdate);
     }
-
 
     public Paciente findById(Integer id) {
         if (id == null) throw new EntidadeInvalidaException();
