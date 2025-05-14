@@ -16,4 +16,6 @@ public class PacienteTokenDTO {
   private String email;
   private String token;
 
+    public PacienteTokenDTO(String token) {
+    }
 }

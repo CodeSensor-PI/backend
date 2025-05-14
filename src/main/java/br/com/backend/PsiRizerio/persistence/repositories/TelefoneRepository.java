@@ -12,4 +12,6 @@ public interface TelefoneRepository extends JpaRepository<Telefone, Integer> {
 
     @Query("SELECT t FROM Telefone t WHERE t.fkPaciente.id = :id")
     List<Telefone> findByFkPaciente(Integer id);
+
+    boolean existsByNumero(String numero);
 }

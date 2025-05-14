@@ -2,12 +2,15 @@ package br.com.backend.PsiRizerio.dto.avaliacaoDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
-@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AvaliacaoUpdateDTO {
 
     @NotNull
@@ -15,20 +18,4 @@ public class AvaliacaoUpdateDTO {
 
     @NotBlank
     private String feedback;
-
-    public Integer getNota() {
-        return nota;
-    }
-
-    public void setNota(Integer nota) {
-        this.nota = nota;
-    }
-
-    public String getFeedback() {
-        return feedback;
-    }
-
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
 }

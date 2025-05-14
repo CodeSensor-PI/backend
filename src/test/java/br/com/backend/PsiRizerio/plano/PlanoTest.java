@@ -22,7 +22,6 @@ import static org.mockito.Mockito.*;
 
 public class PlanoTest {
 
-
     @Mock
     private PlanoRepository planoRepository;
 

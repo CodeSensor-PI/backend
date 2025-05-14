@@ -16,4 +16,6 @@ public class PsicologoTokenDTO {
     private String email;
     private String token;
 
+    public PsicologoTokenDTO(String token) {
+    }
 }
