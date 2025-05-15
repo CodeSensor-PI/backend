@@ -3,6 +3,7 @@ package br.com.backend.PsiRizerio.controller;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoCreateDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoResponseDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoUpdateDTO;
+import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.service.SessaoService;
@@ -78,5 +79,11 @@ public class SessaoController {
         Sessao sessao = sessaoMapper.toEntity(sessaoUpdateDTO);
         Sessao sessaoUpdated = sessaoService.cancelarSessao(id, sessao);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoResponse(sessaoUpdated));
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<SessaoResponseDTO>> findByStatus(@RequestParam StatusSessao status) {
+        List<Sessao> sessoes = sessaoService.findByStatusPendente(status);
+        return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
     }
 }

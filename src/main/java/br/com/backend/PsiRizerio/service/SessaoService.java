@@ -90,4 +90,13 @@ public class SessaoService {
         return sessaoRepository.findByFkPaciente(paciente);
     }
 
+    public List<Sessao> findByStatusPendente(StatusSessao statusSessao) {
+        if (statusSessao == null) throw new EntidadeNaoEncontradaException();
+
+        if (sessaoRepository.findByStatusSessao(statusSessao).isEmpty()) throw new EntidadeNaoEncontradaException();
+
+        return sessaoRepository.findByStatusSessao(statusSessao);
+    }
+
+
 }

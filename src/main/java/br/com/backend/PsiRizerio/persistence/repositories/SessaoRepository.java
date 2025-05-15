@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.persistence.repositories;
 
+import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +34,6 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     boolean existsByDataAndHoraBetween(LocalDate data, LocalTime hora, LocalTime localTime);
 
     boolean existsByDataAndHora(LocalDate data, LocalTime hora);
+
+    List<Sessao> findByStatusSessao(StatusSessao statusSessao);
 }
