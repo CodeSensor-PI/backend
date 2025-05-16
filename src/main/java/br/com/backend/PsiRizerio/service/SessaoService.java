@@ -49,6 +49,7 @@ public class SessaoService {
 
         sessaoToUpdate.setData(sessao.getData());
         sessaoToUpdate.setHora(sessao.getHora());
+        sessaoToUpdate.setStatusSessao(sessao.getStatusSessao());
         sessaoToUpdate.setAnotacao(sessao.getAnotacao());
         sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
         return sessaoRepository.save(sessaoToUpdate);
