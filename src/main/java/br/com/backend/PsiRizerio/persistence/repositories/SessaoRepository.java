@@ -36,4 +36,6 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     boolean existsByDataAndHora(LocalDate data, LocalTime hora);
 
     List<Sessao> findByStatusSessao(StatusSessao statusSessao);
+
+
 }

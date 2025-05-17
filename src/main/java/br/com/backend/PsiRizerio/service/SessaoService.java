@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -97,6 +98,28 @@ public class SessaoService {
         if (sessaoRepository.findByStatusSessao(statusSessao).isEmpty()) throw new EntidadeNaoEncontradaException();
 
         return sessaoRepository.findByStatusSessao(statusSessao);
+    }
+
+
+    public List<Sessao> findByDataHoraDisponivel(LocalDate data, LocalTime hora, LocalTime hora2) {
+        if (sessaoRepository.existsByDataAndHoraBetween(data, hora, hora2)) throw new EntidadeConflitoException();
+
+        return sessaoRepository.findByDataAndHoraBetween(data, hora, hora2);
+    }
+
+    public List<LocalTime> findHorariosDisponiveis(LocalDate data, LocalTime horaInicio, LocalTime horaFim) {
+        List<Sessao> sessoesOcupadas = sessaoRepository.findByDataAndHoraBetween(data, horaInicio, horaFim);
+        List<LocalTime> horariosOcupados = sessoesOcupadas.stream()
+                .map(Sessao::getHora)
+                .toList();
+
+        List<LocalTime> horariosDisponiveis = new ArrayList<>();
+        for (LocalTime hora = horaInicio; hora.isBefore(horaFim); hora = hora.plusMinutes(30)) {
+            if (!horariosOcupados.contains(hora)) {
+                horariosDisponiveis.add(hora);
+            }
+        }
+        return horariosDisponiveis;
     }
 
 
