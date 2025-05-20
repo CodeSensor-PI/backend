@@ -54,7 +54,7 @@ public class PreferenciaService {
     }
 
     public Preferencia findPreferenciaById(Integer id) {
-        return preferenciaRepository.findById(id)
+        return preferenciaRepository.findFirstByFkPaciente_Id(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
     }
 
