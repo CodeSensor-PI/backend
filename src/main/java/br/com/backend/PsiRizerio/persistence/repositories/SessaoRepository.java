@@ -38,4 +38,7 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     List<Sessao> findByStatusSessao(StatusSessao statusSessao);
 
 
+    List<Sessao> data(LocalDate data);
+
+    List<LocalDate> findByDataBetween(LocalDate dataInicio, LocalDate dataFim);
 }

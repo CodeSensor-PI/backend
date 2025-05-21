@@ -114,13 +114,22 @@ public class SessaoService {
                 .toList();
 
         List<LocalTime> horariosDisponiveis = new ArrayList<>();
-        for (LocalTime hora = horaInicio; hora.isBefore(horaFim); hora = hora.plusMinutes(30)) {
+        for (LocalTime hora = horaInicio; hora.isBefore(horaFim); hora = hora.plusMinutes(60)) {
             if (!horariosOcupados.contains(hora)) {
                 horariosDisponiveis.add(hora);
             }
         }
         return horariosDisponiveis;
     }
+
+    public List<LocalDate> findDataPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+        List<LocalDate> datas = new ArrayList<>();
+        for (LocalDate data = dataInicio; !data.isAfter(dataFim); data = data.plusDays(1)) {
+            datas.add(data);
+        }
+        return datas;
+    }
+
 
 
 }

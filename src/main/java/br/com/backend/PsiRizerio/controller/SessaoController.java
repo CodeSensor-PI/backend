@@ -95,4 +95,19 @@ public class SessaoController {
         List<LocalTime> horariosDisponiveis = sessaoService.findHorariosDisponiveis(data, horaInicio, horaFim);
         return ResponseEntity.status(HttpStatus.OK).body(horariosDisponiveis);
     }
+
+    @GetMapping("/datas")
+    public ResponseEntity<List<String>> listarDatasPorPeriodo(
+            @RequestParam LocalDate dataInicio,
+            @RequestParam LocalDate dataFim) {
+
+        List<LocalDate> datas = sessaoService.findDataPorPeriodo(dataInicio, dataFim);
+
+        List<String> datasFormatadas = datas.stream()
+                .map(LocalDate::toString)
+                .toList();
+
+        return ResponseEntity.ok(datasFormatadas);
+    }
+
 }
