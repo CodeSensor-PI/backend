@@ -28,6 +28,9 @@ public class Paciente {
         @Column(name = "cpf", columnDefinition = "CHAR(14)", unique = true)
         private String cpf;
 
+        @Column(name = "motivo_consulta", columnDefinition = "TEXT")
+        private String motivoConsulta;
+
         @Column(name = "email", columnDefinition = "VARCHAR(80)", unique = true)
         private String email;
 

@@ -188,6 +188,7 @@ public class PacienteService {
         pacienteToUpdate.setDataNasc(paciente.getDataNasc());
         pacienteToUpdate.setFkEndereco(paciente.getFkEndereco());
         pacienteToUpdate.setCpf(paciente.getCpf());
+        pacienteToUpdate.setMotivoConsulta(paciente.getMotivoConsulta());
         pacienteToUpdate.setUpdatedAt(LocalDateTime.now());
 
         return pacienteRepository.save(pacienteToUpdate);

@@ -26,5 +26,8 @@ public class PacientePrimeiroLoginDTO {
     @NotBlank
     private String cpf;
 
+    @NotBlank
+    private String motivoConsulta;
+
     private EnderecoResponseDTO fkEndereco;
 }
