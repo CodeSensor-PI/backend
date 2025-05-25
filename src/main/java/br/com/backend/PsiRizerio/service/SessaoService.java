@@ -1,7 +1,8 @@
 package br.com.backend.PsiRizerio.service;
 
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
-import br.com.backend.PsiRizerio.enums.TipoSessao;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
 import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
@@ -10,7 +11,6 @@ import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.persistence.repositories.SessaoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -45,7 +45,7 @@ public class SessaoService {
         Sessao sessaoToUpdate = sessaoRepository.findById(id)
                 .orElseThrow((EntidadeConflitoException::new));
 
-        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1), id)) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1).minusSeconds(1), id)) throw new EntidadeConflitoException();
 
         sessaoToUpdate.setData(sessao.getData());
         sessaoToUpdate.setHora(sessao.getHora());
@@ -97,6 +97,14 @@ public class SessaoService {
         if (sessaoRepository.findByStatusSessao(statusSessao).isEmpty()) throw new EntidadeNaoEncontradaException();
 
         return sessaoRepository.findByStatusSessao(statusSessao);
+    }
+
+    public List<SessaoKpiResponseDTO> getKpiSessoesSemana() {
+        return sessaoRepository.findKpiSessoesSemana();
+    }
+
+    public List<SessaoDiaResponseDTO> getSessoesDoDia() {
+        return sessaoRepository.findSessoesDoDia();
     }
 
 

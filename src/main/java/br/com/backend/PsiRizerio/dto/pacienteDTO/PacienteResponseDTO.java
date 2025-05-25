@@ -21,6 +21,7 @@ public class PacienteResponseDTO {
     private String cpf;
     private String email;
     private StatusUsuario status;
+    private String motivoConsulta;
     private PlanoResponseDTO fkPlano;
     private EnderecoResponseDTO fkEndereco;
     private LocalDateTime createdAt;
