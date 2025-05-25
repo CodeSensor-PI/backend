@@ -42,7 +42,8 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     @Query("""
 SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO(
     CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)),
-    COUNT(DISTINCT s.fkPaciente.id)
+    COUNT(DISTINCT s.fkPaciente.id),
+    COUNT(s.id)
 )
 FROM Sessao s
 WHERE 

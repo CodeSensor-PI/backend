@@ -13,5 +13,6 @@ public class SessaoKpiResponseDTO {
 
     private String anoSemana;
     private Long pacientesAgendados;
+    private Long totalSessoes;
 
 }
