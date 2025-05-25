@@ -86,7 +86,7 @@ public class SessaoController {
 
     @GetMapping("/kpi/sessoes-semana")
     public ResponseEntity<List<SessaoKpiResponseDTO>> getKpiSessoesSemana() {
-        List<SessaoKpiResponseDTO> kpiData = sessaoService.getKpiSessoesSemana();
+        List<SessaoKpiResponseDTO> kpiData = sessaoService.getKpiSessoesSemanaAtualEAnterior();
         return ResponseEntity.ok(kpiData);
     }
 

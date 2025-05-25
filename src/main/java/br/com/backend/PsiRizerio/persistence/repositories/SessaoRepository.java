@@ -5,8 +5,10 @@ import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -37,19 +39,25 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
 
     List<Sessao> findByStatusSessao(StatusSessao statusSessao);
 
-    @Query(value = """
-        SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO(
-            CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)),
-            COUNT(DISTINCT s.fkPaciente.id)
-        )
-        FROM Sessao s
-        GROUP BY
-            CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data))
-        ORDER BY
-            CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)) DESC
-        LIMIT 2
-    """)
-    List<SessaoKpiResponseDTO> findKpiSessoesSemana();
+    @Query("""
+SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO(
+    CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)),
+    COUNT(DISTINCT s.fkPaciente.id)
+)
+FROM Sessao s
+WHERE 
+    (FUNCTION('YEAR', s.data) = :anoAtual AND FUNCTION('WEEK', s.data) = :semanaAtual)
+    OR
+    (FUNCTION('YEAR', s.data) = :anoAnterior AND FUNCTION('WEEK', s.data) = :semanaAnterior)
+GROUP BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data))
+ORDER BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)) DESC
+""")
+    List<SessaoKpiResponseDTO> findKpiSessoesSemanaAtualEAnterior(
+            @Param("anoAtual") int anoAtual,
+            @Param("semanaAtual") int semanaAtual,
+            @Param("anoAnterior") int anoAnterior,
+            @Param("semanaAnterior") int semanaAnterior
+    );
 
 
     @Query(value = """

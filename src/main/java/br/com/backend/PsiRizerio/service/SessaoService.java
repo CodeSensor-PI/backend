@@ -11,12 +11,16 @@ import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.persistence.repositories.SessaoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -99,8 +103,18 @@ public class SessaoService {
         return sessaoRepository.findByStatusSessao(statusSessao);
     }
 
-    public List<SessaoKpiResponseDTO> getKpiSessoesSemana() {
-        return sessaoRepository.findKpiSessoesSemana();
+    public List<SessaoKpiResponseDTO> getKpiSessoesSemanaAtualEAnterior() {
+        LocalDate now = LocalDate.now();
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+
+        int semanaAtual = now.get(weekFields.weekOfWeekBasedYear());
+        int semanaAnterior = semanaAtual == 1 ? 52 : semanaAtual - 1;
+        int anoAtual = now.getYear();
+        int anoAnterior = semanaAtual == 1 ? anoAtual - 1 : anoAtual;
+
+        return sessaoRepository.findKpiSessoesSemanaAtualEAnterior(
+                anoAnterior, semanaAtual, anoAnterior, semanaAnterior
+        );
     }
 
     public List<SessaoDiaResponseDTO> getSessoesDoDia() {
