@@ -11,8 +11,7 @@ import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.persistence.repositories.SessaoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+// Removed unused imports for PageRequest and Pageable
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
