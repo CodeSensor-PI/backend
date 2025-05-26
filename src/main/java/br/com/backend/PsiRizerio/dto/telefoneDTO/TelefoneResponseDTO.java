@@ -19,6 +19,7 @@ public class TelefoneResponseDTO {
     private String ddd;
     private String numero;
     private TipoTelefone tipo;
+    private String nomeContato;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private PacienteSessaoResponseDTO fkPaciente;

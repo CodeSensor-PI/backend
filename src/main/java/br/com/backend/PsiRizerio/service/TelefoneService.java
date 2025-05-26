@@ -30,6 +30,7 @@ public class TelefoneService {
 
         telefoneToUpdate.setDdd(telefone.getDdd());
         telefoneToUpdate.setNumero(telefone.getNumero());
+        telefoneToUpdate.setNomeContato(telefone.getNomeContato());
         telefoneToUpdate.setTipo(telefone.getTipo());
         telefoneToUpdate.setUpdatedAt(LocalDateTime.now());
         return telefoneRepository.save(telefoneToUpdate);

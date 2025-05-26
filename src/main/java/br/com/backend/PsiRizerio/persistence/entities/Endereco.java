@@ -31,7 +31,7 @@ public class Endereco {
     @Column(name = "cidade", columnDefinition = "VARCHAR(25)")
     private String cidade;
 
-    @Column(name = "bairro", columnDefinition = "VARCHAR(40)")
+    @Column(name = "bairro", columnDefinition = "VARCHAR(80)")
     private String bairro;
 
     @Column(name = "uf", columnDefinition = "CHAR(2)")

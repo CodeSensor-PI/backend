@@ -1,8 +1,6 @@
 package br.com.backend.PsiRizerio.controller;
 
-import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoCreateDTO;
-import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoResponseDTO;
-import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoUpdateDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.*;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
@@ -14,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -85,5 +82,21 @@ public class SessaoController {
     public ResponseEntity<List<SessaoResponseDTO>> findByStatus(@RequestParam StatusSessao status) {
         List<Sessao> sessoes = sessaoService.findByStatusPendente(status);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
+    }
+
+    @GetMapping("/kpi/sessoes-semana")
+    public ResponseEntity<List<SessaoKpiResponseDTO>> getKpiSessoesSemana() {
+        List<SessaoKpiResponseDTO> kpiData = sessaoService.getKpiSessoesSemanaAtualEAnterior();
+        return ResponseEntity.ok(kpiData);
+    }
+
+    @GetMapping("/dia")
+    public ResponseEntity<List<SessaoDiaResponseDTO>> getSessoesDoDia() {
+        List<SessaoDiaResponseDTO> sessoesDoDia = sessaoService.getSessoesDoDia();
+        if (sessoesDoDia.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(sessoesDoDia);
+        }
     }
 }
