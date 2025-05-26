@@ -113,7 +113,7 @@ public class SessaoService {
         int anoAnterior = semanaAtual == 1 ? anoAtual - 1 : anoAtual;
 
         return sessaoRepository.findKpiSessoesSemanaAtualEAnterior(
-                anoAnterior, semanaAtual, anoAnterior, semanaAnterior
+                anoAtual, semanaAtual, anoAnterior, semanaAnterior
         );
     }
 
