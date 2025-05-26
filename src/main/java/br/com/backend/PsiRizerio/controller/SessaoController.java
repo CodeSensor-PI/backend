@@ -86,4 +86,28 @@ public class SessaoController {
         List<Sessao> sessoes = sessaoService.findByStatusPendente(status);
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
     }
+
+    @GetMapping("/disponibilidade")
+    public ResponseEntity<List<LocalTime>> getHorariosDisponiveis(
+            @RequestParam LocalDate data,
+            @RequestParam LocalTime horaInicio,
+            @RequestParam LocalTime horaFim) {
+        List<LocalTime> horariosDisponiveis = sessaoService.findHorariosDisponiveis(data, horaInicio, horaFim);
+        return ResponseEntity.status(HttpStatus.OK).body(horariosDisponiveis);
+    }
+
+    @GetMapping("/datas")
+    public ResponseEntity<List<String>> listarDatasPorPeriodo(
+            @RequestParam LocalDate dataInicio,
+            @RequestParam LocalDate dataFim) {
+
+        List<LocalDate> datas = sessaoService.findDataPorPeriodo(dataInicio, dataFim);
+
+        List<String> datasFormatadas = datas.stream()
+                .map(LocalDate::toString)
+                .toList();
+
+        return ResponseEntity.ok(datasFormatadas);
+    }
+
 }
