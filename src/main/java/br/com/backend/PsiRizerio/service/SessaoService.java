@@ -1,6 +1,7 @@
 package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiQtdCanceladaDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
@@ -31,9 +32,11 @@ public class SessaoService {
     private final PacienteRepository pacienteRepository;
 
     public Sessao createSessao(Sessao sessao) {
-        if (sessaoRepository.existsByDataAndHora(sessao.getData(), sessao.getHora())) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHora(sessao.getData(), sessao.getHora()))
+            throw new EntidadeConflitoException();
 
-        if (sessaoRepository.existsByDataAndHoraBetween(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1))) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHoraBetween(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1)))
+            throw new EntidadeConflitoException();
 
         Integer pacienteId = sessao.getFkPaciente().getId();
         Paciente paciente = pacienteRepository.findById(pacienteId)
@@ -48,7 +51,8 @@ public class SessaoService {
         Sessao sessaoToUpdate = sessaoRepository.findById(id)
                 .orElseThrow((EntidadeConflitoException::new));
 
-        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1).minusSeconds(1), id)) throw new EntidadeConflitoException();
+        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1).minusSeconds(1), id))
+            throw new EntidadeConflitoException();
 
 
         sessaoToUpdate.setData(sessao.getData());
@@ -122,5 +126,11 @@ public class SessaoService {
         return sessaoRepository.findSessoesDoDia();
     }
 
+    public SessaoKpiQtdCanceladaDTO getKpiQtdCanceladas() {
+
+        Double qtdCancelada = sessaoRepository.getPercentualCanceladasSemana();
+
+        return new SessaoKpiQtdCanceladaDTO(qtdCancelada);
+    }
 
 }

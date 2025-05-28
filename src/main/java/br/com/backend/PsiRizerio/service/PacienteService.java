@@ -1,5 +1,6 @@
 package br.com.backend.PsiRizerio.service;
 
+import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativoDTO;
 import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteTokenDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
@@ -183,7 +184,8 @@ public class PacienteService {
 
         if (pacienteRepository.existsByCpf(paciente.getCpf())) throw new EntidadeConflitoException();
 
-        if (paciente.getFkEndereco() == null && paciente.getFkEndereco().getId() == null) throw new EntidadeInvalidaException();
+        if (paciente.getFkEndereco() == null && paciente.getFkEndereco().getId() == null)
+            throw new EntidadeInvalidaException();
 
         pacienteToUpdate.setDataNasc(paciente.getDataNasc());
         pacienteToUpdate.setFkEndereco(paciente.getFkEndereco());
@@ -192,6 +194,11 @@ public class PacienteService {
         pacienteToUpdate.setUpdatedAt(LocalDateTime.now());
 
         return pacienteRepository.save(pacienteToUpdate);
+    }
+
+    public PacienteKpiQtdInativoDTO getQtdInativosKpi() {
+        Double percentual = pacienteRepository.getPercentualInativos();
+        return new PacienteKpiQtdInativoDTO(percentual);
     }
 
     public static boolean isValidEmail(String email) {

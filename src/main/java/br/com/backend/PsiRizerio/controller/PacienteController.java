@@ -95,4 +95,11 @@ public class PacienteController {
 
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoResponse(pacienteUpdated));
     }
+
+    @GetMapping("/kpi/percentInativo")
+    public ResponseEntity<PacienteKpiQtdInativoDTO> getQtdInativosKpi() {
+        PacienteKpiQtdInativoDTO porcentInativos = pacienteService.getQtdInativosKpi();
+
+        return ResponseEntity.status(HttpStatus.OK).body(porcentInativos);
+    }
 }
