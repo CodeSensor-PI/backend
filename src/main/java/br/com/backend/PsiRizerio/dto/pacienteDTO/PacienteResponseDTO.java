@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -20,6 +21,7 @@ public class PacienteResponseDTO {
     private String nome;
     private String cpf;
     private String email;
+    private LocalDate dataNasc;
     private StatusUsuario status;
     private String motivoConsulta;
     private PlanoResponseDTO fkPlano;
