@@ -19,9 +19,11 @@ import java.util.Optional;
 @Repository
 public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     Sessao save(Sessao sessao);
+
     void deleteById(Integer id);
 
     List<Sessao> findAll();
+
     Optional<Sessao> findById(Integer id);
 
     List<Sessao> findByFkPaciente(Paciente paciente);
@@ -40,19 +42,19 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     List<Sessao> findByStatusSessao(StatusSessao statusSessao);
 
     @Query("""
-SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO(
-    CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)),
-    COUNT(DISTINCT s.fkPaciente.id),
-    COUNT(s.id)
-)
-FROM Sessao s
-WHERE 
-    (FUNCTION('YEAR', s.data) = :anoAtual AND FUNCTION('WEEK', s.data) = :semanaAtual)
-    OR
-    (FUNCTION('YEAR', s.data) = :anoAnterior AND FUNCTION('WEEK', s.data) = :semanaAnterior)
-GROUP BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data))
-ORDER BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)) DESC
-""")
+            SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO(
+                CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)),
+                COUNT(DISTINCT s.fkPaciente.id),
+                COUNT(s.id)
+            )
+            FROM Sessao s
+            WHERE 
+                (FUNCTION('YEAR', s.data) = :anoAtual AND FUNCTION('WEEK', s.data) = :semanaAtual)
+                OR
+                (FUNCTION('YEAR', s.data) = :anoAnterior AND FUNCTION('WEEK', s.data) = :semanaAnterior)
+            GROUP BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data))
+            ORDER BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)) DESC
+            """)
     List<SessaoKpiResponseDTO> findKpiSessoesSemanaAtualEAnterior(
             @Param("anoAtual") int anoAtual,
             @Param("semanaAtual") int semanaAtual,
@@ -62,18 +64,29 @@ ORDER BY CONCAT(FUNCTION('YEAR', s.data), FUNCTION('WEEK', s.data)) DESC
 
 
     @Query(value = """
-        SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO(
-            s.id,
-            s.fkPaciente.id,
-            s.fkPaciente.nome,
-            s.data,
-            s.hora,
-            s.statusSessao
-        )
-        FROM Sessao s
-        JOIN s.fkPaciente p
-        WHERE s.data = CURRENT_DATE()
-        ORDER BY s.hora ASC
-    """)
+                SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO(
+                    s.id,
+                    s.fkPaciente.id,
+                    s.fkPaciente.nome,
+                    s.data,
+                    s.hora,
+                    s.statusSessao
+                )
+                FROM Sessao s
+                JOIN s.fkPaciente p
+                WHERE s.data = CURRENT_DATE()
+                ORDER BY s.hora ASC
+            """)
     List<SessaoDiaResponseDTO> findSessoesDoDia();
+
+    @Query(value = """
+            SELECT 
+                ROUND((SUM(CASE WHEN s.status_sessao = 'CANCELADO' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 1)
+            FROM sessao s
+            WHERE s.data BETWEEN 
+                DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY) 
+                AND 
+                DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 4 DAY)
+            """, nativeQuery = true)
+    Double getPercentualCanceladasSemana();
 }

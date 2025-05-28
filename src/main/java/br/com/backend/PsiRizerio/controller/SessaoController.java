@@ -95,8 +95,15 @@ public class SessaoController {
         List<SessaoDiaResponseDTO> sessoesDoDia = sessaoService.getSessoesDoDia();
         if (sessoesDoDia.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.OK).body(sessoesDoDia);
         }
+    }
+
+    @GetMapping("/kpi/porcentCancelada")
+    public ResponseEntity<SessaoKpiQtdCanceladaDTO> getQtdCanceladas() {
+        SessaoKpiQtdCanceladaDTO qtdCanceladas = sessaoService.getKpiQtdCanceladas();
+
+        return ResponseEntity.status(HttpStatus.OK).body(qtdCanceladas);
     }
 }
