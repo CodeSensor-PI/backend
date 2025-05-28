@@ -56,7 +56,7 @@ public class SessaoService {
         sessaoToUpdate.setStatusSessao(sessao.getStatusSessao());
         sessaoToUpdate.setAnotacao(sessao.getAnotacao());
         sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
-        sessaoToUpdate.getFkPaciente().setNome(sessao.getFkPaciente().getNome());
+        sessaoToUpdate.setFkPaciente(sessao.getFkPaciente());
         return sessaoRepository.save(sessaoToUpdate);
     }
 
