@@ -130,7 +130,11 @@ public class SessaoService {
 
     public SessaoKpiQtdCanceladaDTO getKpiQtdCanceladas() {
 
-        Double qtdCancelada = sessaoRepository.getPercentualCanceladasSemana();
+        Double qtdCancelada = sessaoRepository.getPercentualCanceladasSemana(StatusSessao.CANCELADA.name());
+
+        if (qtdCancelada == null) {
+            qtdCancelada = 0.0;
+        }
 
         return new SessaoKpiQtdCanceladaDTO(qtdCancelada);
     }
