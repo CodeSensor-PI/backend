@@ -82,14 +82,14 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
 
     @Query(value = """
             SELECT 
-                ROUND((SUM(CASE WHEN s.status_sessao = 'CANCELADA' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 1)
+                ROUND((SUM(CASE WHEN s.status_sessao = :statusCancelada THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 1)
             FROM sessao s
             WHERE s.data BETWEEN 
                 DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY) 
                 AND 
                 DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 4 DAY)
             """, nativeQuery = true)
-    Double getPercentualCanceladasSemana();
+    Double getPercentualCanceladasSemana(@Param("statusCancelada") String statusCancelada);
 
     @Query(value = """
                 SELECT 
