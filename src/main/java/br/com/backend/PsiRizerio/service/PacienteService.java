@@ -197,7 +197,7 @@ public class PacienteService {
     }
 
     public PacienteKpiQtdInativoDTO getQtdInativosKpi() {
-        Double percentual = pacienteRepository.getPercentualInativos();
+        Double percentual = pacienteRepository.getPercentualInativos(StatusUsuario.INATIVO.name());
         return new PacienteKpiQtdInativoDTO(percentual);
     }
 
