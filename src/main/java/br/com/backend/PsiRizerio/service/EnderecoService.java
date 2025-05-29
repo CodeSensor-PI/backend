@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,4 +65,10 @@ public class EnderecoService {
         Endereco endereco = enderecoRepository.findById(id).orElseThrow(EntidadeNaoEncontradaException::new);
         enderecoRepository.deleteById(id);
     }
+
+    public Endereco findByCepAndNumero(String cep, String numero) {
+        return enderecoRepository.findByCepAndNumero(cep, numero)
+                .orElseThrow(EntidadeNaoEncontradaException::new);
+    }
+
 }
