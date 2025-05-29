@@ -1,6 +1,7 @@
 package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoGraficoDadosDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiQtdCanceladaDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
@@ -18,9 +19,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +133,25 @@ public class SessaoService {
         Double qtdCancelada = sessaoRepository.getPercentualCanceladasSemana();
 
         return new SessaoKpiQtdCanceladaDTO(qtdCancelada);
+    }
+
+    public List<SessaoGraficoDadosDTO> getDadosGrafico() {
+
+        List<Object[]> resultados = sessaoRepository.getDadosGrafico(LocalDate.now().getYear(), StatusSessao.CANCELADA.name(), StatusSessao.CONCLUIDA.name());
+
+        List<SessaoGraficoDadosDTO> dtos = resultados.stream().map(obj -> {
+            Long qtdCancelada = ((Number) obj[0]).longValue();
+            Long qtdConcluida = ((Number) obj[1]).longValue();
+            Integer mesInt = ((Number) obj[2]).intValue();
+
+            // opcional: converter número do mês para nome do mês em pt-BR
+            String mesNome = Month.of(mesInt)
+                    .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"));
+
+            return new SessaoGraficoDadosDTO(qtdCancelada, qtdConcluida, mesNome);
+        }).toList();
+
+        return dtos;
     }
 
 }
