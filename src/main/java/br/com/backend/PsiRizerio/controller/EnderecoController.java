@@ -65,4 +65,12 @@ public class EnderecoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/encontrarEndereco")
+    @Operation(summary = "Busca um endereco por CEP e número do logradouro", description = "Busca um endereco por CEP e número do logradouro")
+    public ResponseEntity<EnderecoResponseDTO> findByCepAndNumero(@RequestParam String cep, @RequestParam String numero) {
+        Endereco enderecoEncontrado = enderecoService.findByCepAndNumero(cep, numero);
+        return ResponseEntity.ok(enderecoMapper.toDtoResponse(enderecoEncontrado));
+    }
+
+
 }

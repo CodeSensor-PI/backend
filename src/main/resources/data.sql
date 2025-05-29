@@ -1,4 +1,3 @@
-
 -- Inserir plano apenas se não existir
 INSERT INTO plano (id, categoria, preco)
 SELECT 1, 'Mensal', 400.00

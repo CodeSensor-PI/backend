@@ -1,6 +1,7 @@
 package br.com.backend.PsiRizerio.persistence.repositories;
 
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO;
+import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoGraficoDadosDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
@@ -81,12 +82,26 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
 
     @Query(value = """
             SELECT 
-                ROUND((SUM(CASE WHEN s.status_sessao = 'CANCELADO' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 1)
+                ROUND((SUM(CASE WHEN s.status_sessao = :statusCancelada THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 1)
             FROM sessao s
             WHERE s.data BETWEEN 
                 DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY) 
                 AND 
                 DATE_ADD(DATE_SUB(CURDATE(), INTERVAL (WEEKDAY(CURDATE())) DAY), INTERVAL 4 DAY)
             """, nativeQuery = true)
-    Double getPercentualCanceladasSemana();
+    Double getPercentualCanceladasSemana(@Param("statusCancelada") String statusCancelada);
+
+    @Query(value = """
+                SELECT 
+                    SUM(CASE WHEN s.status_sessao = :statusCancelada THEN 1 ELSE 0 END) AS qtd_cancelada,
+                    SUM(CASE WHEN s.status_sessao = :statusConcluida THEN 1 ELSE 0 END) AS qtd_concluida,
+                    MONTH(s.data) AS mes
+                FROM Sessao s
+                WHERE YEAR(s.data) = :anoAtual
+                GROUP BY MONTH(s.data)
+                ORDER BY MONTH(s.data)
+            """, nativeQuery = true)
+    List<Object[]> getDadosGrafico(@Param("anoAtual") int anoAtual, @Param("statusCancelada") String statusCancelada, @Param("statusConcluida") String statusConcluida);
+
+
 }

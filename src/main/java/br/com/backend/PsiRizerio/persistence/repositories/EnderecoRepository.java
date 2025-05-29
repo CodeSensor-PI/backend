@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EnderecoRepository extends JpaRepository<Endereco, Integer> {
@@ -35,4 +36,6 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Integer> {
             @Param("uf") String uf,
             @Param("bairro") String bairro
     );
+
+    Optional<Endereco> findByCepAndNumero(String cep, String numero);
 }

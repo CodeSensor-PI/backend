@@ -4,6 +4,7 @@ import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativoDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -30,8 +31,8 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
 
     @Query(value = """
             SELECT 
-                (SUM(CASE WHEN p.status = 'INATIVO' THEN 1 ELSE 0 END) / COUNT(*)) * 100
+                (SUM(CASE WHEN p.status = :statusInativo THEN 1 ELSE 0 END) / COUNT(*)) * 100
             FROM paciente p
             """, nativeQuery = true)
-    Double getPercentualInativos();
+    Double getPercentualInativos(@Param("statusInativo") String statusInativo);
 }
