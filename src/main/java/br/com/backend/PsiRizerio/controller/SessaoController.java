@@ -5,6 +5,7 @@ import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.mapper.SessaoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.service.SessaoService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -101,6 +102,7 @@ public class SessaoController {
     }
 
     @GetMapping("/kpi/porcentCancelada")
+    @Operation(summary = "Busca a quantidade % de sessões canceladas na semana", description = "Busca a quantidade % de sessões canceladas na semana")
     public ResponseEntity<SessaoKpiQtdCanceladaDTO> getQtdCanceladas() {
         SessaoKpiQtdCanceladaDTO qtdCanceladas = sessaoService.getKpiQtdCanceladas();
 
