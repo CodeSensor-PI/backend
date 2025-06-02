@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PacienteKpiQtdInativoDTO {
+public class PacienteKpiQtdInativosDTO {
     private Double porcentPacienteInativo;
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessaoGraficoDadosDTO {
+public class SessaoDashGraficoDadosDTO {
     private Long qtdCancelada;
     private Long qtdConcluida;
     private String nomeMes;

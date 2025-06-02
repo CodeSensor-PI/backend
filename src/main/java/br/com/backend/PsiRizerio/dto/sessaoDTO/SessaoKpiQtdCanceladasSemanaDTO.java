@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SessaoKpiQtdCanceladaSemanaDTO {
+public class SessaoKpiQtdCanceladasSemanaDTO {
     private Double qtdCancelada;
 }
