@@ -1,6 +1,6 @@
 package br.com.backend.PsiRizerio.service;
 
-import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativoDTO;
+import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativosDTO;
 import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteTokenDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
 import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
@@ -196,9 +196,9 @@ public class PacienteService {
         return pacienteRepository.save(pacienteToUpdate);
     }
 
-    public PacienteKpiQtdInativoDTO getQtdInativosKpi() {
+    public PacienteKpiQtdInativosDTO getQtdInativosKpi() {
         Double percentual = pacienteRepository.getPercentualInativos(StatusUsuario.INATIVO.name());
-        return new PacienteKpiQtdInativoDTO(percentual);
+        return new PacienteKpiQtdInativosDTO(percentual);
     }
 
     public static boolean isValidEmail(String email) {

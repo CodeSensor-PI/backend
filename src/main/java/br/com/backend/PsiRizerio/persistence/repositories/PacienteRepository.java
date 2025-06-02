@@ -1,6 +1,5 @@
 package br.com.backend.PsiRizerio.persistence.repositories;
 
-import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativoDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

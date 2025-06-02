@@ -1,12 +1,10 @@
 package br.com.backend.PsiRizerio.persistence.repositories;
 
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO;
-import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoGraficoDadosDTO;
 import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

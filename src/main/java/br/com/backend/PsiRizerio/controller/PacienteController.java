@@ -98,8 +98,8 @@ public class PacienteController {
 
     @GetMapping("/kpi/porcent-inativo")
     @Operation(summary = "Busca a quantidade % de pacientes inativos", description = "Busca a quantidade % de pacientes inativos")
-    public ResponseEntity<PacienteKpiQtdInativoDTO> getQtdInativosKpi() {
-        PacienteKpiQtdInativoDTO porcentInativos = pacienteService.getQtdInativosKpi();
+    public ResponseEntity<PacienteKpiQtdInativosDTO> getQtdInativosKpi() {
+        PacienteKpiQtdInativosDTO porcentInativos = pacienteService.getQtdInativosKpi();
 
         return ResponseEntity.status(HttpStatus.OK).body(porcentInativos);
     }

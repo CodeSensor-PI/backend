@@ -103,16 +103,16 @@ public class SessaoController {
 
     @GetMapping("/kpi/porcent-cancelada")
     @Operation(summary = "Busca a quantidade % de sessões canceladas na semana", description = "Busca a quantidade % de sessões canceladas na semana")
-    public ResponseEntity<SessaoKpiQtdCanceladaDTO> getQtdCanceladas() {
-        SessaoKpiQtdCanceladaDTO qtdCanceladas = sessaoService.getKpiQtdCanceladas();
+    public ResponseEntity<SessaoKpiQtdCanceladasSemanaDTO> getQtdCanceladas() {
+        SessaoKpiQtdCanceladasSemanaDTO qtdCanceladas = sessaoService.getKpiQtdCanceladas();
 
         return ResponseEntity.status(HttpStatus.OK).body(qtdCanceladas);
     }
 
     @GetMapping("/dados-grafico")
     @Operation(summary = "Busca os dados para o gráfico da Dashboard", description = "Busca os dados para o gráfico da Dashboard")
-    public ResponseEntity<List<SessaoGraficoDadosDTO>> getDadosGrafico() {
-        List<SessaoGraficoDadosDTO> dadosGrafico = sessaoService.getDadosGrafico();
+    public ResponseEntity<List<SessaoDashGraficoDadosDTO>> getDadosGrafico() {
+        List<SessaoDashGraficoDadosDTO> dadosGrafico = sessaoService.getDadosGrafico();
 
         return ResponseEntity.ok(dadosGrafico);
     }
