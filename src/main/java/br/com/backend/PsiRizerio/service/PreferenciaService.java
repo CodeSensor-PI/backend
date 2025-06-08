@@ -29,27 +29,22 @@ public class PreferenciaService {
     }
 
     public Preferencia updatePreferencia(Integer id, Preferencia preferencia) {
-        // Busca a entidade existente no banco
         Preferencia preferenciaToUpdate = preferenciaRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
-        // Verifica se já existe um conflito de horário e dia da semana
         if (preferenciaRepository.existsByHorarioAndDiaSemanaAndIdNot(
                 preferencia.getHorario(), preferencia.getDiaSemana(), id)) {
             throw new EntidadeConflitoException();
         }
 
-        // Atualiza os campos necessários
         preferenciaToUpdate.setHorario(preferencia.getHorario());
         preferenciaToUpdate.setDiaSemana(preferencia.getDiaSemana());
         preferenciaToUpdate.setUpdatedAt(LocalDateTime.now());
 
-        // Atualiza o fkPaciente, se necessário
         if (preferencia.getFkPaciente() != null) {
             preferenciaToUpdate.setFkPaciente(preferencia.getFkPaciente());
         }
 
-        // Salva a entidade atualizada
         return preferenciaRepository.save(preferenciaToUpdate);
     }
 

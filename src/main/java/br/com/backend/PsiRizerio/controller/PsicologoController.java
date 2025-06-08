@@ -7,6 +7,11 @@ import br.com.backend.PsiRizerio.mapper.PsicologoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Psicologo;
 import br.com.backend.PsiRizerio.service.PsicologoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +22,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/psicologos")
+@Tag(name = "Psicólogos", description = "Gerenciamento e autenticação de psicólogos do sistema")
 public class PsicologoController {
 
     private final PsicologoService psicologoService;
     private final PsicologoMapper psicologoMapper;
 
+    @Operation(summary = "Criar psicólogo", description = "Cria um novo psicólogo no sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Psicólogo criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
     public PsicologoResponseDTO createPsicologo(@Valid @RequestBody PsicologoCreateDTO psicologoCreateDTO) {
         Psicologo psicologo = psicologoMapper.toEntity(psicologoCreateDTO);
@@ -29,46 +40,57 @@ public class PsicologoController {
         return psicologoMapper.toDtoResponse(psicologo);
     }
 
+    @Operation(summary = "Buscar psicólogo por ID", description = "Retorna os dados de um psicólogo específico")
     @GetMapping("/{id}")
-    public PsicologoResponseDTO findPsicologoById(@PathVariable Integer id) {
+    public PsicologoResponseDTO findPsicologoById(
+            @Parameter(description = "ID do psicólogo") @PathVariable Integer id) {
         Psicologo psicologo = psicologoService.findById(id);
         return psicologoMapper.toDtoResponse(psicologo);
     }
 
+    @Operation(summary = "Listar psicólogos", description = "Retorna todos os psicólogos cadastrados no sistema")
     @GetMapping
     public List<PsicologoResponseDTO> findAllPsicologos() {
         return psicologoMapper.toDtoList(psicologoService.findAll());
     }
 
+    @Operation(summary = "Atualizar psicólogo", description = "Atualiza os dados de um psicólogo existente")
     @PutMapping("/{id}")
-    public PsicologoResponseDTO updatePsicologo(@PathVariable Integer id,
-                                                @Valid @RequestBody PsicologoUpdateDTO psicologoUpdateDTO) {
+    public PsicologoResponseDTO updatePsicologo(
+            @Parameter(description = "ID do psicólogo a ser atualizado") @PathVariable Integer id,
+            @Valid @RequestBody PsicologoUpdateDTO psicologoUpdateDTO) {
         Psicologo psicologo = psicologoMapper.toEntity(psicologoUpdateDTO);
         return psicologoMapper.toDtoResponse(psicologoService.update(id, psicologo));
     }
 
+    @Operation(summary = "Ativar psicólogo", description = "Ativa o psicólogo para uso no sistema")
     @PutMapping("/{id}/ativar")
-    public void ativarPsicologo(@PathVariable Integer id) {
+    public void ativarPsicologo(
+            @Parameter(description = "ID do psicólogo a ser ativado") @PathVariable Integer id) {
         psicologoService.ativarPsicologo(id);
     }
 
+    @Operation(summary = "Desativar psicólogo", description = "Desativa o psicólogo no sistema")
     @PutMapping("/{id}/desativar")
-    public void desativarPsicologo(@PathVariable Integer id) {
+    public void desativarPsicologo(
+            @Parameter(description = "ID do psicólogo a ser desativado") @PathVariable Integer id) {
         psicologoService.desativarPsicologo(id);
     }
 
+    @Operation(summary = "Autenticar psicólogo", description = "Autentica o psicólogo e retorna um token JWT")
     @PostMapping("/login")
-    public ResponseEntity<PsicologoTokenDTO> login(@RequestBody PsicologoLoginDTO psicologoLoginDTO) {
-
+    public ResponseEntity<PsicologoTokenDTO> login(
+            @RequestBody PsicologoLoginDTO psicologoLoginDTO) {
         final Psicologo psicologo = psicologoMapper.toEntity(psicologoLoginDTO);
         PsicologoTokenDTO psicologoTokenDTO = this.psicologoService.autenticar(psicologo);
-
         return ResponseEntity.status(200).body(psicologoTokenDTO);
     }
 
+    @Operation(summary = "Alterar senha", description = "Altera a senha do psicólogo com validação da senha atual")
     @PutMapping("/{id}/alterar-senha")
-    public ResponseEntity<Void> updateSenha(@PathVariable Integer id,
-                                            @Valid @RequestBody PsicologoSenhaUpdateDTO psicologoSenhaUpdateDTO) {
+    public ResponseEntity<Void> updateSenha(
+            @Parameter(description = "ID do psicólogo") @PathVariable Integer id,
+            @Valid @RequestBody PsicologoSenhaUpdateDTO psicologoSenhaUpdateDTO) {
         psicologoService.updateSenha(id, psicologoSenhaUpdateDTO.getSenha(), psicologoSenhaUpdateDTO.getNovaSenha());
         return ResponseEntity.ok().build();
     }
