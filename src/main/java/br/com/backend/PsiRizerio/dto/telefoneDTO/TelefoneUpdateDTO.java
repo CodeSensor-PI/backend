@@ -18,6 +18,7 @@ public class TelefoneUpdateDTO {
     private String ddd;
     private String numero;
     private TipoTelefone tipo;
+    private String nomeContato;
     private LocalDateTime updateAt;
     private PacienteSessaoResponseDTO fkPaciente;
 

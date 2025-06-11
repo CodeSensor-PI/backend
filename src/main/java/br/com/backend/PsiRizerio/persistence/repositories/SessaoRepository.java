@@ -94,7 +94,7 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
                     SUM(CASE WHEN s.status_sessao = :statusCancelada THEN 1 ELSE 0 END) AS qtd_cancelada,
                     SUM(CASE WHEN s.status_sessao = :statusConcluida THEN 1 ELSE 0 END) AS qtd_concluida,
                     MONTH(s.data) AS mes
-                FROM Sessao s
+                FROM sessao s
                 WHERE YEAR(s.data) = :anoAtual
                 GROUP BY MONTH(s.data)
                 ORDER BY MONTH(s.data)

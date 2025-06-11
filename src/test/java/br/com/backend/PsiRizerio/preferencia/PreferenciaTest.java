@@ -83,13 +83,13 @@ public class PreferenciaTest {
         Preferencia preferencia = new Preferencia();
         preferencia.setId(1);
 
-        when(preferenciaRepository.findById(1)).thenReturn(Optional.of(preferencia));
+        when(preferenciaRepository.findFirstByFkPaciente_Id(1)).thenReturn(Optional.of(preferencia));
 
         Preferencia result = preferenciaService.findPreferenciaById(1);
 
         assertNotNull(result);
         assertEquals(1, result.getId());
-        verify(preferenciaRepository, times(1)).findById(1);
+        verify(preferenciaRepository, times(1)).findFirstByFkPaciente_Id(1);
     }
 
     @Test
