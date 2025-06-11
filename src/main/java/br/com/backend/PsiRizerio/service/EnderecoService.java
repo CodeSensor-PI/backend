@@ -41,6 +41,7 @@ public class EnderecoService {
         enderecoToUpdate.setCep(endereco.getCep());
         enderecoToUpdate.setBairro(endereco.getBairro());
         enderecoToUpdate.setNumero(endereco.getNumero());
+        enderecoToUpdate.setCidade(endereco.getCidade());
         enderecoToUpdate.setLogradouro(endereco.getLogradouro());
         enderecoToUpdate.setUf(endereco.getUf());
         enderecoToUpdate.setUpdatedAt(LocalDateTime.now());
