@@ -3,6 +3,7 @@ package br.com.backend.PsiRizerio.mapper;
 import br.com.backend.PsiRizerio.dto.psicologoDTO.*;
 import br.com.backend.PsiRizerio.persistence.entities.Psicologo;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public interface PsicologoMapper {
     PsicologoUpdateDTO toDtoUpdate(Psicologo psicologo);
     PsicologoResponseDTO toDtoResponse(Psicologo psicologo);
     List<PsicologoResponseDTO> toDtoList(List<Psicologo> psicologos);
+
+    @Mapping(target = "role", source = "psicologo.fkRoles")
     PsicologoTokenDTO toDtoToken(Psicologo psicologo, String token);
 
     Psicologo toEntity(PsicologoLoginDTO psicologoLoginDTO);
