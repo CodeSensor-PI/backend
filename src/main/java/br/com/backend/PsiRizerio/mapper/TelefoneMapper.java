@@ -5,6 +5,7 @@ import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneResponseDTO;
 import br.com.backend.PsiRizerio.dto.telefoneDTO.TelefoneUpdateDTO;
 import br.com.backend.PsiRizerio.persistence.entities.Telefone;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -15,7 +16,10 @@ public interface TelefoneMapper {
     List<Telefone> toEntityList(List<TelefoneCreateDTO> telefoneCreateDTOs);
 
     TelefoneCreateDTO toDto(Telefone telefone);
+
+    @Mapping(target = "nomeContato", source = "nomeContato")
     TelefoneUpdateDTO toDtoUpdate(Telefone telefone);
+
     TelefoneResponseDTO toDtoResponse(Telefone telefone);
     List<TelefoneResponseDTO> toDtoList(List<Telefone> telefones);
 }
