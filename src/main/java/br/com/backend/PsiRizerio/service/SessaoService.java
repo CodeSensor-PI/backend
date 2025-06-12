@@ -38,7 +38,7 @@ public class SessaoService {
         if (sessaoRepository.existsByDataAndHora(sessao.getData(), sessao.getHora()))
             throw new EntidadeConflitoException();
 
-        if (sessaoRepository.existsByDataAndHoraBetween(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1)))
+        if (sessaoRepository.existsByDataAndHoraBetween(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1).minusSeconds(1)))
             throw new EntidadeConflitoException();
 
         Integer pacienteId = sessao.getFkPaciente().getId();
@@ -52,11 +52,15 @@ public class SessaoService {
 
     public Sessao update(Integer id, Sessao sessao) {
         Sessao sessaoToUpdate = sessaoRepository.findById(id)
-                .orElseThrow((EntidadeConflitoException::new));
+                .orElseThrow(EntidadeNaoEncontradaException::new);
 
-        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(sessao.getData(), sessao.getHora(), sessao.getHora().plusHours(1).minusSeconds(1), id))
+        if (sessaoRepository.existsByDataAndHoraBetweenAndIdNot(
+                sessao.getData(),
+                sessao.getHora(),
+                sessao.getHora().plusHours(1).minusSeconds(1),
+                id)) {
             throw new EntidadeConflitoException();
-
+        }
 
         sessaoToUpdate.setData(sessao.getData());
         sessaoToUpdate.setHora(sessao.getHora());
@@ -64,6 +68,7 @@ public class SessaoService {
         sessaoToUpdate.setAnotacao(sessao.getAnotacao());
         sessaoToUpdate.setUpdatedAt(LocalDateTime.now());
         sessaoToUpdate.setFkPaciente(sessao.getFkPaciente());
+
         return sessaoRepository.save(sessaoToUpdate);
     }
 

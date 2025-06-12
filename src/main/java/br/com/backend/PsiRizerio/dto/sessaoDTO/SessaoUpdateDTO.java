@@ -23,7 +23,7 @@ public class SessaoUpdateDTO {
 
     private PacienteSessaoResponseDTO fkPaciente;
 
-    @Future
+    @FutureOrPresent
     private LocalDate data;
 
     private LocalTime hora;
