@@ -98,7 +98,7 @@ public class SessaoTest {
         Sessao sessao = new Sessao();
         when(sessaoRepository.findById(1)).thenReturn(Optional.empty());
 
-        assertThrows(EntidadeConflitoException.class, () -> sessaoService.update(1, sessao));
+        assertThrows(EntidadeNaoEncontradaException.class, () -> sessaoService.update(1, sessao));
     }
 
     @Test
