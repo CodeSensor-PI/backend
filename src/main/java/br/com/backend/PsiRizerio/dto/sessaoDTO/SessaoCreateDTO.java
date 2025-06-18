@@ -24,7 +24,7 @@ public class SessaoCreateDTO {
     @NotNull
     private PacienteSessaoResponseDTO fkPaciente;
 
-    @Future
+    @FutureOrPresent
     @NotNull
     private LocalDate data;
 
