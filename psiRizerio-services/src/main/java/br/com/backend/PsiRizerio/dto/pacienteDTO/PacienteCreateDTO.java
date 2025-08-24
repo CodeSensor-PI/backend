@@ -22,11 +22,4 @@ public class PacienteCreateDTO {
     private String email;
 
     private StatusUsuario status = StatusUsuario.ATIVO;
-
-    @NotBlank
-    private String senha;
-
-    private PlanoResponseDTO fkPlano;
-
-    private EnderecoResponseDTO fkEndereco;
 }
