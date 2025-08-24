@@ -67,6 +67,8 @@ docker compose up -d rabbitmq
 - AMQP: amqp://guest:guest@localhost:5672
 - UI: http://localhost:15672 (guest/guest)
 
+Se precisar reiniciar: `docker compose restart rabbitmq` ou `docker compose down && docker compose up -d rabbitmq`.
+
 ### 2) Variáveis de ambiente principais
 Já existem defaults em psiRizerio-email-service/src/main/resources/application.properties.
 - RabbitMQ (opcional, pois os defaults já apontam para localhost:5672)
@@ -79,6 +81,10 @@ Já existem defaults em psiRizerio-email-service/src/main/resources/application.
   - MAIL_STARTTLS=true (para TLS na porta 587)
   - Para SSL na porta 465: MAIL_STARTTLS=false e SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE=true
   - Opcional: APP_MAIL_FROM (remetente; se ausente, usa spring.mail.username)
+
+Observações importantes:
+- O email-service carrega automaticamente .env da raiz e do próprio módulo: `spring.config.import=optional:file:.env,optional:file:../.env`.
+- Se os logs mostrarem `SMTP config: host=, port=0...`, as variáveis não foram carregadas: verifique o caminho do `.env` e a execução via IDE/terminal.
 
 ### 2.1) Arquivo .env (raiz do projeto)
 Um arquivo `.env` foi criado na raiz do repositório com valores padrão para desenvolvimento. O Docker Compose carrega esse arquivo automaticamente.
@@ -133,7 +139,26 @@ mvn spring-boot:run
 - Em Dev (APP_MAIL_ENABLED=false), verá logs [NO-OP] ao “enviar” e-mails.
 - Em produção (APP_MAIL_ENABLED=true) com SMTP válido, o e-mail é enviado de fato.
 
-### 4) Publicar uma mensagem de teste no RabbitMQ
+### 4) Rodar os dois serviços ao mesmo tempo
+Abra dois terminais:
+- Terminal A (serviço principal):
+  ```sh
+  cd psiRizerio-services
+  mvn spring-boot:run
+  ```
+- Terminal B (email-service):
+  ```sh
+  cd psiRizerio-email-service
+  mvn spring-boot:run
+  ```
+
+Dica Maven (alternativa): você pode direcionar por módulo usando o reactor:
+```sh
+mvn -pl psiRizerio-services spring-boot:run
+mvn -pl psiRizerio-email-service spring-boot:run
+```
+
+### 5) Publicar uma mensagem de teste no RabbitMQ
 Via UI (http://localhost:15672):
 - Exchanges > email-exchange > Publish message
 - Routing key: email.send
@@ -142,14 +167,20 @@ Via UI (http://localhost:15672):
 {"to":"destinatario@exemplo.com","subject":"Teste","body":"Olá!"}
 ```
 
-### 5) Contrato de mensagem
+### 6) Contrato de mensagem
 - Formato: JSON
-- Campos obrigatórios: to, subject, body
+- Campos obrigatórios: `to`, `subject`, `body`
+- Content-Type no RabbitMQ é opcional; o consumidor usa conversor Jackson no corpo.
 
-### 6) Troubleshooting rápido
-- Connection refused (RabbitMQ): suba o broker (docker compose up -d rabbitmq) e verifique 5672/15672.
-- Failed to convert message: payload não é JSON válido; envie o JSON acima.
-- MailAuthenticationException: configure SMTP e APP_MAIL_ENABLED=true; para Gmail use App Password; valide porta/SSL/TLS.
+### 7) Troubleshooting rápido
+- Connection refused (RabbitMQ): suba o broker (`docker compose up -d rabbitmq`) e verifique as portas 5672/15672; confirme RABBITMQ_HOST/PORT.
+- Failed to convert message: o payload não é JSON válido (ex.: começa com parêntese). Envie exatamente o JSON do exemplo.
+- MailAuthenticationException: `failed to connect, no password specified?`
+  - Defina `MAIL_PASSWORD` (ou `APP_SMTP_PASSWORD`) e `MAIL_USERNAME`.
+  - Garanta `APP_MAIL_ENABLED=true` para envio real.
+  - Para Gmail, use App Password (2FA habilitado) e `MAIL_STARTTLS=true` (porta 587).
+  - Se usar 465, desative STARTTLS e habilite `SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE=true`.
+- Variáveis não carregadas: confira se o `.env` está na raiz do repositório (ou um `.env` no diretório do email-service). Rodando via IDE, configure as env vars na Run Configuration.
 - Debug de autoconfiguração: rode com `--debug` para ver o Condition Evaluation Report.
 
 ---
