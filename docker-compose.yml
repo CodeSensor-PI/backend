@@ -15,6 +15,19 @@ services:
     networks:
       - meu_rede
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: meu-rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    networks:
+      - meu_rede
+
 volumes:
   mysql_data:
 
