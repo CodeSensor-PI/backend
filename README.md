@@ -48,5 +48,108 @@ docker run --name meu-mysql -e MYSQL_ROOT_PASSWORD=senha -e MYSQL_DATABASE=meuba
    mvn spring-boot:run
    ```
 
+---
 
+## ✉️ psiRizerio-email-service (RabbitMQ + SMTP)
 
+Este módulo consome mensagens do RabbitMQ e envia e-mails. Ele está preparado para rodar em dois modos:
+- Modo Dev (padrão): envio de e-mail No-Op (simulado), sem exigir SMTP.
+- Modo Real: envio via SMTP (Gmail, Outlook, etc.).
+
+### 1) Subir o RabbitMQ (local)
+Use o docker-compose na raiz do projeto (já inclui RabbitMQ com UI):
+
+```sh
+# na pasta raiz do repositório
+docker compose up -d rabbitmq
+```
+
+- AMQP: amqp://guest:guest@localhost:5672
+- UI: http://localhost:15672 (guest/guest)
+
+### 2) Variáveis de ambiente principais
+Já existem defaults em psiRizerio-email-service/src/main/resources/application.properties.
+- RabbitMQ (opcional, pois os defaults já apontam para localhost:5672)
+  - RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD
+  - EMAIL_QUEUE, EMAIL_EXCHANGE, EMAIL_ROUTING_KEY (defaults: emailQueue, email-exchange, email.send)
+- SMTP
+  - APP_MAIL_ENABLED: true para envio real; false (padrão) para No-Op
+  - MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
+  - MAIL_SMTP_AUTH=true
+  - MAIL_STARTTLS=true (para TLS na porta 587)
+  - Para SSL na porta 465: MAIL_STARTTLS=false e SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE=true
+  - Opcional: APP_MAIL_FROM (remetente; se ausente, usa spring.mail.username)
+
+### 2.1) Arquivo .env (raiz do projeto)
+Um arquivo `.env` foi criado na raiz do repositório com valores padrão para desenvolvimento. O Docker Compose carrega esse arquivo automaticamente.
+
+Principais variáveis no `.env`:
+- RabbitMQ: RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD, EMAIL_QUEUE, EMAIL_EXCHANGE, EMAIL_ROUTING_KEY
+- SMTP: APP_MAIL_ENABLED, APP_MAIL_FROM, MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_SMTP_AUTH, MAIL_STARTTLS, MAIL_TIMEOUT_MS, SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE (opcional)
+- MySQL (para o compose): MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD
+
+Como usar:
+- Docker Compose: apenas edite o `.env` e rode `docker compose up -d rabbitmq`.
+- Rodando local (fora do Docker): exporte as variáveis do `.env` no seu terminal antes de `mvn spring-boot:run`.
+  - PowerShell (exemplo): `$env:APP_MAIL_ENABLED='true'` etc. (veja exemplos abaixo em SMTP).
+
+Exemplo (Windows PowerShell) – TLS 587 (Gmail/Outlook):
+```powershell
+$env:APP_MAIL_ENABLED='true'
+$env:APP_MAIL_FROM='seu_email@dominio.com'
+
+$env:MAIL_HOST='smtp.gmail.com'     # ou smtp.office365.com
+$env:MAIL_PORT='587'
+$env:MAIL_USERNAME='seu_email@dominio.com'
+$env:MAIL_PASSWORD='SENHA_OU_APP_PASSWORD'
+$env:MAIL_SMTP_AUTH='true'
+$env:MAIL_STARTTLS='true'
+```
+SSL 465:
+```powershell
+$env:APP_MAIL_ENABLED='true'
+$env:APP_MAIL_FROM='seu_email@dominio.com'
+
+$env:MAIL_HOST='smtp.seuprovedor.com'
+$env:MAIL_PORT='465'
+$env:MAIL_USERNAME='seu_email@dominio.com'
+$env:MAIL_PASSWORD='SENHA_OU_APP_PASSWORD'
+$env:MAIL_SMTP_AUTH='true'
+$env:MAIL_STARTTLS='false'
+$env:SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE='true'
+```
+
+Dicas por provedor:
+- Gmail: ative 2FA e use App Password (16 dígitos); “apps menos seguros” não é suportado.
+- Outlook/Office 365: normalmente TLS 587; App Password pode ser necessário.
+- Muitos provedores exigem que o “from” seja igual ao username.
+
+### 3) Rodar o serviço de e-mail
+```sh
+cd psiRizerio-email-service
+mvn spring-boot:run
+```
+
+- Em Dev (APP_MAIL_ENABLED=false), verá logs [NO-OP] ao “enviar” e-mails.
+- Em produção (APP_MAIL_ENABLED=true) com SMTP válido, o e-mail é enviado de fato.
+
+### 4) Publicar uma mensagem de teste no RabbitMQ
+Via UI (http://localhost:15672):
+- Exchanges > email-exchange > Publish message
+- Routing key: email.send
+- Payload (JSON):
+```
+{"to":"destinatario@exemplo.com","subject":"Teste","body":"Olá!"}
+```
+
+### 5) Contrato de mensagem
+- Formato: JSON
+- Campos obrigatórios: to, subject, body
+
+### 6) Troubleshooting rápido
+- Connection refused (RabbitMQ): suba o broker (docker compose up -d rabbitmq) e verifique 5672/15672.
+- Failed to convert message: payload não é JSON válido; envie o JSON acima.
+- MailAuthenticationException: configure SMTP e APP_MAIL_ENABLED=true; para Gmail use App Password; valide porta/SSL/TLS.
+- Debug de autoconfiguração: rode com `--debug` para ver o Condition Evaluation Report.
+
+---
