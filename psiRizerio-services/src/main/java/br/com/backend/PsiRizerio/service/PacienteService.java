@@ -81,7 +81,7 @@ public class PacienteService {
                     "Recomendamos que escolha uma senha forte, contendo letras maiúsculas, minúsculas, números e símbolos.\n\n" +
                     "Se você não solicitou este cadastro, por favor desconsidere este e-mail ou entre em contato com nossa equipe de suporte.\n\n" +
                     "Atenciosamente,\n" +
-                    "Equipe de Suporte – Psigologa Jéssica Rizerio", nome, email, senha);
+                    "Equipe de Suporte – Psicóloga Jéssica Rizerio", nome, email, senha);
             Map<String, Object> payload = Map.of(
                     "to", salvo.getEmail(),
                     "subject", subject,
