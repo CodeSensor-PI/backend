@@ -10,5 +10,6 @@
     <modules>
         <module>psiRizerio-services</module>
         <module>psiRizerio-email-service</module>
+        <module>psiRizerio-relatorios-service</module>
     </modules>
 </project>
