@@ -102,4 +102,21 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     List<Object[]> getDadosGrafico(@Param("anoAtual") int anoAtual, @Param("statusCancelada") String statusCancelada, @Param("statusConcluida") String statusConcluida);
 
 
+
+    @Query("""
+    SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoDiaResponseDTO(
+        s.id,
+        s.fkPaciente.id,
+        s.fkPaciente.nome,
+        s.data,
+        s.hora,
+        s.statusSessao
+    )
+    FROM Sessao s
+    WHERE s.data = :data
+    ORDER BY s.hora ASC
+""")
+    List<SessaoDiaResponseDTO> findSessoesPorData(@Param("data") LocalDate data);
 }
+
+

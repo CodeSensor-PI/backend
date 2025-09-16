@@ -130,9 +130,10 @@ public class SessaoService {
         );
     }
 
-    public List<SessaoDiaResponseDTO> getSessoesDoDia() {
-        return sessaoRepository.findSessoesDoDia();
+    public List<SessaoDiaResponseDTO> getSessoesPorData(LocalDate data) {
+        return sessaoRepository.findSessoesPorData(data);
     }
+
 
     public SessaoKpiQtdCanceladasSemanaDTO getKpiQtdCanceladas() {
 

@@ -114,17 +114,17 @@ public class SessaoController {
         return ResponseEntity.ok(kpiData);
     }
 
-    @Operation(summary = "Buscar sessões do dia", description = "Retorna as sessões agendadas para o dia atual.")
+    @Operation(summary = "Buscar sessões por data", description = "Retorna as sessões agendadas para uma data específica.")
     @GetMapping("/dia")
-    public ResponseEntity<List<SessaoDiaResponseDTO>> getSessoesDoDia() {
-        List<SessaoDiaResponseDTO> sessoesDoDia = sessaoService.getSessoesDoDia();
+    public ResponseEntity<List<SessaoDiaResponseDTO>> getSessoesPorData(
+            @RequestParam @Parameter(description = "Data no formato yyyy-MM-dd") String data) {
+        LocalDate dataFormatada = LocalDate.parse(data);
+        List<SessaoDiaResponseDTO> sessoesDoDia = sessaoService.getSessoesPorData(dataFormatada);
         if (sessoesDoDia.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(sessoesDoDia);
         }
+        return ResponseEntity.status(HttpStatus.OK).body(sessoesDoDia);
     }
-
     @Operation(summary = "KPI - Porcentagem de sessões canceladas", description = "Retorna o percentual de sessões canceladas na semana atual.")
     @GetMapping("/kpi/porcent-cancelada")
     public ResponseEntity<SessaoKpiQtdCanceladasSemanaDTO> getQtdCanceladas() {
