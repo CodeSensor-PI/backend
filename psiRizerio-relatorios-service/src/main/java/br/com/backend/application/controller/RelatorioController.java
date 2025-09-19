@@ -5,7 +5,10 @@ import java.util.UUID;
 
 
 import br.com.backend.domain.entity.Relatorio;
+import br.com.backend.domain.usecase.RelatorioPDF.RelatorioPdfService;
 import br.com.backend.domain.usecase.RelatorioUseCase;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/relatorios")
 public class RelatorioController {
     private final RelatorioUseCase useCase;
+    private final RelatorioPdfService relatorioPdfService;
 
-    public RelatorioController(RelatorioUseCase useCase) {
+    public RelatorioController(RelatorioUseCase useCase, RelatorioPdfService relatorioPdfService) {
         this.useCase = useCase;
+        this.relatorioPdfService = relatorioPdfService;
     }
 
     @GetMapping
@@ -54,5 +59,15 @@ public class RelatorioController {
     public ResponseEntity<Void> excluirPorSessao(@PathVariable Integer fkSessao) {
         useCase.excluirPorSessao(fkSessao);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/exportar-pdf/{fkPaciente}")
+    public ResponseEntity<byte[]> exportarRelatoriosPdf(@PathVariable Integer fkPaciente) {
+        byte[] pdf = relatorioPdfService.gerarRelatorioPdf(fkPaciente);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=relatorios_paciente_" + fkPaciente + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }
