@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -170,10 +172,8 @@ public class PacienteService {
         return pacienteRepository.save(paciente);
     }
 
-    public List<Paciente> findAll() {
-        List<Paciente> pacientes = pacienteRepository.findAll();
-        if (pacientes.isEmpty()) throw new EntidadeNaoEncontradaException();
-        return pacientes;
+    public Page<Paciente> findAll(Pageable pageable) {
+        return pacienteRepository.findAll(pageable);
     }
 
     public PacienteTokenDTO autenticar(Paciente paciente) {
@@ -235,6 +235,10 @@ public class PacienteService {
     public PacienteKpiQtdInativosDTO getQtdInativosKpi() {
         Double percentual = pacienteRepository.getPercentualInativos(StatusUsuario.INATIVO.name());
         return new PacienteKpiQtdInativosDTO(percentual);
+    }
+
+    public List<Paciente> buscarPorNome(String nome) {
+        return pacienteRepository.findByNomeStartingWithIgnoreCase(nome);
     }
 
     public static boolean isValidEmail(String email) {

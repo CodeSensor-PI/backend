@@ -15,6 +15,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,11 +73,14 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoResponse(user));
     }
 
-    @Operation(summary = "Listar todos os pacientes", description = "Retorna todos os pacientes cadastrados")
+    @Operation(summary = "Listar todos os pacientes", description = "Retorna todos os pacientes cadastrados com paginação")
     @GetMapping
-    public ResponseEntity<List<PacienteResponseDTO>> findAll() {
-        List<Paciente> pacientes = pacienteService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoList(pacientes));
+    public ResponseEntity<Page<PacienteResponseDTO>> findAll(@Parameter(description = "Número da página") @RequestParam(defaultValue = "0") int page,
+                                                            @Parameter(description = "Tamanho da página") @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        Page<Paciente> pacientes = pacienteService.findAll(pageable);
+        Page<PacienteResponseDTO> pacientesDto = pacientes.map(pacienteMapper::toDtoResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(pacientesDto);
     }
 
     @Operation(summary = "Desativar paciente", description = "Desativa um paciente no sistema")
@@ -130,5 +135,12 @@ public class PacienteController {
     public ResponseEntity<PacienteKpiQtdInativosDTO> getQtdInativosKpi() {
         PacienteKpiQtdInativosDTO porcentInativos = pacienteService.getQtdInativosKpi();
         return ResponseEntity.status(HttpStatus.OK).body(porcentInativos);
+    }
+
+    @Operation(summary = "Buscar pacientes por nome", description = "Retorna todos os pacientes que contém o nome informado (sem paginação)")
+    @GetMapping("/busca")
+    public ResponseEntity<List<PacienteResponseDTO>> buscarPorNome(@RequestParam String nome) {
+        List<Paciente> pacientes = pacienteService.buscarPorNome(nome);
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoList(pacientes));
     }
 }
