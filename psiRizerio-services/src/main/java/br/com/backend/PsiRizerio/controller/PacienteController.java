@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -99,11 +101,24 @@ public class PacienteController {
 
     @Operation(summary = "Autenticar paciente", description = "Autentica o paciente e retorna um token JWT")
     @PostMapping("/login")
-    public ResponseEntity<PacienteTokenDTO> login(@RequestBody PacienteLoginDTO pacienteLoginDto) {
+    public ResponseEntity<PacienteTokenDTO> login(
+            @RequestBody PacienteLoginDTO pacienteLoginDto,
+            HttpServletResponse response) {
+
         final Paciente paciente = pacienteMapper.toEntity(pacienteLoginDto);
         PacienteTokenDTO pacienteTokenDto = pacienteService.autenticar(paciente);
-        return ResponseEntity.status(200).body(pacienteTokenDto);
+
+        Cookie jwtCookie = new Cookie("jwt", pacienteTokenDto.getToken());
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(true);
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(60 * 60);
+        response.addCookie(jwtCookie);
+
+        pacienteTokenDto.setToken(null);
+        return ResponseEntity.ok(pacienteTokenDto);
     }
+
 
     @Operation(summary = "Primeiro login do paciente", description = "Adiciona dados complementares no primeiro acesso")
     @PutMapping("/primeiroLogin/{id}")
