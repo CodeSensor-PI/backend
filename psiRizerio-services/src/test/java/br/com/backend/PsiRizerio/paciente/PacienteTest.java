@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,18 +62,19 @@ public class PacienteTest {
     void createUser_Success() {
         Paciente paciente = new Paciente();
         paciente.setEmail("test@example.com");
-        paciente.setSenha("password");
         paciente.setStatus(StatusUsuario.ATIVO);
 
         when(pacienteRepository.existsByEmailIgnoreCase(paciente.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(paciente.getSenha())).thenReturn("encodedPassword");
-        when(pacienteRepository.save(paciente)).thenReturn(paciente);
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(pacienteRepository.save(any(Paciente.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Paciente result = pacienteService.createUser(paciente);
 
         assertNotNull(result);
+        assertNotNull(result.getSenha());
         assertEquals("encodedPassword", result.getSenha());
-        verify(pacienteRepository, times(1)).save(paciente);
+        verify(passwordEncoder, times(1)).encode(anyString());
+        verify(pacienteRepository, times(1)).save(any(Paciente.class));
     }
 
     @Test
@@ -136,19 +138,23 @@ public class PacienteTest {
     @Test
     void findAll_Success() {
         Paciente paciente = new Paciente();
-        when(pacienteRepository.findAll()).thenReturn(Collections.singletonList(paciente));
+        Page<Paciente> pacientePage = new org.springframework.data.domain.PageImpl<>(Collections.singletonList(paciente));
+        when(pacienteRepository.findAll(any(org.springframework.data.domain.Pageable.class))).thenReturn(pacientePage);
 
-        List<Paciente> result = pacienteService.findAll();
+        Page<Paciente> result = pacienteService.findAll(org.springframework.data.domain.PageRequest.of(0, 10));
 
         assertFalse(result.isEmpty());
-        verify(pacienteRepository, times(1)).findAll();
+        verify(pacienteRepository, times(1)).findAll(any(org.springframework.data.domain.Pageable.class));
     }
 
     @Test
     void findAll_NotFound() {
-        when(pacienteRepository.findAll()).thenReturn(Collections.emptyList());
+        Page<Paciente> pacientePage = new org.springframework.data.domain.PageImpl<>(Collections.emptyList());
+        when(pacienteRepository.findAll(any(org.springframework.data.domain.Pageable.class))).thenReturn(pacientePage);
 
-        assertThrows(EntidadeNaoEncontradaException.class, () -> pacienteService.findAll());
+        Page<Paciente> result = pacienteService.findAll(org.springframework.data.domain.PageRequest.of(0, 10));
+        assertTrue(result.isEmpty());
+        verify(pacienteRepository, times(1)).findAll(any(org.springframework.data.domain.Pageable.class));
     }
 
     @Test

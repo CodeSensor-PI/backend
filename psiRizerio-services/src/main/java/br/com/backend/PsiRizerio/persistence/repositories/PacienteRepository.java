@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,6 +28,8 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
     boolean existsByCpfIgnoreCaseAndIdNot(String cpf, Integer id);
 
     boolean existsByCpf(String cpf);
+
+    List<Paciente> findByNomeStartingWithIgnoreCase(String nome);
 
     @Query(value = """
             SELECT 
