@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -80,10 +82,22 @@ public class PsicologoController {
     @Operation(summary = "Autenticar psicólogo", description = "Autentica o psicólogo e retorna um token JWT")
     @PostMapping("/login")
     public ResponseEntity<PsicologoTokenDTO> login(
-            @RequestBody PsicologoLoginDTO psicologoLoginDTO) {
+            @RequestBody PsicologoLoginDTO psicologoLoginDTO,
+            HttpServletResponse response) {
+
         final Psicologo psicologo = psicologoMapper.toEntity(psicologoLoginDTO);
         PsicologoTokenDTO psicologoTokenDTO = this.psicologoService.autenticar(psicologo);
-        return ResponseEntity.status(200).body(psicologoTokenDTO);
+
+        Cookie jwtCookie = new Cookie("jwt", psicologoTokenDTO.getToken());
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(true); // use HTTPS em produção
+        jwtCookie.setPath("/");
+        jwtCookie.setMaxAge(60 * 60); // 1h
+        response.addCookie(jwtCookie);
+
+        // Retorna os dados do psicólogo sem o token no body
+        psicologoTokenDTO.setToken(null);
+        return ResponseEntity.ok(psicologoTokenDTO);
     }
 
     @Operation(summary = "Alterar senha", description = "Altera a senha do psicólogo com validação da senha atual")
