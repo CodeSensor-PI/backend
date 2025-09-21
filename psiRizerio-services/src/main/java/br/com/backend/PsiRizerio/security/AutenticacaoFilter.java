@@ -4,6 +4,7 @@ import br.com.backend.PsiRizerio.service.AutenticacaoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -35,23 +36,36 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        String requestTokenHeader = request.getHeader("Authorization");
 
+        String requestTokenHeader = request.getHeader("Authorization");
         if (Objects.nonNull(requestTokenHeader) && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
+        }
 
+        else if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwtToken != null) {
             try {
                 username = jwtTokenManager.getUsernameFromToken(jwtToken);
+                LOGGER.info("Token válido para o usuário: {}", username);
             } catch (ExpiredJwtException exception) {
-
-                LOGGER.info("[FALHA AUTENTICACAO] - Token expirado, usuario: {} - {}",
-                        exception.getClaims().getSubject(), exception.getMessage());
-
-                LOGGER.trace("[FALHA AUTENTICACAO] - stack trace: %s", exception);
-
+                LOGGER.error("Token expirado: {}", exception.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            } catch (Exception e) {
+                LOGGER.error("Falha na validação do token: {}", e.getMessage());
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
             }
-
+        } else {
+            LOGGER.warn("Token JWT ausente na requisição.");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -62,17 +76,13 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
     }
 
     private void addUsernameInContext(HttpServletRequest request, String username, String jwtToken) {
-
         UserDetails userDetails = autenticacaoService.loadUserByUsername(username);
 
         if (jwtTokenManager.validateToken(jwtToken, userDetails)) {
-
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
-
             usernamePasswordAuthenticationToken
                     .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
     }
