@@ -1,7 +1,7 @@
-package br.com.backend.infraestructure.repository;
+package br.com.backend.domain.usecase;
 
 import br.com.backend.domain.entity.Relatorio;
-import br.com.backend.domain.usecase.RelatorioUseCase;
+import br.com.backend.infraestructure.repository.RelatorioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
