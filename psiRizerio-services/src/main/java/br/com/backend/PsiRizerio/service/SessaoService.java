@@ -13,9 +13,11 @@ import br.com.backend.PsiRizerio.persistence.entities.Sessao;
 import br.com.backend.PsiRizerio.persistence.repositories.SessaoRepository;
 import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 import lombok.RequiredArgsConstructor;
-// Removed unused imports for PageRequest and Pageable
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -162,6 +164,15 @@ public class SessaoService {
         }).toList();
 
         return dtos;
+    }
+
+    // New: weekly sessions (Mon-Fri) with pagination. Expects "monday" to be a Monday date.
+    public Page<Sessao> findSessoesSemana(LocalDate monday, Pageable pageable) {
+        if (monday == null || monday.getDayOfWeek() != DayOfWeek.MONDAY) {
+            throw new EntidadeNaoEncontradaException();
+        }
+        LocalDate friday = monday.plusDays(4);
+        return sessaoRepository.findByDataBetween(monday, friday, pageable);
     }
 
 }

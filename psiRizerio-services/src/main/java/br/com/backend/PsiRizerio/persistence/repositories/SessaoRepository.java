@@ -5,6 +5,8 @@ import br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO;
 import br.com.backend.PsiRizerio.enums.StatusSessao;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
 import br.com.backend.PsiRizerio.persistence.entities.Sessao;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,6 +41,9 @@ public interface SessaoRepository extends JpaRepository<Sessao, Integer> {
     boolean existsByDataAndHora(LocalDate data, LocalTime hora);
 
     List<Sessao> findByStatusSessao(StatusSessao statusSessao);
+
+    // New: Paginated retrieval of sessions within a date range (e.g., Monday to Friday)
+    Page<Sessao> findByDataBetween(LocalDate inicio, LocalDate fim, Pageable pageable);
 
     @Query("""
             SELECT new br.com.backend.PsiRizerio.dto.sessaoDTO.SessaoKpiResponseDTO(

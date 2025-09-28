@@ -12,6 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +51,19 @@ public class SessaoController {
     public ResponseEntity<List<SessaoResponseDTO>> findAll() {
         List<Sessao> sessoes = sessaoService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(sessaoMapper.toDtoList(sessoes));
+    }
+
+    @Operation(summary = "Listar sessões da semana (Seg a Sex) com paginação", description = "Informe a data de uma segunda-feira para obter as sessões daquela semana, paginadas.")
+    @GetMapping("/semana")
+    public ResponseEntity<Page<SessaoResponseDTO>> findSemana(
+            @RequestParam("segunda") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @Parameter(description = "Data da segunda-feira da semana desejada (YYYY-MM-DD)") LocalDate segunda,
+            @RequestParam(defaultValue = "0") @Parameter(description = "Número da página (0-based)") int page,
+            @RequestParam(defaultValue = "40") @Parameter(description = "Tamanho da página (padrão 40, 5 dias x 8 agendas)") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("data").ascending().and(Sort.by("hora").ascending()));
+        Page<Sessao> sessoes = sessaoService.findSessoesSemana(segunda, pageable);
+        Page<SessaoResponseDTO> dtos = sessoes.map(sessaoMapper::toDtoResponse);
+        return ResponseEntity.ok(dtos);
     }
 
     @Operation(summary = "Buscar sessão por ID", description = "Retorna uma sessão específica com base no ID.")
