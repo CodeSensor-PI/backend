@@ -3,7 +3,7 @@ name: 🧱 Build and Push Spring Backend Images
 on:
   push:
     branches:
-      - infra/workflow-deploy
+      - main
     paths:
       - 'psiRizerio-services/**'
       - 'psiRizerio-email-service/**'
