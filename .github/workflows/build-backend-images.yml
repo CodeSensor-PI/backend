@@ -76,5 +76,5 @@ jobs:
           build-args: |
             JAR_FILE=target/${{ matrix.artifact }}
           tags: |
-            ${DOCKER_USERNAME}/${{ matrix.image }}:latest
-            ${DOCKER_USERNAME}/${{ matrix.image }}:${{ github.sha }}
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:latest
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:${{ github.sha }}
