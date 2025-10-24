@@ -61,19 +61,23 @@ Use o docker-compose na raiz do projeto (já inclui RabbitMQ com UI):
 
 ```sh
 # na pasta raiz do repositório
-docker compose up -d rabbitmq
+docker compose up -d
 ```
 
 - AMQP: amqp://guest:guest@localhost:5672
 - UI: http://localhost:15672 (guest/guest)
 
-Se precisar reiniciar: `docker compose restart rabbitmq` ou `docker compose down && docker compose up -d rabbitmq`.
+Se precisar reiniciar: `docker compose restart` ou `docker compose down && docker compose up -d`.
 
 ### 2) Variáveis de ambiente principais
 Já existem defaults em psiRizerio-email-service/src/main/resources/application.properties.
 - RabbitMQ (opcional, pois os defaults já apontam para localhost:5672)
   - RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD
   - EMAIL_QUEUE, EMAIL_EXCHANGE, EMAIL_ROUTING_KEY (defaults: emailQueue, email-exchange, email.send)
+- Banco de dados (MySQL)
+  - SPRING_DATASOURCE_URL (ex.: jdbc:mysql://mysql:3306/PsiRizerio)
+  - SPRING_DATASOURCE_USERNAME
+  - SPRING_DATASOURCE_PASSWORD
 - SMTP
   - APP_MAIL_ENABLED: true para envio real; false (padrão) para No-Op
   - MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
@@ -87,15 +91,16 @@ Observações importantes:
 - Se os logs mostrarem `SMTP config: host=, port=0...`, as variáveis não foram carregadas: verifique o caminho do `.env` e a execução via IDE/terminal.
 
 ### 2.1) Arquivo .env (raiz do projeto)
-Um arquivo `.env` foi criado na raiz do repositório com valores padrão para desenvolvimento. O Docker Compose carrega esse arquivo automaticamente.
+Copie `.env.example` para `.env` e ajuste os valores conforme o ambiente. O Docker Compose carrega esse arquivo automaticamente.
 
 Principais variáveis no `.env`:
 - RabbitMQ: RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_USERNAME, RABBITMQ_PASSWORD, EMAIL_QUEUE, EMAIL_EXCHANGE, EMAIL_ROUTING_KEY
+- Banco de dados para os serviços: SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME, SPRING_DATASOURCE_PASSWORD
 - SMTP: APP_MAIL_ENABLED, APP_MAIL_FROM, MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_SMTP_AUTH, MAIL_STARTTLS, MAIL_TIMEOUT_MS, SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE (opcional)
 - MySQL (para o compose): MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD
 
 Como usar:
-- Docker Compose: apenas edite o `.env` e rode `docker compose up -d rabbitmq`.
+- Docker Compose: edite o `.env` e rode `docker compose up -d` para subir banco, RabbitMQ e os três serviços.
 - Rodando local (fora do Docker): exporte as variáveis do `.env` no seu terminal antes de `mvn spring-boot:run`.
   - PowerShell (exemplo): `$env:APP_MAIL_ENABLED='true'` etc. (veja exemplos abaixo em SMTP).
 
@@ -173,7 +178,8 @@ Via UI (http://localhost:15672):
 - Content-Type no RabbitMQ é opcional; o consumidor usa conversor Jackson no corpo.
 
 ### 7) Troubleshooting rápido
-- Connection refused (RabbitMQ): suba o broker (`docker compose up -d rabbitmq`) e verifique as portas 5672/15672; confirme RABBITMQ_HOST/PORT.
+
+- Connection refused (RabbitMQ): suba o broker (`docker compose up -d`) e verifique as portas 5672/15672; confirme RABBITMQ_HOST/PORT.
 - Failed to convert message: o payload não é JSON válido (ex.: começa com parêntese). Envie exatamente o JSON do exemplo.
 - MailAuthenticationException: `failed to connect, no password specified?`
   - Defina `MAIL_PASSWORD` (ou `APP_SMTP_PASSWORD`) e `MAIL_USERNAME`.
@@ -182,5 +188,8 @@ Via UI (http://localhost:15672):
   - Se usar 465, desative STARTTLS e habilite `SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE=true`.
 - Variáveis não carregadas: confira se o `.env` está na raiz do repositório (ou um `.env` no diretório do email-service). Rodando via IDE, configure as env vars na Run Configuration.
 - Debug de autoconfiguração: rode com `--debug` para ver o Condition Evaluation Report.
+
+### 8) Implantação na AWS
+Consulte [docs/aws-deployment.md](docs/aws-deployment.md) para ver como conectar os containers a serviços gerenciados (RDS, Amazon MQ, ECS) e definir as variáveis de ambiente em produção.
 
 ---
