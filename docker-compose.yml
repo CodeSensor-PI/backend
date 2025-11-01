@@ -30,8 +30,8 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-guest}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
     ports:
-      - "5672:5672"    # AMQP
-      - "15672:15672"  # Management UI
+      - "5672:5672"
+      - "15672:15672"
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
       interval: 30s
@@ -40,88 +40,49 @@ services:
     networks:
       - psirizerio_net
 
-  psiRizerio-services:
+  psirizerio-services:
     build:
       context: ./psiRizerio-services
       dockerfile: Dockerfile
       args:
         JAR_FILE: target/psiRizerio-services-0.0.1-SNAPSHOT.jar
-    image: psirizerio-services:local
     env_file:
       - .env
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql:3306/PsiRizerio}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-psirizerio}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-changeme}
-      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
-      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
-      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-guest}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-guest}
-      EMAIL_EXCHANGE: ${EMAIL_EXCHANGE:-email-exchange}
-      EMAIL_ROUTING_KEY: ${EMAIL_ROUTING_KEY:-email.send}
+    ports:
+      - "${PSIRIZERIO_SERVICES_PORT:-8080}:8080"
     depends_on:
       - mysql
       - rabbitmq
-    ports:
-      - "${PSIRIZERIO_SERVICES_PORT:-8080}:8080"
     networks:
       - psirizerio_net
 
-  psiRizerio-email-service:
+  psirizerio-email-service:
     build:
       context: ./psiRizerio-email-service
       dockerfile: Dockerfile
       args:
         JAR_FILE: target/psiRizerio-email-service-0.0.1-SNAPSHOT.jar
-    image: psirizerio-email-service:local
     env_file:
       - .env
-    environment:
-      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
-      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
-      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-guest}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-guest}
-      EMAIL_QUEUE: ${EMAIL_QUEUE:-emailQueue}
-      EMAIL_EXCHANGE: ${EMAIL_EXCHANGE:-email-exchange}
-      EMAIL_ROUTING_KEY: ${EMAIL_ROUTING_KEY:-email.send}
-      APP_MAIL_ENABLED: ${APP_MAIL_ENABLED:-true}
-      APP_MAIL_FROM: ${APP_MAIL_FROM:-you@example.com}
-      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
-      MAIL_PORT: ${MAIL_PORT:-587}
-      MAIL_USERNAME: ${MAIL_USERNAME:-you@example.com}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-app-password-here}
-      MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-true}
-      MAIL_STARTTLS: ${MAIL_STARTTLS:-true}
-      MAIL_TIMEOUT_MS: ${MAIL_TIMEOUT_MS:-5000}
-      SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_ENABLE:-false}
-      APP_SMTP_HOST: ${APP_SMTP_HOST:-smtp.gmail.com}
-      APP_SMTP_PORT: ${APP_SMTP_PORT:-587}
-      APP_SMTP_USERNAME: ${APP_SMTP_USERNAME:-you@example.com}
-      APP_SMTP_PASSWORD: ${APP_SMTP_PASSWORD:-app-password-here}
-    depends_on:
-      - rabbitmq
     ports:
       - "${PSIRIZERIO_EMAIL_PORT:-8082}:8082"
+    depends_on:
+      - rabbitmq
     networks:
       - psirizerio_net
 
-  psiRizerio-relatorios-service:
+  psirizerio-relatorios-service:
     build:
       context: ./psiRizerio-relatorios-service
       dockerfile: Dockerfile
       args:
         JAR_FILE: target/psiRizerio-relatorio-services-0.0.1-SNAPSHOT.jar
-    image: psirizerio-relatorios-service:local
     env_file:
       - .env
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mysql://mysql:3306/PsiRizerio}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-psirizerio}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-changeme}
-    depends_on:
-      - mysql
     ports:
       - "${PSIRIZERIO_RELATORIOS_PORT:-8081}:8081"
+    depends_on:
+      - mysql
     networks:
       - psirizerio_net
 
