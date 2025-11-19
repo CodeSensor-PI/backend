@@ -1,0 +1,80 @@
+name: 🧱 Build and Push Spring Backend Images
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'psiRizerio-services/**'
+      - 'psiRizerio-email-service/**'
+      - 'psiRizerio-relatorios-service/**'
+      - '.github/workflows/build-backend-images.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env: 
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    strategy:
+      matrix:
+        include:
+          - module: psiRizerio-services
+            artifact: psiRizerio-services-0.0.1-SNAPSHOT.jar
+            image: psirizerio-services
+          - module: psiRizerio-email-service
+            artifact: psiRizerio-email-service-0.0.1-SNAPSHOT.jar
+            image: psirizerio-email-service
+          - module: psiRizerio-relatorios-service
+            artifact: psiRizerio-relatorio-services-0.0.1-SNAPSHOT.jar
+            image: psirizerio-relatorios-service
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Grant execute permission for Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: ☕ Set up Temurin JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: 📚 Resolve dependencies for ${{ matrix.module }}
+        run: ./mvnw -B -pl ${{ matrix.module }} -am dependency:go-offline
+
+      - name: 🏗️ Build ${{ matrix.module }} JAR
+        run: ./mvnw -B -pl ${{ matrix.module }} -am package -DskipTests
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔐 Log in to Docker Hub
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: 🧩 Check Docker username
+        run: |
+          if [ -z "$DOCKER_USERNAME" ]; then
+            echo "❌ ERRO: DOCKER_USERNAME está vazio!"
+            exit 1
+          else
+            echo "✅ Docker username detectado: $DOCKER_USERNAME"
+          fi
+
+      - name: 🐳 Build and push ${{ matrix.module }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.module }}
+          file: ${{ matrix.module }}/Dockerfile
+          push: true
+          build-args: |
+            JAR_FILE=target/${{ matrix.artifact }}
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:latest
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:${{ github.sha }}

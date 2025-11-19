@@ -1,35 +1,93 @@
+version: "3.9"
+
 services:
   mysql:
-    image: mysql:latest
-    container_name: meu-mysql
+    image: mysql:8.4
+    container_name: psirizerio-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-PsiRizerio}
+      MYSQL_USER: ${MYSQL_USER:-psirizerio}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeme}
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
-      - meu_rede
+      - psirizerio_net
 
   rabbitmq:
-    image: rabbitmq:3-management
-    container_name: meu-rabbitmq
+    image: rabbitmq:3.13-management
+    container_name: psirizerio-rabbitmq
     restart: always
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
     ports:
-      - "5672:5672"    # AMQP
-      - "15672:15672"  # Management UI
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
     networks:
-      - meu_rede
+      - psirizerio_net
+
+  psirizerio-services:
+    build:
+      context: ./psiRizerio-services
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: target/psiRizerio-services-0.0.1-SNAPSHOT.jar
+    env_file:
+      - .env
+    ports:
+      - "${PSIRIZERIO_SERVICES_PORT:-8080}:8080"
+    depends_on:
+      - mysql
+      - rabbitmq
+    networks:
+      - psirizerio_net
+
+  psirizerio-email-service:
+    build:
+      context: ./psiRizerio-email-service
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: target/psiRizerio-email-service-0.0.1-SNAPSHOT.jar
+    env_file:
+      - .env
+    ports:
+      - "${PSIRIZERIO_EMAIL_PORT:-8082}:8082"
+    depends_on:
+      - rabbitmq
+    networks:
+      - psirizerio_net
+
+  psirizerio-relatorios-service:
+    build:
+      context: ./psiRizerio-relatorios-service
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: target/psiRizerio-relatorio-services-0.0.1-SNAPSHOT.jar
+    env_file:
+      - .env
+    ports:
+      - "${PSIRIZERIO_RELATORIOS_PORT:-8081}:8081"
+    depends_on:
+      - mysql
+    networks:
+      - psirizerio_net
 
 volumes:
   mysql_data:
 
 networks:
-  meu_rede:
+  psirizerio_net:
