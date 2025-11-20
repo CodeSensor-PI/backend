@@ -34,6 +34,9 @@ public class Paciente {
         @Column(name = "email", columnDefinition = "VARCHAR(80)", unique = true)
         private String email;
 
+        @Column(name = "imagem_url", columnDefinition = "TEXT")
+        private String imagemUrl;
+
         @Column(name = "senha", columnDefinition = "VARCHAR(100)")
         private String senha;
 

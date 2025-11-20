@@ -89,8 +89,9 @@ public class SecurityConfiguracao {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
-        configuracao.setAllowCredentials(true);
-        configuracao.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5173")); // Add localhost:5173
+        // Para desenvolvimento, permitir qualquer origem
+        configuracao.setAllowCredentials(false); // Desabilitar credentials para permitir "*"
+        configuracao.setAllowedOrigins(Arrays.asList("*")); // Permitir todas as origens em desenvolvimento
         configuracao.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
@@ -101,7 +102,9 @@ public class SecurityConfiguracao {
                         HttpMethod.OPTIONS.name(),
                         HttpMethod.HEAD.name(),
                         HttpMethod.TRACE.name()));
-        configuracao.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
+        configuracao.setAllowedHeaders(Arrays.asList("*")); // Permite todos os headers
+        configuracao.setExposedHeaders(Arrays.asList("*")); // Expõe todos os headers
+        configuracao.setMaxAge(3600L); // Cache de preflight
 
         UrlBasedCorsConfigurationSource origem = new UrlBasedCorsConfigurationSource();
         origem.registerCorsConfiguration("/**", configuracao);

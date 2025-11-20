@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -142,5 +143,19 @@ public class PacienteController {
     public ResponseEntity<List<PacienteResponseDTO>> buscarPorNome(@RequestParam String nome) {
         List<Paciente> pacientes = pacienteService.buscarPorNome(nome);
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoList(pacientes));
+    }
+
+    @Operation(summary = "Upload de imagem do paciente", description = "Faz upload da foto de perfil do paciente para o S3")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Imagem enviada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Arquivo inválido"),
+            @ApiResponse(responseCode = "404", description = "Paciente não encontrado")
+    })
+    @PostMapping("/{id}/imagem")
+    public ResponseEntity<PacienteResponseDTO> uploadImagem(
+            @Parameter(description = "ID do paciente") @PathVariable Integer id,
+            @Parameter(description = "Arquivo de imagem") @RequestParam("imagem") MultipartFile file) {
+        Paciente pacienteAtualizado = pacienteService.uploadImagemPaciente(id, file);
+        return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoResponse(pacienteAtualizado));
     }
 }
