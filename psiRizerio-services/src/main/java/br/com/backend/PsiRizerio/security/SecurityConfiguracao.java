@@ -90,7 +90,9 @@ public class SecurityConfiguracao {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
         configuracao.setAllowCredentials(true);
-        configuracao.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5173")); // Add localhost:5173
+        configuracao.setAllowedHeaders(List.of("*"));
+        configuracao.setExposedHeaders(List.of("*"));
+        configuracao.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174"));
         configuracao.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
