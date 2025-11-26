@@ -28,8 +28,38 @@ services:
     networks:
       - meu_rede
 
+  # Redis
+  redis:
+    image: redis:7
+    container_name: meu-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--appendonly", "yes" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - meu_rede
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: meu-redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - meu_rede
+    volumes:
+      - redisinsight_data:/data
+
 volumes:
   mysql_data:
+  redis_data:
+  redisinsight_data:
 
 networks:
   meu_rede:
