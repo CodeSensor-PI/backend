@@ -89,9 +89,15 @@ public class SecurityConfiguracao {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuracao = new CorsConfiguration();
+
         // Para desenvolvimento, permitir qualquer origem
-        configuracao.setAllowCredentials(false); // Desabilitar credentials para permitir "*"
-        configuracao.setAllowedOrigins(Arrays.asList("*")); // Permitir todas as origens em desenvolvimento
+        // configuracao.setAllowCredentials(false); // Desabilitar credentials para permitir "*"
+        // configuracao.setAllowedOrigins(Arrays.asList("*")); // Permitir todas as origens em desenvolvimento
+
+        configuracao.setAllowCredentials(true);
+        configuracao.setAllowedHeaders(List.of("*"));
+        configuracao.setExposedHeaders(List.of("*"));
+        configuracao.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174"));
         configuracao.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
