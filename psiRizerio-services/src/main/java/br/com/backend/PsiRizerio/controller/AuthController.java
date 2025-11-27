@@ -36,7 +36,7 @@ public class AuthController {
 
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setHttpOnly(true);
-//        jwtCookie.setSecure(true); // usar true se estivermos com HTTPS
+        jwtCookie.setSecure(true); // usar true se estivermos com HTTPS
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
 
