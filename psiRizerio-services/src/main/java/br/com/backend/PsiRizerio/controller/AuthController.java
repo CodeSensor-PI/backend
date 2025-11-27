@@ -22,7 +22,7 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Sessão válida (token válido).")
     @ApiResponse(responseCode = "401", description = "Token ausente ou expirado.")
     @ApiResponse(responseCode = "403", description = "Token inválido.")
-    public ResponseEntity<?> validarSessao() {
+    public ResponseEntity<String> validarSessao() {
         return ResponseEntity.ok("Sessão ativa.");
     }
 
@@ -36,7 +36,7 @@ public class AuthController {
 
         Cookie jwtCookie = new Cookie("jwt", null);
         jwtCookie.setHttpOnly(true);
-//        jwtCookie.setSecure(true); // usar true se estivermos com HTTPS
+        jwtCookie.setSecure(true); // usar true se estivermos com HTTPS
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(0);
 
