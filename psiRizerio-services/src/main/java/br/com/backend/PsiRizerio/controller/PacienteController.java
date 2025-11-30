@@ -145,6 +145,13 @@ public class PacienteController {
         return ResponseEntity.status(HttpStatus.OK).body(pacienteMapper.toDtoList(pacientes));
     }
 
+    @Operation(summary = "Validação para CPF existente", description = "Retorna um boolean para caso o CPF exista na base de dados")
+    @GetMapping("/cpf-existente")
+    public ResponseEntity<Boolean> validarCpf(@RequestParam String cpf) {
+        boolean existe = pacienteService.cpfExiste(cpf);
+        return ResponseEntity.ok(existe);
+    }
+
     @Operation(summary = "Upload de imagem do paciente", description = "Faz upload da foto de perfil do paciente para o S3")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Imagem enviada com sucesso"),
