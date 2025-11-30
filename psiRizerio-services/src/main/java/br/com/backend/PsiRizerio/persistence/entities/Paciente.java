@@ -25,7 +25,7 @@ public class Paciente {
         @Column(name = "nome", columnDefinition = "VARCHAR(60)")
         private String nome;
 
-        @Column(name = "cpf", columnDefinition = "CHAR(14)", unique = true)
+        @Column(name = "cpf", columnDefinition = "CHAR(11)", unique = true)
         private String cpf;
 
         @Column(name = "motivo_consulta", columnDefinition = "TEXT")
