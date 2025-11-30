@@ -22,4 +22,6 @@ public class PacienteCreateDTO {
     private String email;
 
     private StatusUsuario status = StatusUsuario.ATIVO;
+
+    private PlanoResponseDTO fkPlano;
 }

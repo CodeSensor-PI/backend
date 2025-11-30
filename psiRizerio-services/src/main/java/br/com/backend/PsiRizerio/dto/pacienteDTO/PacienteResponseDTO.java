@@ -24,6 +24,7 @@ public class PacienteResponseDTO {
     private LocalDate dataNasc;
     private StatusUsuario status;
     private String motivoConsulta;
+    private String imagemUrl; // URL da imagem no S3
     private PlanoResponseDTO fkPlano;
     private EnderecoResponseDTO fkEndereco;
     private LocalDateTime createdAt;
