@@ -11,6 +11,8 @@ import br.com.backend.PsiRizerio.persistence.entities.Psicologo;
 import br.com.backend.PsiRizerio.persistence.repositories.PsicologoRepository;
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,10 @@ public class PsicologoService {
     private final PasswordEncoder passwordEncoder;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
+    private final StringRedisTemplate redis;
+
+    private static final int MAX_TENTATIVAS = 5;
+    private static final long BLOQUEIO_SEGUNDOS = 60;
 
     public Psicologo createPsicologo(Psicologo psicologo) {
         if (psicologoRepository.existsByEmailOrCrpIgnoreCase(psicologo.getEmail(), psicologo.getCrp())
@@ -101,23 +108,63 @@ public class PsicologoService {
 
     public PsicologoTokenDTO autenticar(Psicologo psicologo) {
 
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                psicologo.getEmail(), psicologo.getSenha());
+        final String email = psicologo.getEmail();
+        final String key = "login:tentativas:" + email;
 
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+        String valor = redis.opsForValue().get(key);
+        int tentativas = valor != null ? Integer.parseInt(valor) : 0;
 
-        Psicologo usuarioAutenticado =
-                psicologoRepository.findByEmailIgnoreCase(psicologo.getEmail())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
-                        );
+        if (tentativas >= MAX_TENTATIVAS) {
+            Long ttl = redis.getExpire(key);
+            throw new ResponseStatusException(
+                    HttpStatus.TOO_MANY_REQUESTS,
+                    "Muitas tentativas. Aguarde " + ttl + " segundos."
+            );
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, psicologo.getSenha())
+            );
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
+            redis.delete(key);
 
-        return psicologoMapper.toDtoToken(usuarioAutenticado, token);
+            Psicologo psicologoAutenticado = psicologoRepository
+                    .findByEmailIgnoreCase(email)
+                    .orElseThrow(() ->
+                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Email do usuário não cadastrado")
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String token = gerenciadorTokenJwt.generateToken(authentication);
+
+            return psicologoMapper.toDtoToken(psicologoAutenticado, token);
+
+        } catch (Exception e) {
+            redis.opsForValue().set(
+                    key,
+                    String.valueOf(tentativas + 1),
+                    BLOQUEIO_SEGUNDOS,
+                    TimeUnit.SECONDS
+            );
+
+            int restantes = MAX_TENTATIVAS - (tentativas + 1);
+
+            if (restantes <= 0) {
+                throw new ResponseStatusException(
+                        HttpStatus.TOO_MANY_REQUESTS,
+                        "Conta bloqueada por " + BLOQUEIO_SEGUNDOS + " segundos."
+                );
+            }
+
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Credenciais inválidas. Tentativas restantes: " + restantes
+            );
+        }
     }
+
 
     public void updateSenha(Integer id, String senhaAtual, String novaSenha) {
         Psicologo psicologo = psicologoRepository.findById(id)
