@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
@@ -36,7 +38,6 @@ import java.util.UUID;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class PacienteService {
 
     private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
@@ -47,8 +48,29 @@ public class PacienteService {
     private final PacienteMapper pacienteMapper;
     private final EnderecoRepository enderecoRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final S3Service s3Service; // Opcional
 
     private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+";
+
+    @Autowired
+    public PacienteService(
+            PacienteRepository pacienteRepository,
+            PasswordEncoder passwordEncoder,
+            GerenciadorTokenJwt gerenciadorTokenJwt,
+            AuthenticationManager authenticationManager,
+            PacienteMapper pacienteMapper,
+            EnderecoRepository enderecoRepository,
+            RabbitTemplate rabbitTemplate,
+            @Autowired(required = false) S3Service s3Service) {
+        this.pacienteRepository = pacienteRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
+        this.authenticationManager = authenticationManager;
+        this.pacienteMapper = pacienteMapper;
+        this.enderecoRepository = enderecoRepository;
+        this.rabbitTemplate = rabbitTemplate;
+        this.s3Service = s3Service;
+    }
 
 
     @Value("${app.rabbitmq.exchange:email-exchange}")
@@ -241,6 +263,10 @@ public class PacienteService {
         return pacienteRepository.findByNomeStartingWithIgnoreCase(nome);
     }
 
+    public boolean cpfExiste(String cpf) {
+        return pacienteRepository.existsByCpf(cpf);
+    }
+
     public static boolean isValidEmail(String email) {
         return email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     }
@@ -255,6 +281,35 @@ public class PacienteService {
         }
 
         return senha.toString();
+    }
+
+    public Paciente uploadImagemPaciente(Integer id, MultipartFile file) {
+        // Verifica se o S3Service está disponível
+        if (s3Service == null) {
+            log.error("Tentativa de upload de imagem mas S3Service não está configurado. Configure aws.s3.enabled=true e as credenciais AWS no .env");
+            throw new RuntimeException("Upload de imagem não está disponível. Configure as credenciais AWS no arquivo .env");
+        }
+
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(EntidadeNaoEncontradaException::new);
+
+        try {
+            // Deleta imagem antiga se existir
+            if (paciente.getImagemUrl() != null && !paciente.getImagemUrl().isEmpty()) {
+                s3Service.deleteImage(paciente.getImagemUrl());
+            }
+
+            // Faz upload da nova imagem
+            String imageUrl = s3Service.uploadImage(file, "pacientes");
+            paciente.setImagemUrl(imageUrl);
+            paciente.setUpdatedAt(LocalDateTime.now());
+
+            return pacienteRepository.save(paciente);
+
+        } catch (Exception e) {
+            log.error("Erro ao fazer upload da imagem do paciente {}", id, e);
+            throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage());
+        }
     }
 
 }
