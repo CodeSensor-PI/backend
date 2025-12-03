@@ -16,11 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -50,12 +53,20 @@ public class PacienteTest {
     @Mock
     private PacienteMapper pacienteMapper;
 
+    @Mock
+    private StringRedisTemplate redis;
+
+    @Mock
+    private ValueOperations<String, String> valueOps;
+
     @InjectMocks
     private PacienteService pacienteService;
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        when(redis.opsForValue()).thenReturn(valueOps);
     }
 
     @Test
@@ -179,9 +190,12 @@ public class PacienteTest {
         paciente.setEmail("test@example.com");
         paciente.setSenha("password");
 
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+        when(redis.opsForValue()).thenReturn(valueOps);
+        when(valueOps.get(anyString())).thenReturn(null);
+
+        when(authenticationManager.authenticate(any()))
                 .thenThrow(new BadCredentialsException("Invalid credentials"));
 
-        assertThrows(BadCredentialsException.class, () -> pacienteService.autenticar(paciente));
+        assertThrows(ResponseStatusException.class, () -> pacienteService.autenticar(paciente));
     }
 }
