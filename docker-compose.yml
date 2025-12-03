@@ -40,6 +40,23 @@ services:
     networks:
       - psirizerio_net
 
+
+  # Redis
+  redis:
+    image: redis:7
+    container_name: psirizerio-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--appendonly", "yes" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - psirizerio_net
+
   psirizerio-services:
     build:
       context: ./psiRizerio-services
@@ -88,6 +105,8 @@ services:
 
 volumes:
   mysql_data:
+  redis_data:
+  redisinsight_data:
 
 networks:
   psirizerio_net:
