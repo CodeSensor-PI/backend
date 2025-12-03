@@ -242,6 +242,7 @@ public class PacienteService {
     }
 
 
+
     public void updateSenha(Integer id, String senhaAtual, String novaSenha) {
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
