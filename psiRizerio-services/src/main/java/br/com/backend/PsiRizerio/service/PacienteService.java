@@ -3,10 +3,7 @@ package br.com.backend.PsiRizerio.service;
 import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativosDTO;
 import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteTokenDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
-import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
-import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
-import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
-import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
+import br.com.backend.PsiRizerio.exception.*;
 import br.com.backend.PsiRizerio.mapper.PacienteMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
@@ -217,10 +214,10 @@ public class PacienteService {
         int tentativas = valor != null ? Integer.parseInt(valor) : 0;
 
         if (tentativas >= MAX_TENTATIVAS) {
-            Long timeToLive = redis.getExpire(key);
-            throw new ResponseStatusException(
-                    HttpStatus.TOO_MANY_REQUESTS,
-                    "Muitas tentativas. Aguarde " + timeToLive + " segundos."
+            Long timeToLiveRestante = redis.getExpire(key);
+            throw new MuitasRequisicoesException(
+                    "Muitas tentativas. Aguarde " + timeToLiveRestante + " segundos.",
+                    timeToLiveRestante
             );
         }
 
@@ -253,9 +250,9 @@ public class PacienteService {
             int restantes = MAX_TENTATIVAS - (tentativas + 1);
 
             if (restantes <= 0) {
-                throw new ResponseStatusException(
-                        HttpStatus.TOO_MANY_REQUESTS,
-                        "Conta bloqueada por" + BLOQUEIO_SEGUNDOS + "segundos."
+                throw new MuitasRequisicoesException(
+                        "Conta bloqueada por " + BLOQUEIO_SEGUNDOS + " segundos.",
+                        (long) BLOQUEIO_SEGUNDOS
                 );
             }
 

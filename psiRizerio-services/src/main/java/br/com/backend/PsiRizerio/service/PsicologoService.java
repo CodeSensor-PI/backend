@@ -2,10 +2,7 @@ package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.dto.psicologoDTO.PsicologoTokenDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
-import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
-import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
-import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
-import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
+import br.com.backend.PsiRizerio.exception.*;
 import br.com.backend.PsiRizerio.mapper.PsicologoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Psicologo;
 import br.com.backend.PsiRizerio.persistence.repositories.PsicologoRepository;
@@ -115,10 +112,10 @@ public class PsicologoService {
         int tentativas = valor != null ? Integer.parseInt(valor) : 0;
 
         if (tentativas >= MAX_TENTATIVAS) {
-            Long ttl = redis.getExpire(key);
-            throw new ResponseStatusException(
-                    HttpStatus.TOO_MANY_REQUESTS,
-                    "Muitas tentativas. Aguarde " + ttl + " segundos."
+            Long timeToLiveRestante = redis.getExpire(key);
+            throw new MuitasRequisicoesException(
+                    "Muitas tentativas. Aguarde " + timeToLiveRestante + " segundos.",
+                    timeToLiveRestante
             );
         }
 
@@ -152,9 +149,9 @@ public class PsicologoService {
             int restantes = MAX_TENTATIVAS - (tentativas + 1);
 
             if (restantes <= 0) {
-                throw new ResponseStatusException(
-                        HttpStatus.TOO_MANY_REQUESTS,
-                        "Conta bloqueada por " + BLOQUEIO_SEGUNDOS + " segundos."
+                throw new MuitasRequisicoesException(
+                        "Conta bloqueada por " + BLOQUEIO_SEGUNDOS + " segundos.",
+                        (long) BLOQUEIO_SEGUNDOS
                 );
             }
 
