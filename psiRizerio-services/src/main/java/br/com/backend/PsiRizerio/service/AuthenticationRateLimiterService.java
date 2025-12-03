@@ -19,9 +19,10 @@ public class AuthenticationRateLimiterService {
     private static final int MAX_TENTATIVAS = 5;
     private static final long BLOQUEIO_SEGUNDOS = 60;
 
-    public String buildKey(String email) {
-        return "login:tentativas:" + DigestUtils.sha256Hex(email);
+    public String buildKey(String email, String tipoUsuario) {
+        return "login:tentativas:" + tipoUsuario + ":" + DigestUtils.sha256Hex(email);
     }
+
 
     public int getTentativas(String key) {
         String valor = redis.opsForValue().get(key);

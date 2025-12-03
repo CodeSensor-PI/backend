@@ -213,7 +213,7 @@ public class PacienteService {
     public PacienteTokenDTO autenticar(Paciente paciente) {
 
         final String email = paciente.getEmail();
-        final String key = rateLimiter.buildKey(email);
+        final String key = rateLimiter.buildKey(email, "paciente");
 
         int tentativas = rateLimiter.getTentativas(key);
         rateLimiter.validarTentativasOuErro(key, tentativas);

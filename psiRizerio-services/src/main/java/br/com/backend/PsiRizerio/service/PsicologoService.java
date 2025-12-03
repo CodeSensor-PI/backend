@@ -110,7 +110,7 @@ public class PsicologoService {
     public PsicologoTokenDTO autenticar(Psicologo psicologo) {
 
         final String email = psicologo.getEmail();
-        final String key = rateLimiter.buildKey(email);
+        final String key = rateLimiter.buildKey(email, "psicologo");
 
         int tentativas = rateLimiter.getTentativas(key);
         rateLimiter.validarTentativasOuErro(key, tentativas);
