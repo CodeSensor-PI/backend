@@ -20,9 +20,7 @@ public class PreferenciaService {
     private final PreferenciaMapper preferenciaMapper;
 
     public Preferencia createPreferencia(Preferencia preferencia) {
-        if (preferenciaRepository.existsByHorarioAndDiaSemana(preferencia.getHorario(), preferencia.getDiaSemana())) {
-            throw new EntidadeConflitoException();
-        }
+
 
         preferencia.setCreatedAt(LocalDateTime.now());
         return preferenciaRepository.save(preferencia);
@@ -32,10 +30,7 @@ public class PreferenciaService {
         Preferencia preferenciaToUpdate = preferenciaRepository.findById(id)
                 .orElseThrow(EntidadeNaoEncontradaException::new);
 
-        if (preferenciaRepository.existsByHorarioAndDiaSemanaAndIdNot(
-                preferencia.getHorario(), preferencia.getDiaSemana(), id)) {
-            throw new EntidadeConflitoException();
-        }
+
 
         preferenciaToUpdate.setHorario(preferencia.getHorario());
         preferenciaToUpdate.setDiaSemana(preferencia.getDiaSemana());
