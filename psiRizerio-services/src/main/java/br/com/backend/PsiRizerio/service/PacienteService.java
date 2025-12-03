@@ -215,6 +215,9 @@ public class PacienteService {
 
         if (tentativas >= MAX_TENTATIVAS) {
             Long timeToLiveRestante = redis.getExpire(key);
+            if (timeToLiveRestante == null || timeToLiveRestante < 0) {
+                timeToLiveRestante = (long) BLOQUEIO_SEGUNDOS;
+            }
             throw new MuitasRequisicoesException(
                     "Muitas tentativas. Aguarde " + timeToLiveRestante + " segundos.",
                     timeToLiveRestante
