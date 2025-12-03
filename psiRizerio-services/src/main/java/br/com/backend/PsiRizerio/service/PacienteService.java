@@ -12,6 +12,7 @@ import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -48,6 +50,7 @@ public class PacienteService {
     private final PacienteMapper pacienteMapper;
     private final EnderecoRepository enderecoRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final AuthenticationRateLimiterService rateLimiter;
     private final S3Service s3Service; // Opcional
     private final StringRedisTemplate redis;
 
@@ -63,6 +66,7 @@ public class PacienteService {
             PacienteMapper pacienteMapper,
             EnderecoRepository enderecoRepository,
             StringRedisTemplate redis,
+            AuthenticationRateLimiterService rateLimiter,
             RabbitTemplate rabbitTemplate,
             @Autowired(required = false) S3Service s3Service) {
         this.pacienteRepository = pacienteRepository;
@@ -72,6 +76,7 @@ public class PacienteService {
         this.pacienteMapper = pacienteMapper;
         this.enderecoRepository = enderecoRepository;
         this.redis = redis;
+        this.rateLimiter = rateLimiter;
         this.rabbitTemplate = rabbitTemplate;
         this.s3Service = s3Service;
     }
@@ -208,27 +213,19 @@ public class PacienteService {
     public PacienteTokenDTO autenticar(Paciente paciente) {
 
         final String email = paciente.getEmail();
-        final String key = "login:tentativas:" + email;
+        final String key = rateLimiter.buildKey(email, "paciente");
 
-        String valor = redis.opsForValue().get(key);
-        int tentativas = valor != null ? Integer.parseInt(valor) : 0;
-
-        if (tentativas >= MAX_TENTATIVAS) {
-            Long timeToLiveRestante = redis.getExpire(key);
-            throw new MuitasRequisicoesException(
-                    "Muitas tentativas. Aguarde " + timeToLiveRestante + " segundos.",
-                    timeToLiveRestante
-            );
-        }
+        int tentativas = rateLimiter.getTentativas(key);
+        rateLimiter.validarTentativasOuErro(key, tentativas);
 
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, paciente.getSenha())
             );
 
-            redis.delete(key);
+            rateLimiter.registrarSucesso(key);
 
-            Paciente pacienteAutenticado = pacienteRepository
+            Paciente autenticado = pacienteRepository
                     .findByEmail(email)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email não encontrado"));
 
@@ -236,32 +233,15 @@ public class PacienteService {
 
             String token = gerenciadorTokenJwt.generateToken(authentication);
 
-            return pacienteMapper.toDtoToken(pacienteAutenticado, token);
+            return pacienteMapper.toDtoToken(autenticado, token);
 
-        } catch (Exception e) {
-
-            redis.opsForValue().set(
-                    key,
-                    String.valueOf(tentativas + 1),
-                    BLOQUEIO_SEGUNDOS,
-                    TimeUnit.SECONDS
-            );
-
-            int restantes = MAX_TENTATIVAS - (tentativas + 1);
-
-            if (restantes <= 0) {
-                throw new MuitasRequisicoesException(
-                        "Conta bloqueada por " + BLOQUEIO_SEGUNDOS + " segundos.",
-                        (long) BLOQUEIO_SEGUNDOS
-                );
-            }
-
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Credenciais inválidas. Tentativas restantes: " + restantes
-            );
+        } catch (AuthenticationException e) {
+            rateLimiter.registrarFalha(key, tentativas);
+            return null;
         }
     }
+
+
 
     public void updateSenha(Integer id, String senhaAtual, String novaSenha) {
         Paciente paciente = pacienteRepository.findById(id)

@@ -8,11 +8,14 @@ import br.com.backend.PsiRizerio.persistence.entities.Psicologo;
 import br.com.backend.PsiRizerio.persistence.repositories.PsicologoRepository;
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.cli.Digest;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class PsicologoService {
     private final PasswordEncoder passwordEncoder;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationRateLimiterService rateLimiter;
     private final StringRedisTemplate redis;
 
     private static final int MAX_TENTATIVAS = 5;
@@ -106,61 +110,34 @@ public class PsicologoService {
     public PsicologoTokenDTO autenticar(Psicologo psicologo) {
 
         final String email = psicologo.getEmail();
-        final String key = "login:tentativas:" + email;
+        final String key = rateLimiter.buildKey(email, "psicologo");
 
-        String valor = redis.opsForValue().get(key);
-        int tentativas = valor != null ? Integer.parseInt(valor) : 0;
-
-        if (tentativas >= MAX_TENTATIVAS) {
-            Long timeToLiveRestante = redis.getExpire(key);
-            throw new MuitasRequisicoesException(
-                    "Muitas tentativas. Aguarde " + timeToLiveRestante + " segundos.",
-                    timeToLiveRestante
-            );
-        }
+        int tentativas = rateLimiter.getTentativas(key);
+        rateLimiter.validarTentativasOuErro(key, tentativas);
 
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, psicologo.getSenha())
             );
 
-            redis.delete(key);
+            rateLimiter.registrarSucesso(key);
 
-            Psicologo psicologoAutenticado = psicologoRepository
+            Psicologo autenticado = psicologoRepository
                     .findByEmailIgnoreCase(email)
-                    .orElseThrow(() ->
-                            new ResponseStatusException(HttpStatus.NOT_FOUND, "Email do usuário não cadastrado")
-                    );
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email não cadastrado"));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String token = gerenciadorTokenJwt.generateToken(authentication);
 
-            return psicologoMapper.toDtoToken(psicologoAutenticado, token);
+            return psicologoMapper.toDtoToken(autenticado, token);
 
-        } catch (Exception e) {
-            redis.opsForValue().set(
-                    key,
-                    String.valueOf(tentativas + 1),
-                    BLOQUEIO_SEGUNDOS,
-                    TimeUnit.SECONDS
-            );
-
-            int restantes = MAX_TENTATIVAS - (tentativas + 1);
-
-            if (restantes <= 0) {
-                throw new MuitasRequisicoesException(
-                        "Conta bloqueada por " + BLOQUEIO_SEGUNDOS + " segundos.",
-                        (long) BLOQUEIO_SEGUNDOS
-                );
-            }
-
-            throw new ResponseStatusException(
-                    HttpStatus.UNAUTHORIZED,
-                    "Credenciais inválidas. Tentativas restantes: " + restantes
-            );
+        } catch (AuthenticationException e) {
+            rateLimiter.registrarFalha(key, tentativas);
+            return null; // nunca chega aqui, mas compila
         }
     }
+
 
 
     public void updateSenha(Integer id, String senhaAtual, String novaSenha) {

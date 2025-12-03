@@ -44,7 +44,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MuitasRequisicoesException.class)
     public ResponseEntity<Map<String, Object>> handleMuitasRequisicoesException(MuitasRequisicoesException ex) {
 
-        // Paschoal --> Isso aqui embaixo serve para criar o body json para exception pe
         Map<String, Object> body = new HashMap<>();
         body.put("status", 429);
         body.put("ttlMessage", ex.getReason());
