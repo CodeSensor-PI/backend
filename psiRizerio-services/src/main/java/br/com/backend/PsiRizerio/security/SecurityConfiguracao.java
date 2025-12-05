@@ -97,7 +97,7 @@ public class SecurityConfiguracao {
         configuracao.setAllowCredentials(true);
         configuracao.setAllowedHeaders(List.of("*"));
         configuracao.setExposedHeaders(List.of("*"));
-        configuracao.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174"));
+        configuracao.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://44.198.79.33", "http://44.198.79.33:81"));
         configuracao.setAllowedMethods(
                 Arrays.asList(
                         HttpMethod.GET.name(),
