@@ -5,6 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -37,4 +40,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRecursoPrecondicaoFalhaException(EntidadePrecondicaoFalhaException enpe) {
         return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(enpe.getMessage());
     }
+
+    @ExceptionHandler(MuitasRequisicoesException.class)
+    public ResponseEntity<Map<String, Object>> handleMuitasRequisicoesException(MuitasRequisicoesException ex) {
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 429);
+        body.put("ttlMessage", ex.getReason());
+        body.put("ttl", ex.getRetryAfter());
+        body.put("error", HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase());
+
+        return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .header("Retry-After", String.valueOf(ex.getRetryAfter()))
+                .body(body);
+    }
+
 }

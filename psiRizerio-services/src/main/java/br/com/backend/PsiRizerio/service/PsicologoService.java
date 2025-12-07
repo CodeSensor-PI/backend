@@ -2,18 +2,20 @@ package br.com.backend.PsiRizerio.service;
 
 import br.com.backend.PsiRizerio.dto.psicologoDTO.PsicologoTokenDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
-import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
-import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
-import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
-import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
+import br.com.backend.PsiRizerio.exception.*;
 import br.com.backend.PsiRizerio.mapper.PsicologoMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Psicologo;
 import br.com.backend.PsiRizerio.persistence.repositories.PsicologoRepository;
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.cli.Digest;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,11 @@ public class PsicologoService {
     private final PasswordEncoder passwordEncoder;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationRateLimiterService rateLimiter;
+    private final StringRedisTemplate redis;
+
+    private static final int MAX_TENTATIVAS = 5;
+    private static final long BLOQUEIO_SEGUNDOS = 60;
 
     public Psicologo createPsicologo(Psicologo psicologo) {
         if (psicologoRepository.existsByEmailOrCrpIgnoreCase(psicologo.getEmail(), psicologo.getCrp())
@@ -101,23 +109,36 @@ public class PsicologoService {
 
     public PsicologoTokenDTO autenticar(Psicologo psicologo) {
 
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                psicologo.getEmail(), psicologo.getSenha());
+        final String email = psicologo.getEmail();
+        final String key = rateLimiter.buildKey(email, "psicologo");
 
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+        int tentativas = rateLimiter.getTentativas(key);
+        rateLimiter.validarTentativasOuErro(key, tentativas);
 
-        Psicologo usuarioAutenticado =
-                psicologoRepository.findByEmailIgnoreCase(psicologo.getEmail())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
-                        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, psicologo.getSenha())
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            rateLimiter.registrarSucesso(key);
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
+            Psicologo autenticado = psicologoRepository
+                    .findByEmailIgnoreCase(email)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email não cadastrado"));
 
-        return psicologoMapper.toDtoToken(usuarioAutenticado, token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String token = gerenciadorTokenJwt.generateToken(authentication);
+
+            return psicologoMapper.toDtoToken(autenticado, token);
+
+        } catch (AuthenticationException e) {
+            rateLimiter.registrarFalha(key, tentativas);
+            return null; // nunca chega aqui, mas compila
+        }
     }
+
+
 
     public void updateSenha(Integer id, String senhaAtual, String novaSenha) {
         Psicologo psicologo = psicologoRepository.findById(id)

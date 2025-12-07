@@ -3,10 +3,7 @@ package br.com.backend.PsiRizerio.service;
 import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteKpiQtdInativosDTO;
 import br.com.backend.PsiRizerio.dto.pacienteDTO.PacienteTokenDTO;
 import br.com.backend.PsiRizerio.enums.StatusUsuario;
-import br.com.backend.PsiRizerio.exception.EntidadeConflitoException;
-import br.com.backend.PsiRizerio.exception.EntidadeInvalidaException;
-import br.com.backend.PsiRizerio.exception.EntidadeNaoEncontradaException;
-import br.com.backend.PsiRizerio.exception.EntidadePrecondicaoFalhaException;
+import br.com.backend.PsiRizerio.exception.*;
 import br.com.backend.PsiRizerio.mapper.PacienteMapper;
 import br.com.backend.PsiRizerio.persistence.entities.Endereco;
 import br.com.backend.PsiRizerio.persistence.entities.Paciente;
@@ -15,18 +12,24 @@ import br.com.backend.PsiRizerio.persistence.repositories.PacienteRepository;
 
 import br.com.backend.PsiRizerio.security.GerenciadorTokenJwt;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
@@ -34,9 +37,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
-@RequiredArgsConstructor
 public class PacienteService {
 
     private static final Logger log = LoggerFactory.getLogger(PacienteService.class);
@@ -47,8 +50,36 @@ public class PacienteService {
     private final PacienteMapper pacienteMapper;
     private final EnderecoRepository enderecoRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final AuthenticationRateLimiterService rateLimiter;
+    private final S3Service s3Service; // Opcional
+    private final StringRedisTemplate redis;
+
 
     private static final String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_=+";
+
+    @Autowired
+    public PacienteService(
+            PacienteRepository pacienteRepository,
+            PasswordEncoder passwordEncoder,
+            GerenciadorTokenJwt gerenciadorTokenJwt,
+            AuthenticationManager authenticationManager,
+            PacienteMapper pacienteMapper,
+            EnderecoRepository enderecoRepository,
+            StringRedisTemplate redis,
+            AuthenticationRateLimiterService rateLimiter,
+            RabbitTemplate rabbitTemplate,
+            @Autowired(required = false) S3Service s3Service) {
+        this.pacienteRepository = pacienteRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
+        this.authenticationManager = authenticationManager;
+        this.pacienteMapper = pacienteMapper;
+        this.enderecoRepository = enderecoRepository;
+        this.redis = redis;
+        this.rateLimiter = rateLimiter;
+        this.rabbitTemplate = rabbitTemplate;
+        this.s3Service = s3Service;
+    }
 
 
     @Value("${app.rabbitmq.exchange:email-exchange}")
@@ -56,6 +87,9 @@ public class PacienteService {
 
     @Value("${app.rabbitmq.routing-key:email.send}")
     private String emailRoutingKey;
+
+    private static final int MAX_TENTATIVAS = 5;
+    private static final long BLOQUEIO_SEGUNDOS = 60;
 
     public Paciente createUser(Paciente paciente) {
         if (pacienteRepository.existsByEmailIgnoreCase(paciente.getEmail())
@@ -178,23 +212,36 @@ public class PacienteService {
 
     public PacienteTokenDTO autenticar(Paciente paciente) {
 
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                paciente.getEmail(), paciente.getSenha());
+        final String email = paciente.getEmail();
+        final String key = rateLimiter.buildKey(email, "paciente");
 
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
+        int tentativas = rateLimiter.getTentativas(key);
+        rateLimiter.validarTentativasOuErro(key, tentativas);
 
-        Paciente pacienteAutenticado =
-                pacienteRepository.findByEmail(paciente.getEmail())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(404, "Email do paciente não cadastrado", null)
-                        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, paciente.getSenha())
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            rateLimiter.registrarSucesso(key);
 
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
+            Paciente autenticado = pacienteRepository
+                    .findByEmail(email)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email não encontrado"));
 
-        return pacienteMapper.toDtoToken(pacienteAutenticado, token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            String token = gerenciadorTokenJwt.generateToken(authentication);
+
+            return pacienteMapper.toDtoToken(autenticado, token);
+
+        } catch (AuthenticationException e) {
+            rateLimiter.registrarFalha(key, tentativas);
+            return null;
+        }
     }
+
+
 
     public void updateSenha(Integer id, String senhaAtual, String novaSenha) {
         Paciente paciente = pacienteRepository.findById(id)
@@ -241,6 +288,10 @@ public class PacienteService {
         return pacienteRepository.findByNomeStartingWithIgnoreCase(nome);
     }
 
+    public boolean cpfExiste(String cpf) {
+        return pacienteRepository.existsByCpf(cpf);
+    }
+
     public static boolean isValidEmail(String email) {
         return email != null && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     }
@@ -255,6 +306,35 @@ public class PacienteService {
         }
 
         return senha.toString();
+    }
+
+    public Paciente uploadImagemPaciente(Integer id, MultipartFile file) {
+        // Verifica se o S3Service está disponível
+        if (s3Service == null) {
+            log.error("Tentativa de upload de imagem mas S3Service não está configurado. Configure aws.s3.enabled=true e as credenciais AWS no .env");
+            throw new RuntimeException("Upload de imagem não está disponível. Configure as credenciais AWS no arquivo .env");
+        }
+
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(EntidadeNaoEncontradaException::new);
+
+        try {
+            // Deleta imagem antiga se existir
+            if (paciente.getImagemUrl() != null && !paciente.getImagemUrl().isEmpty()) {
+                s3Service.deleteImage(paciente.getImagemUrl());
+            }
+
+            // Faz upload da nova imagem
+            String imageUrl = s3Service.uploadImage(file, "pacientes");
+            paciente.setImagemUrl(imageUrl);
+            paciente.setUpdatedAt(LocalDateTime.now());
+
+            return pacienteRepository.save(paciente);
+
+        } catch (Exception e) {
+            log.error("Erro ao fazer upload da imagem do paciente {}", id, e);
+            throw new RuntimeException("Erro ao fazer upload da imagem: " + e.getMessage());
+        }
     }
 
 }
