@@ -111,7 +111,7 @@ public class PacienteController {
 
         Cookie jwtCookie = new Cookie("jwt", pacienteTokenDto.getToken());
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true);
+        jwtCookie.setSecure(false);
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(60 * 60);
         response.addCookie(jwtCookie);
