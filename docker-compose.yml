@@ -14,13 +14,15 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - psirizerio_net
+
 
   rabbitmq:
     image: rabbitmq:3.13-management
@@ -56,6 +58,18 @@ services:
       retries: 10
     networks:
       - psirizerio_net
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: psirizerio-redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - psirizerio_net
+    volumes:
+      - redisinsight_data:/data
 
   psirizerio-services:
     build:
