@@ -82,10 +82,9 @@ jobs:
           tags: |
             ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:latest
             ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:${{ github.sha }}
-
+            
 
   deploy:
-    if: false
     needs: build-and-push
     runs-on: ubuntu-latest
 
@@ -95,15 +94,21 @@ jobs:
         with:
           host: ${{ secrets.EC2_PUBLIC_IP }}
           username: ${{ secrets.EC2_PUBLIC_USER }}
-          key: ${{ secrets.EC2_PUBLIC_SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "=============== Acessando pública ==============="
             mkdir -p ~/.ssh
-            echo "${{ secrets.EC2_PRIVATE_SSH_KEY }}" > ~/.ssh/private.pem
-            chmod 600 ~/.ssh/private.pem
+
+            if [ ! -f ~/.ssh/chaveatividade.pem ]; then
+              echo "🔐 Criando chave chaveatividade.pem..."
+              echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/chaveatividade.pem
+              chmod 600 ~/.ssh/chaveatividade.pem
+            else
+              echo "🔐 chaveatividade.pem já existe — reaproveitando!"
+            fi
 
             echo "=============== CONECTANDO PRIVADA ==============="
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.pem ${{ secrets.EC2_PRIVATE_USER }}@${{ secrets.EC2_PRIVATE_IP_BACKEND }} << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/chaveatividade.pem ${{ secrets.EC2_PRIVATE_USER }}@${{ secrets.EC2_PRIVATE_IP_BACKEND }} << 'EOF'
 
               echo "=============== LIMPANDO DOCKER ==============="
               docker stop $(docker ps -aq) 2>/dev/null || true
@@ -127,7 +132,6 @@ jobs:
               echo "=============== BUILD JAR + DOCKER COMPOSE ==============="
               chmod +x mvnw
               ./mvnw clean package -DskipTests
-
               docker compose up -d
 
             EOF
