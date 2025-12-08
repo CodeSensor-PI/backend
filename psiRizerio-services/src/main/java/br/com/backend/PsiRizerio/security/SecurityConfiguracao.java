@@ -52,6 +52,13 @@ public class SecurityConfiguracao {
                         .requestMatchers(HttpMethod.POST, "/auth/cadastro-psicologo").permitAll()
                         .requestMatchers(HttpMethod.POST, "/password-reset/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/password-reset/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/psicologos").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/pacientes").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/psicologos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pacientes").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/logout").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/auth/validate").permitAll()
+
                         // Swagger
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         // Todos os outros endpoints requerem autenticação
