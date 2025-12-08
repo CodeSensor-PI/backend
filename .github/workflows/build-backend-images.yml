@@ -138,23 +138,24 @@ jobs:
             # ========================================
             # CRIA deploy-back.sh (SEM INDENTAÇÃO)
             # ========================================
-            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/deploy-back.sh" << 'EOF'
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/deploy-back.sh" << EOF
             #!/bin/bash
             set -e
-          
+            
             rm -rf backend
-            git clone $BACKEND_REPO backend
+            git clone "$BACKEND_REPO"
             cd backend
             git checkout develop
-          
+            
             cat <<EOT > .env
             ${{ secrets.ENV_FILE_CONTENT }}
             EOT
-          
+            
             chmod +x mvnw
             ./mvnw clean package -DskipTests
             docker compose up -d
             EOF
+
             
             ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "chmod +x ~/deploy-back.sh"
             
