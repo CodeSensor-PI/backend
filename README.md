@@ -11,6 +11,7 @@ Este repositório contém a API do sistema, desenvolvida em **Java Spring**. Ele
 - **Docker**
 - **Swagger (OpenAPI)**
 - **Maven**
+- **Redis**
 
 ## 📦 Instalação e Configuração
 
