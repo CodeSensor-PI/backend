@@ -90,7 +90,7 @@ public class PsicologoController {
 
         Cookie jwtCookie = new Cookie("jwt", psicologoTokenDTO.getToken());
         jwtCookie.setHttpOnly(true);
-        jwtCookie.setSecure(true); // use HTTPS em produção
+        jwtCookie.setSecure(false); // use HTTPS em produção
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(60 * 60); // 1h
         response.addCookie(jwtCookie);
