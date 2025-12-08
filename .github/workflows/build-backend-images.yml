@@ -14,6 +14,7 @@ on:
 
 jobs:
   build-and-push:
+    if: false
     runs-on: ubuntu-latest
 
     env:
@@ -82,11 +83,14 @@ jobs:
           tags: |
             ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:latest
             ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:${{ github.sha }}
-            
+  
+
+
 
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
+
 
     steps:
       - name: 🚀 SSH para EC2 Publica
@@ -99,16 +103,31 @@ jobs:
             echo "=============== Acessando pública ==============="
             mkdir -p ~/.ssh
 
+            # ==========================
+            # GARANTE QUE A CHAVE EXISTE
+            # ==========================
             if [ ! -f ~/.ssh/chaveatividade.pem ]; then
               echo "🔐 Criando chave chaveatividade.pem..."
               echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/chaveatividade.pem
               chmod 600 ~/.ssh/chaveatividade.pem
             else
               echo "🔐 chaveatividade.pem já existe — reaproveitando!"
+              chmod 600 ~/.ssh/chaveatividade.pem
             fi
 
+            # ==========================
+            # GARANTE QUE TEMOS USER
+            # ==========================
+            PRIVATE_USER="${{ secrets.EC2_PRIVATE_USER }}"
+            if [ -z "$PRIVATE_USER" ]; then
+              PRIVATE_USER="ubuntu"   # fallback automático
+            fi
+
+            # ==========================
+            # ACESSA A PRIVADA
+            # ==========================
             echo "=============== CONECTANDO PRIVADA ==============="
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/chaveatividade.pem ${{ secrets.EC2_PRIVATE_USER }}@${{ secrets.EC2_PRIVATE_IP_BACKEND }} << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/chaveatividade.pem $PRIVATE_USER@${{ secrets.EC2_PRIVATE_IP_BACKEND }} << 'EOF'
 
               echo "=============== LIMPANDO DOCKER ==============="
               docker stop $(docker ps -aq) 2>/dev/null || true
