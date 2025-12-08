@@ -50,11 +50,9 @@ jobs:
       - name: 📚 Resolve dependencies for ${{ matrix.module }}
         run: ./mvnw -B -pl ${{ matrix.module }} -am dependency:go-offline
 
-      # ⭐ TESTES UNITÁRIOS
       - name: 🧪 Run Unit Tests for ${{ matrix.module }}
         run: ./mvnw -B -pl ${{ matrix.module }} -am test
 
-      # ⭐ BUILD DO JAR (SEM TESTAR NOVAMENTE)
       - name: 🏗️ Build ${{ matrix.module }} JAR
         run: ./mvnw -B -pl ${{ matrix.module }} -am package -DskipTests
 
@@ -84,3 +82,52 @@ jobs:
           tags: |
             ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:latest
             ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:${{ github.sha }}
+
+
+  deploy:
+    if: false
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 SSH para EC2 Publica
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_PUBLIC_IP }}
+          username: ${{ secrets.EC2_PUBLIC_USER }}
+          key: ${{ secrets.EC2_PUBLIC_SSH_KEY }}
+          script: |
+            echo "=============== Acessando pública ==============="
+            mkdir -p ~/.ssh
+            echo "${{ secrets.EC2_PRIVATE_SSH_KEY }}" > ~/.ssh/private.pem
+            chmod 600 ~/.ssh/private.pem
+
+            echo "=============== CONECTANDO PRIVADA ==============="
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/private.pem ${{ secrets.EC2_PRIVATE_USER }}@${{ secrets.EC2_PRIVATE_IP_BACKEND }} << 'EOF'
+
+              echo "=============== LIMPANDO DOCKER ==============="
+              docker stop $(docker ps -aq) 2>/dev/null || true
+              docker rm $(docker ps -aq) 2>/dev/null || true
+              docker rmi -f $(docker images -aq) 2>/dev/null || true
+              docker volume rm $(docker volume ls -q) 2>/dev/null || true
+              docker network rm $(docker network ls -q) 2>/dev/null || true
+              docker system prune -a --volumes -f
+
+              echo "=============== CLONANDO REPOSITÓRIO ==============="
+              rm -rf backend
+              git clone ${{ secrets.BACKEND_REPO }} backend
+              cd backend
+              git checkout develop
+
+              echo "=============== CRIANDO .ENV AUTOMATICAMENTE ==============="
+              cat <<EOT > .env
+              ${{ secrets.ENV_FILE_CONTENT }}
+              EOT
+
+              echo "=============== BUILD JAR + DOCKER COMPOSE ==============="
+              chmod +x mvnw
+              ./mvnw clean package -DskipTests
+
+              docker compose up -d
+
+            EOF
