@@ -46,7 +46,16 @@ public class SecurityConfiguracao {
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer<HttpSecurity>::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll() // <---- libera tudo
+                        // Endpoints públicos (sem autenticação)
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/cadastro-paciente").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/cadastro-psicologo").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/password-reset/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/password-reset/**").permitAll()
+                        // Swagger
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Todos os outros endpoints requerem autenticação
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(autenticacaoJwtEntryPoint))

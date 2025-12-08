@@ -1,23 +1,30 @@
 {
 	"info": {
 		"_postman_id": "efb25ff2-5e5a-4f30-a142-7a8efdd1db39",
-		"name": "Psi-Rizerio",
+		"name": "Psi-Rizerio API",
+		"description": "API completa do sistema Psi-Rizerio com microserviços para pacientes, psicólogos, sessões, relatórios e notificações",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "44412922",
 		"_collection_link": "https://kauesilva-1911016.postman.co/workspace/Kaue-Silva's-Workspace~972d485b-c03f-4518-8f02-a2832f618570/collection/44412922-efb25ff2-5e5a-4f30-a142-7a8efdd1db39?action=share&source=collection_link&creator=44412922"
 	},
 	"item": [
 		{
-			"name": "paciente",
+			"name": "Pacientes",
+			"description": "CRUD, autenticação e KPIs de pacientes",
 			"item": [
 				{
-					"name": "criar-usuario",
+					"name": "Criar paciente",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"nome_aa07ea8c9349\",\r\n  \"cpf\": \"47652882850\",\r\n  \"email\": \"email@gmail.com\",\r\n  \"senha\": \"senha_f6f640fa19be\",\r\n  \"fkPlano\": {\r\n    \"id\": 1\r\n  },\r\n  \"fkEndereco\": {\r\n    \"id\": 1\r\n  }\r\n}",
+							"raw": "{\r\n  \"nome\": \"João Silva\",\r\n  \"email\": \"joao.silva@email.com\",\r\n  \"status\": \"ATIVO\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,66 +32,76 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios",
+							"raw": "http://localhost:8080/pacientes",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios"
-							]
+							"path": ["pacientes"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-usuarios",
+					"name": "Buscar paciente por ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/usuarios/2",
+							"raw": "http://localhost:8080/pacientes/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"2"
-							]
+							"path": ["pacientes", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-todos-usuarios",
+					"name": "Buscar todos os pacientes",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/usuarios",
+							"raw": "http://localhost:8080/pacientes?page=0&size=10",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios"
+							"path": ["pacientes"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"}
 							]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "atualizar-usuario",
+					"name": "Buscar pacientes por nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pacientes/busca?nome=João",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["pacientes", "busca"],
+							"query": [
+								{"key": "nome", "value": "João"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Atualizar paciente",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"nome_409c1a6ae81a\",\r\n  \"cpf\": \"47652882850\",\r\n  \"email\": \"gustavo@gmail.com\",\r\n  \"senha\": \"senha_9100ef854a06\",\r\n  \"fkPlano\": {\r\n    \"id\": 1\r\n  },\r\n  \"fkEndereco\": {\r\n    \"id\": 2\r\n  }\r\n}",
+							"raw": "{\r\n  \"nome\": \"João Silva Atualizado\",\r\n  \"email\": \"joao.atualizado@email.com\",\r\n  \"status\": \"ATIVO\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -92,28 +109,27 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios/1",
+							"raw": "http://localhost:8080/pacientes/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"1"
-							]
+							"path": ["pacientes", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "desativar-usuario",
+					"name": "Alterar senha do paciente",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \"status\": \"INATIVO\"\r\n}",
+							"raw": "{\r\n  \"senha\": \"senhaAtual123\",\r\n  \"novaSenha\": \"novaSenha456\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -121,28 +137,55 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios/1",
+							"raw": "http://localhost:8080/pacientes/1/alterar-senha",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"1"
-							]
+							"path": ["pacientes", "1", "alterar-senha"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "ativar-usuario",
+					"name": "Desativar paciente",
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pacientes/1/desativar",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["pacientes", "1", "desativar"]
+						}
+					}
+				},
+				{
+					"name": "Ativar paciente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pacientes/1/ativar",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["pacientes", "1", "ativar"]
+						}
+					}
+				},
+				{
+					"name": "Login paciente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \"status\": \"ATIVO\"\r\n}",
+							"raw": "{\r\n  \"email\": \"joao.silva@email.com\",\r\n  \"senha\": \"senha123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -150,34 +193,75 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios/1/ativar",
+							"raw": "http://localhost:8080/pacientes/login",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"1",
-								"ativar"
-							]
+							"path": ["pacientes", "login"]
 						}
-					},
-					"response": []
+					}
+				},
+				{
+					"name": "Primeiro login do paciente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"dadosComplementares\": \"Informações adicionais do primeiro acesso\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/pacientes/primeiroLogin/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["pacientes", "primeiroLogin", "1"]
+						}
+					}
+				},
+				{
+					"name": "KPI - % pacientes inativos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pacientes/kpi/porcent-inativo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["pacientes", "kpi", "porcent-inativo"]
+						}
+					}
 				}
 			]
 		},
 		{
-			"name": "Psicologos",
+			"name": "Psicólogos",
+			"description": "Gerenciamento e autenticação de psicólogos do sistema",
 			"item": [
 				{
-					"name": "criar-psicolgos",
+					"name": "Criar psicólogo",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"nome_aa07ea8c9349\",\r\n  \"cpf\": \"47652882850\",\r\n  \"email\": \"email@gmail.com\",\r\n  \"senha\": \"senha_f6f640fa19be\",\r\n  \"fkPlano\": {\r\n    \"id\": 1\r\n  },\r\n  \"fkEndereco\": {\r\n    \"id\": 1\r\n  }\r\n}",
+							"raw": "{\r\n  \"nome\": \"Dr. Maria Santos\",\r\n  \"email\": \"maria.santos@clinica.com\",\r\n  \"crp\": \"06/123456\",\r\n  \"especialidades\": [\"Terapia Cognitivo-Comportamental\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -185,66 +269,55 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios",
+							"raw": "http://localhost:8080/psicologos",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios"
-							]
+							"path": ["psicologos"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-usuarios",
+					"name": "Buscar psicólogo por ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/usuarios/2",
+							"raw": "http://localhost:8080/psicologos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"2"
-							]
+							"path": ["psicologos", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-todos-usuarios",
+					"name": "Buscar todos os psicólogos",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/usuarios",
+							"raw": "http://localhost:8080/psicologos",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios"
-							]
+							"path": ["psicologos"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "atualizar-usuario",
+					"name": "Atualizar psicólogo",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"nome\",\r\n  \"cpf\": \"47652882850\",\r\n  \"email\": \"gustavogrizeriog@gmail.com\",\r\n  \"senha\": \"senha_b571514dab78\",\r\n  \"fk_plano\": 1,\r\n  \"fk_endereco\": 1\r\n}",
+							"raw": "{\r\n  \"nome\": \"Dra. Maria Santos Atualizada\",\r\n  \"email\": \"maria.atualizada@clinica.com\",\r\n  \"crp\": \"06/123456\",\r\n  \"especialidades\": [\"TCC\", \"Terapia Familiar\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -252,29 +325,55 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/v1/user/1",
+							"raw": "http://localhost:8080/psicologos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"v1",
-								"user",
-								"1"
-							]
+							"path": ["psicologos", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "desativar-usuario",
+					"name": "Ativar psicólogo",
 					"request": {
 						"method": "PUT",
 						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/psicologos/1/ativar",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["psicologos", "1", "ativar"]
+						}
+					}
+				},
+				{
+					"name": "Desativar psicólogo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/psicologos/1/desativar",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["psicologos", "1", "desativar"]
+						}
+					}
+				},
+				{
+					"name": "Login psicólogo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \"status\": \"INATIVO\"\r\n}",
+							"raw": "{\r\n  \"email\": \"maria.santos@clinica.com\",\r\n  \"senha\": \"senha123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -282,28 +381,27 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios/1",
+							"raw": "http://localhost:8080/psicologos/login",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"1"
-							]
+							"path": ["psicologos", "login"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "ativar-usuario",
+					"name": "Alterar senha psicólogo",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \"status\": \"ATIVO\"\r\n}",
+							"raw": "{\r\n  \"senha\": \"senhaAtual123\",\r\n  \"novaSenha\": \"novaSenha456\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -311,44 +409,37 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/usuarios/1/ativar",
+							"raw": "http://localhost:8080/psicologos/1/alterar-senha",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"usuarios",
-								"1",
-								"ativar"
-							]
+							"path": ["psicologos", "1", "alterar-senha"]
 						}
-					},
-					"response": []
+					}
 				}
 			]
 		},
 		{
-			"name": "Agendar",
+			"name": "Sessões",
+			"description": "Gerenciamento de sessões de atendimento dos pacientes",
 			"item": [
 				{
-					"name": "save-sessao",
+					"name": "Criar sessão",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fkCliente\": {\r\n    \"id\": 1\r\n  },\r\n  \"dtHrSessao\": \"2025-05-10T08:54:16\",\r\n  \"tipo\": \"AVULSO\",\r\n  \"statusSessao\": \"AGUARDANDO\",\r\n  \"anotacao\": \"teste\"\r\n}",
+							"raw": "{\r\n  \"fkPaciente\": {\r\n    \"id\": 1\r\n  },\r\n  \"data\": \"2025-12-15\",\r\n  \"hora\": \"14:00:00\",\r\n  \"tipo\": \"AVULSA\",\r\n  \"statusSessao\": \"AGUARDANDO\",\r\n  \"anotacao\": \"Primeira sessão de avaliação\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -358,97 +449,141 @@
 						"url": {
 							"raw": "http://localhost:8080/sessoes",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"sessoes"
-							]
+							"path": ["sessoes"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-agendamentos",
+					"name": "Buscar todas as sessões",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/v1/schedule",
+							"raw": "http://localhost:8080/sessoes",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"v1",
-								"schedule"
-							]
+							"path": ["sessoes"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-todos-agendamentos",
+					"name": "Buscar sessões da semana",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/v1/sessoes/",
+							"raw": "http://localhost:8080/sessoes/semana?segunda=2025-12-09&page=0&size=40",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"v1",
-								"sessoes",
-								""
+							"path": ["sessoes", "semana"],
+							"query": [
+								{"key": "segunda", "value": "2025-12-09"},
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "40"}
 							]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-sessoes-por-usuario",
+					"name": "Buscar sessão por ID",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/sessoes/usuarios/1",
+							"raw": "http://localhost:8080/sessoes/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"sessoes",
-								"usuarios",
-								"1"
-							]
+							"path": ["sessoes", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "atualizar-sessao",
+					"name": "Buscar sessões por horário",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/horarios?data=2025-12-15&hora=14:00:00&hora2=15:00:00",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "horarios"],
+							"query": [
+								{"key": "data", "value": "2025-12-15"},
+								{"key": "hora", "value": "14:00:00"},
+								{"key": "hora2", "value": "15:00:00"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Buscar sessões por paciente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/pacientes/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "pacientes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar sessões por status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/status?status=AGUARDANDO",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "status"],
+							"query": [
+								{"key": "status", "value": "AGUARDANDO"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Buscar sessões do dia",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/dia",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "dia"]
+						}
+					}
+				},
+				{
+					"name": "Atualizar sessão",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Consulta Psicológica\",\r\n    \"description\": \"Sessão de terapia com a Dra. Jessica\",\r\n    \"data\": \"2025-02-20\",\r\n    \"start_time\": \"14:00:00\",\r\n    \"end_time\": \"15:00:00\",\r\n    \"userId\": 1\r\n}",
+							"raw": "{\r\n  \"data\": \"2025-12-16\",\r\n  \"hora\": \"15:00:00\",\r\n  \"tipo\": \"AVULSA\",\r\n  \"statusSessao\": \"CONFIRMADA\",\r\n  \"anotacao\": \"Sessão reagendada\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -456,55 +591,117 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/v1/schedule/1",
+							"raw": "http://localhost:8080/sessoes/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"v1",
-								"schedule",
-								"1"
-							]
+							"path": ["sessoes", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "delete-sessao",
+					"name": "Cancelar sessão",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"statusSessao\": \"CANCELADA\",\r\n  \"anotacao\": \"Cancelada por solicitação do paciente\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/sessoes/cancelar/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "cancelar", "1"]
+						}
+					}
+				},
+				{
+					"name": "Deletar sessão",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/v1/schedule/2",
+							"raw": "http://localhost:8080/sessoes/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"v1",
-								"schedule",
-								"2"
-							]
+							"path": ["sessoes", "1"]
 						}
-					},
-					"response": []
+					}
+				},
+				{
+					"name": "KPI - Sessões da semana",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/kpi/sessoes-semana",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "kpi", "sessoes-semana"]
+						}
+					}
+				},
+				{
+					"name": "KPI - % sessões canceladas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/kpi/porcent-cancelada",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "kpi", "porcent-cancelada"]
+						}
+					}
+				},
+				{
+					"name": "Dados do gráfico dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/sessoes/dados-grafico",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["sessoes", "dados-grafico"]
+						}
+					}
 				}
 			]
 		},
 		{
-			"name": "Endereco",
+			"name": "Endereços",
+			"description": "CRUD de endereços e busca personalizada por CEP e número",
 			"item": [
 				{
-					"name": "cadastrar-endereco",
+					"name": "Criar endereço",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"cep\": \"12345678\",\r\n  \"logradouro\": \"Rua Exemplo\",\r\n  \"numero\": 2,\r\n  \"cidade\": \"Cidade Exemplo\",\r\n  \"uf\": \"SP\",\r\n  \"bairro\": \"Bairro Exemplo\"\r\n}\r\n",
+							"raw": "{\r\n  \"cep\": \"01234567\",\r\n  \"logradouro\": \"Rua das Flores\",\r\n  \"numero\": \"123\",\r\n  \"bairro\": \"Centro\",\r\n  \"cidade\": \"São Paulo\",\r\n  \"uf\": \"SP\",\r\n  \"complemento\": \"Apt 45\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -514,114 +711,86 @@
 						"url": {
 							"raw": "http://localhost:8080/enderecos",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"enderecos"
-							]
+							"path": ["enderecos"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-endereco",
+					"name": "Buscar todos os endereços",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:8080/enderecos",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"enderecos"
-							]
+							"path": ["enderecos"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-Endereco-ID",
+					"name": "Buscar endereço por ID",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:8080/enderecos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"enderecos",
-								"1"
-							]
+							"path": ["enderecos", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-endereco-cep-numero",
+					"name": "Buscar endereço por CEP e número",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8080/enderecos/1",
+							"raw": "http://localhost:8080/enderecos/encontrarEndereco?cep=01234567&numero=123",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"enderecos",
-								"1"
+							"path": ["enderecos", "encontrarEndereco"],
+							"query": [
+								{"key": "cep", "value": "01234567"},
+								{"key": "numero", "value": "123"}
 							]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "atualizar-endereco",
+					"name": "Atualizar endereço",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"cep\": \"22345678\",\r\n  \"logradouro\": \"logradouro\",\r\n  \"bairro\": \"bairro\",\r\n  \"numero\": 2,\r\n  \"cidade\": \"cidade\",\r\n  \"uf\": \"uf\"\r\n}",
+							"raw": "{\r\n  \"cep\": \"01234567\",\r\n  \"logradouro\": \"Rua das Flores Atualizada\",\r\n  \"numero\": \"123\",\r\n  \"bairro\": \"Centro\",\r\n  \"cidade\": \"São Paulo\",\r\n  \"uf\": \"SP\",\r\n  \"complemento\": \"Apt 45B\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -631,51 +800,45 @@
 						"url": {
 							"raw": "http://localhost:8080/enderecos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"enderecos",
-								"1"
-							]
+							"path": ["enderecos", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "deletar-endereco",
+					"name": "Deletar endereço",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/enderecos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"enderecos",
-								"1"
-							]
+							"path": ["enderecos", "1"]
 						}
-					},
-					"response": []
+					}
 				}
 			]
 		},
 		{
-			"name": "Plano",
+			"name": "Planos",
+			"description": "Gerenciamento dos planos de atendimento",
 			"item": [
 				{
-					"name": "cadastras-plano",
+					"name": "Criar plano",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"categoria\": \"Premiumm\",\r\n  \"preco\": 99.99\r\n}",
+							"raw": "{\r\n  \"categoria\": \"Premium\",\r\n  \"preco\": 150.00,\r\n  \"descricao\": \"Plano premium com sessões ilimitadas\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -685,74 +848,58 @@
 						"url": {
 							"raw": "http://localhost:8080/planos",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"planos"
-							]
+							"path": ["planos"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-planos",
+					"name": "Buscar todos os planos",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:8080/planos",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"planos"
-							]
+							"path": ["planos"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-planos-id",
+					"name": "Buscar plano por ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/planos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"planos",
-								"1"
-							]
+							"path": ["planos", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "atualizar-planos",
+					"name": "Atualizar plano",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"categoria\": \"Premium\",\r\n  \"preco\": 99.99\r\n}",
+							"raw": "{\r\n  \"categoria\": \"Premium Plus\",\r\n  \"preco\": 200.00,\r\n  \"descricao\": \"Plano premium plus com benefícios exclusivos\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -762,106 +909,49 @@
 						"url": {
 							"raw": "http://localhost:8080/planos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"planos",
-								"1"
-							]
+							"path": ["planos", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "deletar-plano",
+					"name": "Deletar plano",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
 							"raw": "http://localhost:8080/planos/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"planos",
-								"1"
-							]
+							"path": ["planos", "1"]
 						}
-					},
-					"response": []
+					}
 				}
 			]
 		},
 		{
-			"name": "Auth - paciente",
+			"name": "Telefones",
+			"description": "Gerenciamento de telefones dos pacientes",
 			"item": [
 				{
-					"name": "Login",
+					"name": "Criar telefone",
 					"request": {
 						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"email@gmail.com\",\r\n    \"senha\": \"senha_f6f640fa19be\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
 							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/usuarios/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"usuarios",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Telefone",
-			"item": [
-				{
-					"name": "criar-telefone",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"ddd\": \"11\",\r\n  \"numero\": \"numero_1f58a0b03397\",\r\n  \"tipo\": \"EMERGENCIAL\",\r\n  \"fkCliente\": {\r\n    \"id\": 0\r\n  }\r\n}",
+							"raw": "{\r\n  \"ddd\": \"11\",\r\n  \"numero\": \"987654321\",\r\n  \"tipo\": \"CELULAR\",\r\n  \"fkPaciente\": {\r\n    \"id\": 1\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -871,57 +961,71 @@
 						"url": {
 							"raw": "http://localhost:8080/telefones",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"telefones"
-							]
+							"path": ["telefones"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "buscar-telefones",
+					"name": "Buscar todos os telefones",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8080/telefones",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["telefones"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "bucas-telefone-id",
+					"name": "Buscar telefone por ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8080/telefones/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["telefones", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "atualizar-telefone",
+					"name": "Buscar telefones por paciente",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/telefones/pacientes/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["telefones", "pacientes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Atualizar telefone",
+					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"ddd\": \"11\"\r\n}",
+							"raw": "{\r\n  \"ddd\": \"11\",\r\n  \"numero\": \"999888777\",\r\n  \"tipo\": \"CELULAR\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -929,73 +1033,56 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/telefones/3",
+							"raw": "http://localhost:8080/telefones/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"telefones",
-								"3"
-							]
+							"path": ["telefones", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "deletar-telefone",
+					"name": "Deletar telefone",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:8080/telefones/2",
+							"raw": "http://localhost:8080/telefones/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"telefones",
-								"2"
-							]
+							"path": ["telefones", "1"]
 						}
-					},
-					"response": []
+					}
 				}
 			]
 		},
 		{
-			"name": "Preferencias",
+			"name": "Preferências",
+			"description": "Gerenciamento das preferências dos pacientes",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "Criar preferência",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"diaSemana\": \"SEGUNDA\",\r\n  \"horario\": \"11:40\",\r\n  \"fkPaciente\": {\r\n    \"id\": 1\r\n  }\r\n}",
+							"raw": "{\r\n  \"diaSemana\": \"SEGUNDA\",\r\n  \"horario\": \"14:00\",\r\n  \"fkPaciente\": {\r\n    \"id\": 1\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1005,57 +1092,57 @@
 						"url": {
 							"raw": "http://localhost:8080/preferencias",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"preferencias"
-							]
+							"path": ["preferencias"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "New Request",
+					"name": "Buscar todas as preferências",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8080/preferencias",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["preferencias"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "New Request",
+					"name": "Buscar preferência por ID do paciente",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8080/preferencias/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["preferencias", "1"]
 						}
-					},
-					"response": []
+					}
 				},
 				{
-					"name": "New Request",
+					"name": "Atualizar preferência",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"diaSemana\": \"TERCA\",\r\n  \"horario\": \"16:10\"\r\n}",
+							"raw": "{\r\n  \"diaSemana\": \"TERCA\",\r\n  \"horario\": \"16:00\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1065,70 +1152,400 @@
 						"url": {
 							"raw": "http://localhost:8080/preferencias/1",
 							"protocol": "http",
-							"host": [
-								"localhost"
-							],
+							"host": ["localhost"],
 							"port": "8080",
-							"path": [
-								"preferencias",
-								"1"
-							]
+							"path": ["preferencias", "1"]
 						}
-					},
-					"response": []
+					}
+				},
+				{
+					"name": "Deletar preferência",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/preferencias/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["preferencias", "1"]
+						}
+					}
 				}
 			]
 		},
 		{
-			"name": "Dashboard",
+			"name": "Avaliações",
+			"description": "CRUD de avaliações realizadas pelos pacientes",
 			"item": [
 				{
-					"name": "kpi-porcent-Inativo",
+					"name": "Criar avaliação",
 					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nota\": 5,\r\n  \"comentario\": \"Excelente atendimento, muito satisfeito com o tratamento\",\r\n  \"fkPaciente\": {\r\n    \"id\": 1\r\n  },\r\n  \"fkSessao\": {\r\n    \"id\": 1\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/avaliacoes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["avaliacoes"]
+						}
+					}
 				},
 				{
-					"name": "kpi-porcent-cancelada",
+					"name": "Buscar todas as avaliações",
 					"request": {
 						"method": "GET",
-						"header": []
-					},
-					"response": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/avaliacoes",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["avaliacoes"]
+						}
+					}
 				},
 				{
-					"name": "dados-grafico",
+					"name": "Deletar avaliação",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/avaliacoes/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["avaliacoes", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Relatórios",
+			"description": "Serviço de relatórios (porta 8081)",
+			"item": [
+				{
+					"name": "Criar relatório",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Relatório de Sessão\",\r\n  \"conteudo\": \"Detalhes da sessão realizada com o paciente\",\r\n  \"fkSessao\": 1,\r\n  \"fkPaciente\": 1,\r\n  \"dataRelatorio\": \"2025-12-01T10:00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/relatorios",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios"]
+						}
+					}
+				},
+				{
+					"name": "Buscar todos os relatórios",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios"]
+						}
+					}
+				},
+				{
+					"name": "Buscar relatório por sessão",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios/sessao/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "sessao", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar relatórios por paciente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios/paciente/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "paciente", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar relatórios por paciente (paginado)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios/paciente/1/pagina?page=0&size=10&sort=dataRelatorio,desc",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "paciente", "1", "pagina"],
+							"query": [
+								{"key": "page", "value": "0"},
+								{"key": "size", "value": "10"},
+								{"key": "sort", "value": "dataRelatorio,desc"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Atualizar relatório",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"titulo\": \"Relatório de Sessão Atualizado\",\r\n  \"conteudo\": \"Conteúdo atualizado do relatório\",\r\n  \"fkSessao\": 1,\r\n  \"fkPaciente\": 1,\r\n  \"dataRelatorio\": \"2025-12-01T10:30:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/relatorios/{{relatorio_id}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "{{relatorio_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Deletar relatório por ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios/{{relatorio_id}}",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "{{relatorio_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Deletar relatório por sessão",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios/sessao/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "sessao", "1"]
+						}
+					}
+				},
+				{
+					"name": "Exportar relatórios em PDF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8081/relatorios/exportar-pdf/1",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["relatorios", "exportar-pdf", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Redefinição de Senha",
+			"description": "Endpoints para redefinição de senha com código por email",
+			"item": [
+				{
+					"name": "Solicitar código de redefinição",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/password-reset/request?email=joao.silva@email.com",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["password-reset", "request"],
+							"query": [
+								{"key": "email", "value": "joao.silva@email.com"}
+							]
+						}
+					}
+				},
+				{
+					"name": "Confirmar código e alterar senha",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/password-reset/confirm?codigo=123456&novaSenha=MinhaNovaSenh@123",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["password-reset", "confirm"],
+							"query": [
+								{"key": "codigo", "value": "123456"},
+								{"key": "novaSenha", "value": "MinhaNovaSenh@123"}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Autenticação",
+			"description": "Endpoints para autenticação e tokens",
+			"item": [
+				{
+					"name": "Gerar JWT fake para testes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/auth/fake-token",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8080",
+							"path": ["auth", "fake-token"]
+						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "JWT gerado com sucesso",
+							"originalRequest": {
+								"method": "GET",
+								"url": {
+									"raw": "http://localhost:8080/auth/fake-token"
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"body": "{\n  \"token\": \"<jwt_token>\"\n}"
+						}
+					]
 				}
 			]
 		}
 	],
 	"variable": [
 		{
-			"key": "url-sessao",
-			"value": "http://localhost:8080/v1/sessoes",
-			"type": "default"
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "default",
+			"description": "URL base do serviço principal (psiRizerio-services)"
 		},
 		{
-			"key": "url-usuarios",
-			"value": "http://localhost:8080/v1/usuarios",
-			"type": "default"
+			"key": "relatorios_url", 
+			"value": "http://localhost:8081",
+			"type": "default",
+			"description": "URL base do serviço de relatórios"
 		},
 		{
-			"key": "jwt-token",
-			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndXN0YXZvQGdtYWlsLmNvbSIsImlhdCI6MTc0NDQyNzE3NSwiZXhwIjoxNzQ4MDI3MTc1fQ.Fibeseqbl6ERf416SjKG3lPScHRtSCzqoMWvzT2sXrlNZq3Sw-nNHQ6l4EaPsbTbGSFy8LNAjPFIU06QgxGHpw",
-			"type": "default"
+			"key": "email_url",
+			"value": "http://localhost:8082", 
+			"type": "default",
+			"description": "URL base do serviço de email"
 		},
 		{
 			"key": "access_token",
-			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbWFpbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQ3Mjc1NzMsImV4cCI6MTc0ODMyNzU3M30.tijG_UWj_SfoviB_typ8JXlCM38YM78qeNXiucVYf3hWKHwr3M4JAZ5ZPLt9RAElg5kx12qtgpTCDtSb5j4Gvg",
-			"type": "default"
+			"value": "",
+			"type": "default",
+			"description": "Token JWT para autenticação. Use o endpoint /auth/fake-token para gerar um token de teste."
+		},
+		{
+			"key": "relatorio_id",
+			"value": "",
+			"type": "default",
+			"description": "ID do relatório (UUID) para operações de update/delete"
+		},
+		{
+			"key": "paciente_id",
+			"value": "1",
+			"type": "default",
+			"description": "ID do paciente para testes"
+		},
+		{
+			"key": "psicologo_id",
+			"value": "1", 
+			"type": "default",
+			"description": "ID do psicólogo para testes"
+		},
+		{
+			"key": "sessao_id",
+			"value": "1",
+			"type": "default", 
+			"description": "ID da sessão para testes"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript", 
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
