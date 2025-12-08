@@ -14,7 +14,6 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
@@ -22,6 +21,29 @@ services:
       retries: 5
     networks:
       - psirizerio_net
+
+  # ================== SEED (RODA APÓS BACKEND MIGRAR) ==================
+  mysql-seed:
+    image: mysql:8.4
+    depends_on:
+      mysql:
+        condition: service_healthy
+      psirizerio-services:
+        condition: service_started
+    volumes:
+      - ./init.sql:/init.sql
+    entrypoint: |
+      sh -c "
+        echo '⏳ Aguardando backend terminar de criar tabelas...';
+        sleep 60;
+        echo '🚀 Executando seeds...';
+        mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD:-root} < /init.sql;
+        echo '🌱 Seeds aplicados com sucesso';
+      "
+    networks:
+      - psirizerio_net
+
+
 
 
   rabbitmq:
