@@ -4,12 +4,12 @@ on:
   push:
     branches:
       - develop
+      - infra/workflow
     paths:
       - 'psiRizerio-services/**'
       - 'psiRizerio-email-service/**'
       - 'psiRizerio-relatorios-service/**'
       - '.github/workflows/build-backend-images.yml'
-      - 'infra/workflow'
   workflow_dispatch:
 
 jobs:
