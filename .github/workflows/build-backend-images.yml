@@ -90,7 +90,7 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     env:
-      EC2_BACKEND_IP: ${{ secrets.EC2_PRIVATE_IP_BACKEND }}
+      EC2_PRIVATE_IP_BACKEND: ${{ secrets.EC2_PRIVATE_IP_BACKEND }}
       BACKEND_REPO: ${{ secrets.BACKEND_REPO }}
 
     steps:
@@ -100,66 +100,66 @@ jobs:
           host: ${{ secrets.EC2_IP }}
           username: ${{ secrets.EC2_PUBLIC_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: EC2_BACKEND_IP,BACKEND_REPO
+          envs: EC2_PRIVATE_IP_BACKEND,BACKEND_REPO
           script: |
             echo "=================================================="
             echo "🔐 ACESSO À EC2 PÚBLICA"
             echo "=================================================="
             mkdir -p ~/.ssh
-  
+
             if [ ! -f ~/.ssh/chaveatividade.pem ]; then
               echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/chaveatividade.pem
               chmod 600 ~/.ssh/chaveatividade.pem
             else
               chmod 600 ~/.ssh/chaveatividade.pem
             fi
-  
+
             # ========================================
             # REMOVE scripts antigos da privada
             # ========================================
-            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "rm -f ~/limpar-back.sh"
-            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "rm -f ~/deploy-back.sh"
-  
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "rm -f ~/limpar-back.sh"
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "rm -f ~/deploy-back.sh"
+
             # ========================================
             # LIMPADOR
             # ========================================
-            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "cat > ~/limpar-back.sh" << 'EOF'
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/limpar-back.sh" << 'EOF'
             #!/bin/bash
-              set -e
-              sudo docker stop \$(sudo docker ps -aq) 2>/dev/null || true
-              sudo docker rm \$(sudo docker ps -aq) 2>/dev/null || true
-              sudo docker rmi -f \$(sudo docker images -aq) 2>/dev/null || true
-              sudo docker volume rm \$(sudo docker volume ls -q) 2>/dev/null || true
-              sudo docker system prune -a --volumes -f
-              EOF
-              
-              ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "chmod +x ~/limpar-back.sh"
-              
-              # ========================================
-              # SCRIPT DEPLOY BACKEND
-              # ========================================
-              ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "cat > ~/deploy-back.sh" << 'EOF'
-              #!/bin/bash
-              set -e
-              
-              rm -rf backend
-              git clone $BACKEND_REPO backend
-              cd backend
-              git checkout develop
-              
-              cat <<EOT > .env
-              ${{ secrets.ENV_FILE_CONTENT }}
-              EOT
-              
-              chmod +x mvnw
-              ./mvnw clean package -DskipTests
-              docker compose up -d
-              EOF
-              
-              ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "chmod +x ~/deploy-back.sh"
-              
-              # ========================================
-              # EXECUTA
-              # ========================================
-              ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "~/limpar-back.sh"
-              ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_BACKEND_IP "~/deploy-back.sh"
+            set -e
+            sudo docker stop \$(sudo docker ps -aq) 2>/dev/null || true
+            sudo docker rm \$(sudo docker ps -aq) 2>/dev/null || true
+            sudo docker rmi -f \$(sudo docker images -aq) 2>/dev/null || true
+            sudo docker volume rm \$(sudo docker volume ls -q) 2>/dev/null || true
+            sudo docker system prune -a --volumes -f
+            EOF
+
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "chmod +x ~/limpar-back.sh"
+
+            # ========================================
+            # SCRIPT DEPLOY BACKEND
+            # ========================================
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/deploy-back.sh" << 'EOF'
+            #!/bin/bash
+            set -e
+
+            rm -rf backend
+            git clone $BACKEND_REPO backend
+            cd backend
+            git checkout develop
+
+            cat <<EOT > .env
+            ${{ secrets.ENV_FILE_CONTENT }}
+            EOT
+
+            chmod +x mvnw
+            ./mvnw clean package -DskipTests
+            docker compose up -d
+            EOF
+
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "chmod +x ~/deploy-back.sh"
+
+            # ========================================
+            # EXECUTA
+            # ========================================
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "~/limpar-back.sh"
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "~/deploy-back.sh"
