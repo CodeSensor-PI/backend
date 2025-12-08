@@ -1,0 +1,166 @@
+name: 🧱 Build and Push Spring Backend Images
+
+on:
+  push:
+    branches:
+      - develop
+      - infra/workflow
+    paths:
+      - 'psiRizerio-services/**'
+      - 'psiRizerio-email-service/**'
+      - 'psiRizerio-relatorios-service/**'
+      - '.github/workflows/build-backend-images.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    strategy:
+      matrix:
+        include:
+          - module: psiRizerio-services
+            artifact: psiRizerio-services-0.0.1-SNAPSHOT.jar
+            image: psirizerio-services
+          - module: psiRizerio-email-service
+            artifact: psiRizerio-email-service-0.0.1-SNAPSHOT.jar
+            image: psirizerio-email-service
+          - module: psiRizerio-relatorios-service
+            artifact: psiRizerio-relatorio-services-0.0.1-SNAPSHOT.jar
+            image: psirizerio-relatorios-service
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Grant execute permission for Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: ☕ Set up Temurin JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: 📚 Resolve dependencies for ${{ matrix.module }}
+        run: ./mvnw -B -pl ${{ matrix.module }} -am dependency:go-offline
+
+      - name: 🧪 Run Unit Tests for ${{ matrix.module }}
+        run: ./mvnw -B -pl ${{ matrix.module }} -am test
+
+      - name: 🏗️ Build ${{ matrix.module }} JAR
+        run: ./mvnw -B -pl ${{ matrix.module }} -am package -DskipTests
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔐 Log in to Docker Hub
+        run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: 🧩 Check Docker username
+        run: |
+          if [ -z "$DOCKER_USERNAME" ]; then
+            echo "❌ ERRO: DOCKER_USERNAME está vazio!"
+            exit 1
+          else
+            echo "✅ Docker username detectado: $DOCKER_USERNAME"
+          fi
+
+      - name: 🐳 Build and push ${{ matrix.module }} image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.module }}
+          file: ${{ matrix.module }}/Dockerfile
+          push: true
+          build-args: |
+            JAR_FILE=target/${{ matrix.artifact }}
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:latest
+            ${{ env.DOCKER_USERNAME }}/${{ matrix.image }}:${{ github.sha }}
+  
+
+
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    env:
+      EC2_PRIVATE_IP_BACKEND: ${{ secrets.EC2_PRIVATE_IP_BACKEND }}
+      BACKEND_REPO: ${{ secrets.BACKEND_REPO }}
+
+    steps:
+      - name: 🚀 Deploy via EC2 Pública
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: EC2_PRIVATE_IP_BACKEND,BACKEND_REPO
+          script: |
+            echo "=================================================="
+            echo "🔐 ACESSO À EC2 PÚBLICA"
+            echo "=================================================="
+
+            mkdir -p ~/.ssh
+
+            if [ ! -f ~/.ssh/chaveatividade.pem ]; then
+              echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/chaveatividade.pem
+              chmod 600 ~/.ssh/chaveatividade.pem
+            else
+              chmod 600 ~/.ssh/chaveatividade.pem
+            fi
+
+            # ========================================
+            # REMOVE SCRIPTS ANTIGOS
+            # ========================================
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "rm -f ~/limpar-back.sh ~/deploy-back.sh"
+
+            # ========================================
+            # CRIA limpar-back.sh (SEM INDENTAÇÃO)
+            # ========================================
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/limpar-back.sh" << 'EOF'
+            #!/bin/bash
+            set -e
+            sudo docker stop $(sudo docker ps -aq) 2>/dev/null || true
+            sudo docker rm $(sudo docker ps -aq) 2>/dev/null || true
+            sudo docker rmi -f $(sudo docker images -aq) 2>/dev/null || true
+            sudo docker volume rm $(sudo docker volume ls -q) 2>/dev/null || true
+            sudo docker system prune -a --volumes -f
+            EOF
+            
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "chmod +x ~/limpar-back.sh"
+            
+            # ========================================
+            # CRIA deploy-back.sh (SEM INDENTAÇÃO)
+            # ========================================
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/deploy-back.sh" << EOF
+            #!/bin/bash
+            set -e
+            
+            rm -rf backend
+            git clone "$BACKEND_REPO"
+            cd backend
+            git checkout develop
+            
+            cat <<EOT > .env
+            ${{ secrets.ENV_FILE_CONTENT }}
+            EOT
+            
+            chmod +x mvnw
+            ./mvnw clean package -DskipTests
+            docker compose up -d
+            EOF
+
+            
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "chmod +x ~/deploy-back.sh"
+            
+            # ========================================
+            # EXECUTA
+            # ========================================
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "~/limpar-back.sh"
+            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "~/deploy-back.sh"
