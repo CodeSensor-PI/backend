@@ -9,13 +9,14 @@ on:
       - 'psiRizerio-email-service/**'
       - 'psiRizerio-relatorios-service/**'
       - '.github/workflows/build-backend-images.yml'
+      - 'infra/workflow'
   workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    env: 
+    env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -49,6 +50,11 @@ jobs:
       - name: 📚 Resolve dependencies for ${{ matrix.module }}
         run: ./mvnw -B -pl ${{ matrix.module }} -am dependency:go-offline
 
+      # ⭐ TESTES UNITÁRIOS
+      - name: 🧪 Run Unit Tests for ${{ matrix.module }}
+        run: ./mvnw -B -pl ${{ matrix.module }} -am test
+
+      # ⭐ BUILD DO JAR (SEM TESTAR NOVAMENTE)
       - name: 🏗️ Build ${{ matrix.module }} JAR
         run: ./mvnw -B -pl ${{ matrix.module }} -am package -DskipTests
 
