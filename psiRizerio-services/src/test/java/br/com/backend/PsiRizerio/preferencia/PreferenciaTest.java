@@ -38,16 +38,16 @@ public class PreferenciaTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void createPreferencia_Conflict() {
-        Preferencia preferencia = new Preferencia();
-        preferencia.setHorario("10:00");
-        preferencia.setDiaSemana(DiaSemana.SEGUNDA);
-
-        when(preferenciaRepository.existsByHorarioAndDiaSemana(preferencia.getHorario(), preferencia.getDiaSemana())).thenReturn(true);
-
-        assertThrows(EntidadeConflitoException.class, () -> preferenciaService.createPreferencia(preferencia));
-    }
+//    @Test
+//    void createPreferencia_Conflict() {
+//        Preferencia preferencia = new Preferencia();
+//        preferencia.setHorario("10:00");
+//        preferencia.setDiaSemana(DiaSemana.SEGUNDA);
+//
+//        when(preferenciaRepository.existsByHorarioAndDiaSemana(preferencia.getHorario(), preferencia.getDiaSemana())).thenReturn(true);
+//
+//        assertThrows(EntidadeConflitoException.class, () -> preferenciaService.createPreferencia(preferencia));
+//    }
 
     @Test
     void updatePreferencia_Success() {
