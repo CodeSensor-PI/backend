@@ -122,17 +122,18 @@ jobs:
             ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "rm -f ~/deploy-back.sh"
   
             # ========================================
-            # LIMPADOR (com parênteses escapados)
+            # LIMPADOR (sem interpolação)
             # ========================================
-            ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/limpar-back.sh" << "EOF"
-            #!/bin/bash
-            set -e
-            sudo docker stop \$(sudo docker ps -aq) 2>/dev/null || true
-            sudo docker rm \$(sudo docker ps -aq) 2>/dev/null || true
-            sudo docker rmi -f \$(sudo docker images -aq) 2>/dev/null || true
-            sudo docker volume rm \$(sudo docker volume ls -q) 2>/dev/null || true
-            sudo docker system prune -a --volumes -f
-            EOF
+              ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "cat > ~/limpar-back.sh" << 'EOF'
+              #!/bin/bash
+              set -e
+              sudo docker stop $(sudo docker ps -aq) 2>/dev/null || true
+              sudo docker rm $(sudo docker ps -aq) 2>/dev/null || true
+              sudo docker rmi -f $(sudo docker images -aq) 2>/dev/null || true
+              sudo docker volume rm $(sudo docker volume ls -q) 2>/dev/null || true
+              sudo docker system prune -a --volumes -f
+              EOF
+
             
             ssh -i ~/.ssh/chaveatividade.pem -o StrictHostKeyChecking=no ubuntu@$EC2_PRIVATE_IP_BACKEND "chmod +x ~/limpar-back.sh"
             
