@@ -1,0 +1,65 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: meu-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - meu_rede
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: meu-rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    networks:
+      - meu_rede
+
+  # Redis
+  redis:
+    image: redis:7
+    container_name: meu-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--appendonly", "yes" ]
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - meu_rede
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: meu-redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - meu_rede
+    volumes:
+      - redisinsight_data:/data
+
+volumes:
+  mysql_data:
+  redis_data:
+  redisinsight_data:
+
+networks:
+  meu_rede:
